@@ -1,5 +1,21 @@
+import Freezer from '@/components/Freezer';
 import * as React from 'react';
 
 export default function Home() {
-  return <h1>Hello There!</h1>;
+  const freezers: string[] = [
+    'Gefrierschrank 1',
+    'Gefrierschrank 2',
+    'Gefrierschrank 3',
+    'Gefrierschrank 4',
+    'Gefrierschrank 5',
+    'Geftierschrank 6',
+  ];
+
+  return (
+    <>
+      {freezers.map(freezer => (
+        <Freezer freezer={freezer} />
+      ))}
+    </>
+  );
 }
