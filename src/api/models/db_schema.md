@@ -3,8 +3,9 @@ id integer [primary key]
 meat_type_id integer
 animal_type_id integer
 freezer_id integer
+drawer_number integer
 weight integer
-dater datetime
+date datetime
 count integer
 locked boolean
 reserved_for varchar
