@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Box, Card, CardContent, Collapse, IconButton, IconButtonProps, Typography, styled } from '@mui/material';
 import KitchenIcon from '@mui/icons-material/Kitchen';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
+import FreezerTable from './FreezerTable';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -49,7 +50,7 @@ export default function Freezer({ freezer }: { freezer: string }) {
         </Box>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
-            <Typography>Hello there</Typography>
+            <FreezerTable />
           </CardContent>
         </Collapse>
       </Card>
