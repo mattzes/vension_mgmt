@@ -18,7 +18,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
     duration: theme.transitions.duration.shortest,
   }),
 }));
-export default function Home({ freezer }: { freezer: string }) {
+export default function Freezer({ freezer }: { freezer: string }) {
   const [expanded, setExpanded] = useState(false);
 
   const handleExpandClick = () => {
