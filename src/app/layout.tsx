@@ -1,4 +1,5 @@
 import NavBar from '@/components/NavBar';
+import ThemeRegistry from '@/components/ThemeRegistry/ThemeRegistry';
 import { Container } from '@mui/material';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
@@ -14,8 +15,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body style={{ margin: 0 }}>
-        <NavBar />
-        <Container>{children}</Container>
+        <ThemeRegistry>
+          <NavBar />
+          <Container>{children}</Container>
+        </ThemeRegistry>
       </body>
     </html>
   );
