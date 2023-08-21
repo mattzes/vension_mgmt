@@ -29,7 +29,7 @@ export default function Freezer({ freezer }: { freezer: string }) {
   return (
     <>
       <Card sx={{ m: 1, mt: 3, maxWidth: '100%' }} elevation={7}>
-        <Box sx={{ p: 2, display: 'flex' }}>
+        <Box sx={{ p: 2, display: 'flex' }} onClick={handleExpandClick}>
           <Box>
             <KitchenIcon sx={{ pt: 0.7, mr: 1, fontSize: 28 }} />
           </Box>
@@ -38,12 +38,7 @@ export default function Freezer({ freezer }: { freezer: string }) {
           </Box>
           <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center' }}>
             {/* <ExpandMoreRoundedIcon fontSize="large" /> */}
-            <ExpandMore
-              sx={{ p: 0 }}
-              expand={expanded}
-              onClick={handleExpandClick}
-              aria-expanded={expanded}
-              aria-label="show more">
+            <ExpandMore sx={{ p: 0 }} expand={expanded} aria-expanded={expanded} aria-label="show more">
               <ExpandMoreRoundedIcon sx={{ fontSize: 30 }} />
             </ExpandMore>
           </Box>
