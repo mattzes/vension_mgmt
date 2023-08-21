@@ -183,7 +183,13 @@ export const animal_types = ['Reh', 'Wildschwein'];
 export const meat_types = ['Rücken', 'Keule', 'Für Wurst'];
 export const drawer_numbers = [1, 2, 3, 4, 5, 6];
 
-const FreezerTable = () => {
+const FreezerTable = ({
+  fullscreen,
+  onExpandedChange,
+}: {
+  fullscreen: boolean;
+  onExpandedChange?: (expanded: boolean) => void;
+}) => {
   const [tableData, setTableData] = useState<Vension[]>(() => data);
 
 
@@ -196,6 +202,9 @@ const FreezerTable = () => {
       //send/receive api updates here, then refetch or update local table data for re-render
       setTableData([...tableData]);
       exitEditingMode(); //required to exit editing mode and close modal
+
+  const handleExpandedChange = () => {
+    onExpandedChange?.(false);
   };
 
   const handleDeleteRow = useCallback(
@@ -332,6 +341,7 @@ const FreezerTable = () => {
         enableDensityToggle={false}
         positionToolbarAlertBanner="none"
         onEditingRowSave={handleSaveRowEdits}
+        onIsFullScreenChange={handleExpandedChange}
         muiTablePaperProps={{
           elevation: 0,
         }}
@@ -340,6 +350,7 @@ const FreezerTable = () => {
           expanded: true, //expand all groups by default
           grouping: ['drawer_number'], //an array of columns to group by by default (can be multiple)
           sorting: [{ id: 'drawer_number', desc: false }], //sort by state by default
+          isFullScreen: fullscreen,
         }}
         positionActionsColumn="last"
         renderRowActions={({ row, table }) => (
