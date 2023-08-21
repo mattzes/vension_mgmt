@@ -1,7 +1,18 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Box, Card, CardContent, Collapse, IconButton, IconButtonProps, Typography, styled } from '@mui/material';
+import {
+  Box,
+  Card,
+  CardContent,
+  Collapse,
+  IconButton,
+  IconButtonProps,
+  Typography,
+  styled,
+  useMediaQuery,
+} from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import KitchenIcon from '@mui/icons-material/Kitchen';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import FreezerTable from './FreezerTable';
@@ -20,7 +31,9 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   }),
 }));
 export default function Freezer({ freezer }: { freezer: string }) {
+  const theme = useTheme();
   const [expanded, setExpanded] = useState(false);
+  const isBelowMd = useMediaQuery(theme.breakpoints.down('md'));
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -45,7 +58,7 @@ export default function Freezer({ freezer }: { freezer: string }) {
         </Box>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
-            <FreezerTable />
+            <FreezerTable fullscreen={isBelowMd} onExpandedChange={setExpanded} />
           </CardContent>
         </Collapse>
       </Card>
