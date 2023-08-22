@@ -20,6 +20,7 @@ import {
   Tooltip,
 } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
+import { RecordForm } from './RecordForm';
 
 export type Vension = {
   id: number;
@@ -31,6 +32,17 @@ export type Vension = {
   date: string;
   price: number;
   reserved_for: string;
+};
+
+export type MuiTextFieldProps = {
+  type: 'number' | 'text' | 'date';
+  select?: boolean;
+  children?: React.ReactNode;
+};
+
+export type MyColumnDef = MRT_ColumnDef<Vension> & {
+  editable: boolean;
+  muiTextFieldProps: () => MuiTextFieldProps;
 };
 
 export const data: Vension[] = [
@@ -190,18 +202,33 @@ const FreezerTable = ({
   fullscreen: boolean;
   onExpandedChange?: (expanded: boolean) => void;
 }) => {
+  const [createRecordOpen, setRecordFormOpen] = useState(false);
   const [tableData, setTableData] = useState<Vension[]>(() => data);
+  const [validationErrors, setValidationErrors] = useState<{
+    [cellId: string]: string;
+  }>({});
 
+  const handleCreateRecord = (values: Vension) => {
+    tableData.push(values);
+    setTableData([...tableData]);
+  };
 
   const handleSaveRowEdits: MaterialReactTableProps<Vension>['onEditingRowSave'] = async ({
     exitEditingMode,
     row,
     values,
   }) => {
+    if (!Object.keys(validationErrors).length) {
       tableData[row.index] = values;
       //send/receive api updates here, then refetch or update local table data for re-render
       setTableData([...tableData]);
-      exitEditingMode(); //required to exit editing mode and close modal
+      exitEditingMode(); //required to exit editing mode and close form
+    }
+  };
+
+  const handleCancelRowEdits = () => {
+    setValidationErrors({});
+  };
 
   const handleExpandedChange = () => {
     onExpandedChange?.(false);
@@ -219,13 +246,15 @@ const FreezerTable = ({
     [tableData]
   );
 
-  const columns = useMemo<MRT_ColumnDef<Vension>[]>(
+  const columns = useMemo<MyColumnDef[]>(
     () => [
       {
+        editable: true,
         accessorKey: 'drawer_number',
         header: 'Schublade',
         size: 0,
-        muiTableBodyCellEditTextFieldProps: () => ({
+        muiTextFieldProps: () => ({
+          type: 'number',
           select: true, //change to select for a dropdown
           children: drawer_numbers.map(drawer_number => (
             <MenuItem key={drawer_number} value={drawer_number}>
@@ -237,10 +266,12 @@ const FreezerTable = ({
         Cell: ({ row }) => <>{row.original.drawer_number ? row.original.drawer_number : 'Nicht zugewiesen'}</>,
       },
       {
+        editable: true,
         accessorKey: 'animal_type',
         header: 'Tierart',
         size: 0,
-        muiTableBodyCellEditTextFieldProps: () => ({
+        muiTextFieldProps: () => ({
+          type: 'text',
           select: true, //change to select for a dropdown
           children: animal_types.map(animal_type => (
             <MenuItem key={animal_type} value={animal_type}>
@@ -250,10 +281,12 @@ const FreezerTable = ({
         }),
       },
       {
+        editable: true,
         accessorKey: 'meat_type',
         header: 'Fleischart',
         size: 0,
-        muiTableBodyCellEditTextFieldProps: () => ({
+        muiTextFieldProps: () => ({
+          type: 'text',
           select: true, //change to select for a dropdown
           children: meat_types.map(meat_type => (
             <MenuItem key={meat_type} value={meat_type}>
@@ -263,27 +296,30 @@ const FreezerTable = ({
         }),
       },
       {
+        editable: true,
         accessorKey: 'weight',
         header: 'Gewicht',
         size: 0,
-        muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
+        muiTextFieldProps: () => ({
           type: 'number',
         }),
         Cell: ({ row }) => <>{row.original.weight}g</>,
       },
       {
+        editable: true,
         accessorKey: 'count',
         header: 'Anzahl',
         size: 0,
-        muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
+        muiTextFieldProps: () => ({
           type: 'number',
         }),
       },
       {
+        editable: true,
         accessorKey: 'date',
         header: 'Datum',
         size: 130,
-        muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
+        muiTextFieldProps: () => ({
           type: 'date',
         }),
         Cell: ({ row }) => {
@@ -307,19 +343,22 @@ const FreezerTable = ({
         },
       },
       {
+        editable: false,
         accessorKey: 'price',
         header: 'Preis',
         size: 0,
-        muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
+        muiTextFieldProps: () => ({
           type: 'number',
         }),
         Cell: ({ row }) => <>{row.original.price.toString().replace('.', ',')}€</>,
       },
       {
+        editable: true,
         accessorKey: 'reserved_for',
         header: 'Reserviert für',
         size: 0,
-        muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
+        muiTextFieldProps: () => ({
+          type: 'text',
         }),
       },
     ],
@@ -341,6 +380,7 @@ const FreezerTable = ({
         enableDensityToggle={false}
         positionToolbarAlertBanner="none"
         onEditingRowSave={handleSaveRowEdits}
+        onEditingRowCancel={handleCancelRowEdits}
         onIsFullScreenChange={handleExpandedChange}
         muiTablePaperProps={{
           elevation: 0,
@@ -356,7 +396,10 @@ const FreezerTable = ({
         renderRowActions={({ row, table }) => (
           <Box sx={{ display: 'flex', gap: '1rem' }}>
             <Tooltip arrow placement="left" title="Bearbeiten">
-              <IconButton onClick={() => table.setEditingRow(row)}>
+              <IconButton
+                onClick={() => {
+                  table.setEditingRow(row);
+                }}>
                 <Edit />
               </IconButton>
             </Tooltip>
@@ -367,11 +410,20 @@ const FreezerTable = ({
             </Tooltip>
           </Box>
         )}
+        renderTopToolbarCustomActions={() => (
+          <Button color="secondary" onClick={() => setRecordFormOpen(true)} variant="contained">
+            Neuer Eintrag
+          </Button>
+        )}
+      />
+      <RecordForm
+        columns={columns}
+        open={createRecordOpen}
+        onClose={() => setRecordFormOpen(false)}
+        onSubmit={handleCreateRecord}
       />
     </>
   );
 };
-}
-
 
 export default FreezerTable;
