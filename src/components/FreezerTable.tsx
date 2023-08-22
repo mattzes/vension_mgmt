@@ -35,7 +35,7 @@ export type Vension = {
 };
 
 export type MuiTextFieldProps = {
-  type: 'number' | 'text' | 'date';
+  type: 'number' | 'text' | 'month';
   select?: boolean;
   children?: React.ReactNode;
 };
@@ -269,6 +269,7 @@ const FreezerTable = ({
         header: 'Tierart',
         size: 0,
         muiTextFieldProps: () => ({
+          required: true,
           type: 'text',
           select: true, //change to select for a dropdown
           children: animal_types.map(animal_type => (
@@ -283,6 +284,7 @@ const FreezerTable = ({
         header: 'Fleischart',
         size: 0,
         muiTextFieldProps: () => ({
+          required: true,
           type: 'text',
           select: true, //change to select for a dropdown
           children: meat_types.map(meat_type => (
@@ -297,6 +299,7 @@ const FreezerTable = ({
         header: 'Gewicht',
         size: 0,
         muiTextFieldProps: () => ({
+          required: true,
           type: 'number',
         }),
         Cell: ({ row }) => <>{row.original.weight}g</>,
@@ -306,16 +309,19 @@ const FreezerTable = ({
         header: 'Anzahl',
         size: 0,
         muiTextFieldProps: () => ({
+          required: true,
           type: 'number',
         }),
       },
       {
-        editable: true,
         accessorKey: 'date',
         header: 'Datum',
         size: 130,
         muiTextFieldProps: () => ({
-          type: 'date',
+          placeholder: 'sdf',
+          required: true,
+          type: 'month',
+          defaultValue: `${new Date().getFullYear()}-${new Date().toLocaleString('de-DE', { month: '2-digit' })}`,
         }),
         Cell: ({ row }) => {
           const currentDate = new Date(row.original.date);
