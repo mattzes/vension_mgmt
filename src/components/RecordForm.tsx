@@ -16,7 +16,8 @@ export const RecordForm = ({
 }) => {
   const [values, setValues] = useState<any>(() =>
     columns.reduce((acc, column) => {
-      acc[column.accessorKey ?? ''] = '';
+      const defaultValue = column.muiTextFieldProps?.().defaultValue ?? '';
+      acc[column.accessorKey ?? ''] = defaultValue;
       return acc;
     }, {} as any)
   );
@@ -25,7 +26,12 @@ export const RecordForm = ({
     //put your validation logic here
 
     onSubmit(values);
+    setValues({});
     onClose();
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValues({ ...values, [e.target.name]: e.target.value });
   };
 
   return (
@@ -51,7 +57,7 @@ export const RecordForm = ({
                   name={column.accessorKey}
                   label={column.header}
                   variant="outlined"
-                  onChange={e => setValues({ ...values, [e.target.name]: e.target.value })}
+                  onChange={handleChange}
                   {...textFieldProps}
                 />
               );
