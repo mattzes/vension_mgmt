@@ -188,6 +188,7 @@ export type MuiTextFieldProps = {
   type: 'number' | 'text' | 'month';
   select?: boolean;
   children?: React.ReactNode;
+  defaultValue?: any;
 };
 
 export type MyColumnDef = MRT_ColumnDef<Vension> & {
@@ -354,7 +355,7 @@ const FreezerTable = ({
         muiTextFieldProps: () => ({
           type: 'number',
         }),
-        Cell: ({ row }) => <>{row.original.price.toString().replace('.', ',')}€</>,
+        Cell: ({ row }) => <>{row.original.price.toString()?.replace('.', ',')}€</>,
       },
       {
         accessorKey: 'reserved_for',
