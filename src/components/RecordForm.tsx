@@ -60,7 +60,7 @@ export const RecordForm = ({
         </form>
       </DialogContent>
       <DialogActions sx={{ p: 3 }}>
-        <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={onClose}>Abbrechen</Button>
         <Button color="secondary" onClick={handleSubmit} variant="contained">
           Speichern
         </Button>
