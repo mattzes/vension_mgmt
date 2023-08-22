@@ -41,7 +41,7 @@ export type MuiTextFieldProps = {
 };
 
 export type MyColumnDef = MRT_ColumnDef<Vension> & {
-  editable: boolean;
+  editable?: boolean;
   muiTextFieldProps: () => MuiTextFieldProps;
 };
 
@@ -249,7 +249,6 @@ const FreezerTable = ({
   const columns = useMemo<MyColumnDef[]>(
     () => [
       {
-        editable: true,
         accessorKey: 'drawer_number',
         header: 'Schublade',
         size: 0,
@@ -266,7 +265,6 @@ const FreezerTable = ({
         Cell: ({ row }) => <>{row.original.drawer_number ? row.original.drawer_number : 'Nicht zugewiesen'}</>,
       },
       {
-        editable: true,
         accessorKey: 'animal_type',
         header: 'Tierart',
         size: 0,
@@ -281,7 +279,6 @@ const FreezerTable = ({
         }),
       },
       {
-        editable: true,
         accessorKey: 'meat_type',
         header: 'Fleischart',
         size: 0,
@@ -296,7 +293,6 @@ const FreezerTable = ({
         }),
       },
       {
-        editable: true,
         accessorKey: 'weight',
         header: 'Gewicht',
         size: 0,
@@ -306,7 +302,6 @@ const FreezerTable = ({
         Cell: ({ row }) => <>{row.original.weight}g</>,
       },
       {
-        editable: true,
         accessorKey: 'count',
         header: 'Anzahl',
         size: 0,
@@ -353,7 +348,6 @@ const FreezerTable = ({
         Cell: ({ row }) => <>{row.original.price.toString().replace('.', ',')}€</>,
       },
       {
-        editable: true,
         accessorKey: 'reserved_for',
         header: 'Reserviert für',
         size: 0,
