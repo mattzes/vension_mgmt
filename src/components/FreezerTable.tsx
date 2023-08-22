@@ -22,29 +22,6 @@ import {
 import { Delete, Edit } from '@mui/icons-material';
 import { RecordForm } from './RecordForm';
 
-export type Vension = {
-  id: number;
-  drawer_number: number | null;
-  animal_type: string;
-  meat_type: string;
-  weight: number;
-  count: number;
-  date: string;
-  price: number;
-  reserved_for: string;
-};
-
-export type MuiTextFieldProps = {
-  type: 'number' | 'text' | 'month';
-  select?: boolean;
-  children?: React.ReactNode;
-};
-
-export type MyColumnDef = MRT_ColumnDef<Vension> & {
-  editable?: boolean;
-  muiTextFieldProps: () => MuiTextFieldProps;
-};
-
 export const data: Vension[] = [
   {
     id: 1,
@@ -195,6 +172,29 @@ export const animal_types = ['Reh', 'Wildschwein'];
 export const meat_types = ['Rücken', 'Keule', 'Für Wurst'];
 export const drawer_numbers = [1, 2, 3, 4, 5, 6];
 
+export type Vension = {
+  id: number;
+  drawer_number: number | null;
+  animal_type: string;
+  meat_type: string;
+  weight: number;
+  count: number;
+  date: string;
+  price: number;
+  reserved_for: string;
+};
+
+export type MuiTextFieldProps = {
+  type: 'number' | 'text' | 'month';
+  select?: boolean;
+  children?: React.ReactNode;
+};
+
+export type MyColumnDef = MRT_ColumnDef<Vension> & {
+  editable?: boolean;
+  muiTextFieldProps: () => MuiTextFieldProps;
+};
+
 const FreezerTable = ({
   fullscreen,
   onExpandedChange,
@@ -255,6 +255,7 @@ const FreezerTable = ({
         muiTextFieldProps: () => ({
           type: 'number',
           select: true, //change to select for a dropdown
+          defaultValue: '',
           children: drawer_numbers.map(drawer_number => (
             <MenuItem key={drawer_number} value={drawer_number}>
               {drawer_number}
@@ -272,6 +273,7 @@ const FreezerTable = ({
           required: true,
           type: 'text',
           select: true, //change to select for a dropdown
+          defaultValue: '',
           children: animal_types.map(animal_type => (
             <MenuItem key={animal_type} value={animal_type}>
               {animal_type}
@@ -284,6 +286,7 @@ const FreezerTable = ({
         header: 'Fleischart',
         size: 0,
         muiTextFieldProps: () => ({
+          defaultValue: '',
           required: true,
           type: 'text',
           select: true, //change to select for a dropdown
@@ -311,6 +314,7 @@ const FreezerTable = ({
         muiTextFieldProps: () => ({
           required: true,
           type: 'number',
+          defaultValue: 1,
         }),
       },
       {
@@ -318,7 +322,6 @@ const FreezerTable = ({
         header: 'Datum',
         size: 130,
         muiTextFieldProps: () => ({
-          placeholder: 'sdf',
           required: true,
           type: 'month',
           defaultValue: `${new Date().getFullYear()}-${new Date().toLocaleString('de-DE', { month: '2-digit' })}`,
