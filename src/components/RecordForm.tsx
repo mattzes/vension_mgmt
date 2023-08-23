@@ -12,6 +12,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
+import { validateVension } from '@/validation';
 
 export const RecordForm = ({
   open,
@@ -34,6 +35,7 @@ export const RecordForm = ({
     if (rowToEdit) return rowToEdit;
     else return defaultValues;
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const theme = useTheme();
   const isFullscreen = useMediaQuery(() => theme.breakpoints.down('sm'));
 
@@ -48,12 +50,17 @@ export const RecordForm = ({
   }, [open]);
 
   const handleSubmit = () => {
-    //put your validation logic here
+    const errors = validateVension(values);
 
-    if (rowToEdit) onUpdate(values);
-    else onSubmit(values);
+    if (Object.keys(errors).length !== 0) {
+      setErrors(errors);
+    } else {
+      if (rowToEdit) onUpdate(values);
+      else onSubmit(values);
 
-    onClose();
+      onClose();
+      setErrors({});
+    }
   };
 
   const handleKeypress = (e: React.KeyboardEvent) => {
@@ -68,6 +75,7 @@ export const RecordForm = ({
 
   const handleCancle = () => {
     onClose();
+    setErrors({});
   };
 
   return (
@@ -95,6 +103,8 @@ export const RecordForm = ({
                   label={column.header}
                   variant="outlined"
                   onChange={handleChange}
+                  error={!!errors[column.accessorKey]}
+                  helperText={errors[column.accessorKey]}
                   defaultValue={rowToEdit ? rowToEdit[column.accessorKey] : defaultValues[column.accessorKey]}
                 />
               );
