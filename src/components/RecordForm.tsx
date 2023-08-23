@@ -1,7 +1,17 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { MyColumnDef, Vension } from './FreezerTable';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField } from '@mui/material';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Stack,
+  TextField,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 
 export const RecordForm = ({
   open,
@@ -24,6 +34,8 @@ export const RecordForm = ({
     if (rowToEdit) return rowToEdit;
     else return defaultValues;
   });
+  const theme = useTheme();
+  const isFullscreen = useMediaQuery(() => theme.breakpoints.down('sm'));
 
   useEffect(() => {
     if (open) {
@@ -44,6 +56,12 @@ export const RecordForm = ({
     onClose();
   };
 
+  const handleKeypress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSubmit();
+    }
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
@@ -53,8 +71,8 @@ export const RecordForm = ({
   };
 
   return (
-    <Dialog open={open}>
-      <DialogTitle textAlign="center">{rowToEdit ? 'Eintrag Bearbeiten' : 'Neuen Eintrag erstellena'}</DialogTitle>
+    <Dialog open={open} onKeyDown={handleKeypress} fullScreen={isFullscreen}>
+      <DialogTitle textAlign="center">{rowToEdit ? 'Eintrag Bearbeiten' : 'Neuen Eintrag erstellen'}</DialogTitle>
       <DialogContent>
         <form onSubmit={e => e.preventDefault()}>
           <Stack
@@ -86,7 +104,7 @@ export const RecordForm = ({
       </DialogContent>
       <DialogActions sx={{ p: 3 }}>
         <Button onClick={handleCancle}>Abbrechen</Button>
-        <Button color="secondary" onClick={handleSubmit} variant="contained">
+        <Button type="submit" color="secondary" onClick={handleSubmit} variant="contained">
           Speichern
         </Button>
       </DialogActions>
