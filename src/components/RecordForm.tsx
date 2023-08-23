@@ -1,32 +1,46 @@
 'use client';
-import React, { use, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MyColumnDef, Vension } from './FreezerTable';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField } from '@mui/material';
 
 export const RecordForm = ({
   open,
   columns,
+  rowToEdit,
+  defaultValues,
   onClose,
+  onUpdate,
   onSubmit,
 }: {
-  columns: MyColumnDef[];
-  onClose: () => void;
-  onSubmit: (values: Vension) => void;
   open: boolean;
+  columns: MyColumnDef[];
+  rowToEdit: Vension | null;
+  defaultValues: Vension;
+  onClose: () => void;
+  onUpdate: (values: Vension) => void;
+  onSubmit: (values: Vension) => void;
 }) => {
-  const [values, setValues] = useState<any>(() =>
-    columns.reduce((acc, column) => {
-      const defaultValue = column.muiTextFieldProps?.().defaultValue ?? '';
-      acc[column.accessorKey ?? ''] = defaultValue;
-      return acc;
-    }, {} as any)
-  );
+  const [values, setValues] = useState<Vension>(() => {
+    if (rowToEdit) return rowToEdit;
+    else return defaultValues;
+  });
+
+  useEffect(() => {
+    if (open) {
+      if (rowToEdit) {
+        setValues(rowToEdit);
+      } else {
+        setValues(defaultValues);
+      }
+    }
+  }, [open]);
 
   const handleSubmit = () => {
     //put your validation logic here
 
-    onSubmit(values);
-    setValues({});
+    if (rowToEdit) onUpdate(values);
+    else onSubmit(values);
+
     onClose();
   };
 
@@ -34,9 +48,13 @@ export const RecordForm = ({
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
+  const handleCancle = () => {
+    onClose();
+  };
+
   return (
     <Dialog open={open}>
-      <DialogTitle textAlign="center">Neuen Eintrag erstellen</DialogTitle>
+      <DialogTitle textAlign="center">{rowToEdit ? 'Eintrag Bearbeiten' : 'Neuen Eintrag erstellena'}</DialogTitle>
       <DialogContent>
         <form onSubmit={e => e.preventDefault()}>
           <Stack
@@ -53,12 +71,13 @@ export const RecordForm = ({
 
               return (
                 <TextField
+                  {...textFieldProps}
                   key={column.accessorKey}
                   name={column.accessorKey}
                   label={column.header}
                   variant="outlined"
                   onChange={handleChange}
-                  {...textFieldProps}
+                  defaultValue={rowToEdit ? rowToEdit[column.accessorKey] : defaultValues[column.accessorKey]}
                 />
               );
             })}
@@ -66,7 +85,7 @@ export const RecordForm = ({
         </form>
       </DialogContent>
       <DialogActions sx={{ p: 3 }}>
-        <Button onClick={onClose}>Abbrechen</Button>
+        <Button onClick={handleCancle}>Abbrechen</Button>
         <Button color="secondary" onClick={handleSubmit} variant="contained">
           Speichern
         </Button>

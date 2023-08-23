@@ -1,47 +1,29 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import {
-  MaterialReactTable,
-  type MaterialReactTableProps,
-  type MRT_Cell,
-  type MRT_ColumnDef,
-  type MRT_Row,
-} from 'material-react-table';
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  MenuItem,
-  Stack,
-  TextField,
-  Tooltip,
-} from '@mui/material';
+import { MaterialReactTable, type MaterialReactTableProps, type MRT_ColumnDef, type MRT_Row } from 'material-react-table';
+import { Box, Button, IconButton, MenuItem, Tooltip } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import { RecordForm } from './RecordForm';
 
 export const data: Vension[] = [
   {
     id: 1,
-    drawer_number: null,
+    drawer_number: 'Nicht zugewiesen',
     animal_type: 'Reh',
     meat_type: 'Rücken',
     weight: 380,
     count: 2,
-    date: new Date().toISOString().split('T')[0],
+    date: new Date().toISOString().split('T')[0].split('-').slice(0, 2).join('-'),
     price: 17.8,
     reserved_for: '',
   },
   {
     id: 8,
-    drawer_number: null,
+    drawer_number: 'Nicht zugewiesen',
     animal_type: 'Reh',
     meat_type: 'Rücken',
     weight: 600,
     count: 2,
-    date: new Date().toISOString().split('T')[0],
+    date: new Date().toISOString().split('T')[0].split('-').slice(0, 2).join('-'),
     price: 13.5,
     reserved_for: '',
   },
@@ -52,7 +34,7 @@ export const data: Vension[] = [
     meat_type: 'Keule',
     weight: 1100,
     count: 1,
-    date: new Date().toISOString().split('T')[0],
+    date: new Date().toISOString().split('T')[0].split('-').slice(0, 2).join('-'),
     price: 19.0,
     reserved_for: 'Hans',
   },
@@ -63,7 +45,7 @@ export const data: Vension[] = [
     meat_type: 'Für Wurst',
     weight: 340,
     count: 3,
-    date: new Date().toISOString().split('T')[0],
+    date: new Date().toISOString().split('T')[0].split('-').slice(0, 2).join('-'),
     price: 9.8,
     reserved_for: '',
   },
@@ -74,7 +56,7 @@ export const data: Vension[] = [
     meat_type: 'Rücken',
     weight: 850,
     count: 2,
-    date: new Date().toISOString().split('T')[0],
+    date: new Date().toISOString().split('T')[0].split('-').slice(0, 2).join('-'),
     price: 14.2,
     reserved_for: '',
   },
@@ -85,7 +67,7 @@ export const data: Vension[] = [
     meat_type: 'Keule',
     weight: 920,
     count: 1,
-    date: new Date().toISOString().split('T')[0],
+    date: new Date().toISOString().split('T')[0].split('-').slice(0, 2).join('-'),
     price: 15.8,
     reserved_for: 'Silke',
   },
@@ -96,7 +78,7 @@ export const data: Vension[] = [
     meat_type: 'Für Wurst',
     weight: 380,
     count: 4,
-    date: new Date().toISOString().split('T')[0],
+    date: new Date().toISOString().split('T')[0].split('-').slice(0, 2).join('-'),
     price: 10.5,
     reserved_for: 'Hans',
   },
@@ -107,18 +89,18 @@ export const data: Vension[] = [
     meat_type: 'Rücken',
     weight: 550,
     count: 2,
-    date: new Date().toISOString().split('T')[0],
+    date: new Date().toISOString().split('T')[0].split('-').slice(0, 2).join('-'),
     price: 12.9,
     reserved_for: '',
   },
   {
     id: 15,
-    drawer_number: null,
+    drawer_number: 'Nicht zugewiesen',
     animal_type: 'Wildschwein',
     meat_type: 'Keule',
     weight: 1050,
     count: 1,
-    date: new Date().toISOString().split('T')[0],
+    date: new Date().toISOString().split('T')[0].split('-').slice(0, 2).join('-'),
     price: 18.5,
     reserved_for: 'Silke',
   },
@@ -129,7 +111,7 @@ export const data: Vension[] = [
     meat_type: 'Für Wurst',
     weight: 310,
     count: 3,
-    date: new Date().toISOString().split('T')[0],
+    date: new Date().toISOString().split('T')[0].split('-').slice(0, 2).join('-'),
     price: 9.1,
     reserved_for: '',
   },
@@ -140,7 +122,7 @@ export const data: Vension[] = [
     meat_type: 'Rücken',
     weight: 820,
     count: 2,
-    date: new Date().toISOString().split('T')[0],
+    date: new Date().toISOString().split('T')[0].split('-').slice(0, 2).join('-'),
     price: 13.7,
     reserved_for: 'Hans',
   },
@@ -151,7 +133,7 @@ export const data: Vension[] = [
     meat_type: 'Keule',
     weight: 900,
     count: 1,
-    date: new Date().toISOString().split('T')[0],
+    date: new Date().toISOString().split('T')[0].split('-').slice(0, 2).join('-'),
     price: 16.0,
     reserved_for: 'Silke',
   },
@@ -162,7 +144,7 @@ export const data: Vension[] = [
     meat_type: 'Für Wurst',
     weight: 400,
     count: 4,
-    date: new Date().toISOString().split('T')[0],
+    date: new Date().toISOString().split('T')[0].split('-').slice(0, 2).join('-'),
     price: 10.8,
     reserved_for: '',
   },
@@ -170,11 +152,11 @@ export const data: Vension[] = [
 
 export const animal_types = ['Reh', 'Wildschwein'];
 export const meat_types = ['Rücken', 'Keule', 'Für Wurst'];
-export const drawer_numbers = [1, 2, 3, 4, 5, 6];
+export const drawer_numbers = ['Nicht zugewiesen', 1, 2, 3, 4, 5, 6];
 
 export type Vension = {
   id: number;
-  drawer_number: number | null;
+  drawer_number: number | string;
   animal_type: string;
   meat_type: string;
   weight: number;
@@ -192,6 +174,7 @@ export type MuiTextFieldProps = {
 };
 
 export type MyColumnDef = MRT_ColumnDef<Vension> & {
+  accessorKey: 'id' | 'drawer_number' | 'animal_type' | 'meat_type' | 'weight' | 'count' | 'date' | 'price' | 'reserved_for';
   editable?: boolean;
   muiTextFieldProps: () => MuiTextFieldProps;
 };
@@ -204,48 +187,8 @@ const FreezerTable = ({
   onExpandedChange?: (expanded: boolean) => void;
 }) => {
   const [createRecordOpen, setRecordFormOpen] = useState(false);
-  const [tableData, setTableData] = useState<Vension[]>(() => data);
-  const [validationErrors, setValidationErrors] = useState<{
-    [cellId: string]: string;
-  }>({});
-
-  const handleCreateRecord = (values: Vension) => {
-    tableData.push(values);
-    setTableData([...tableData]);
-  };
-
-  const handleSaveRowEdits: MaterialReactTableProps<Vension>['onEditingRowSave'] = async ({
-    exitEditingMode,
-    row,
-    values,
-  }) => {
-    if (!Object.keys(validationErrors).length) {
-      tableData[row.index] = values;
-      //send/receive api updates here, then refetch or update local table data for re-render
-      setTableData([...tableData]);
-      exitEditingMode(); //required to exit editing mode and close form
-    }
-  };
-
-  const handleCancelRowEdits = () => {
-    setValidationErrors({});
-  };
-
-  const handleExpandedChange = () => {
-    onExpandedChange?.(false);
-  };
-
-  const handleDeleteRow = useCallback(
-    (row: MRT_Row<Vension>) => {
-      if (!confirm('Bist du sicher, dass du diesen Eintrag löschen möchtest?')) {
-        return;
-      }
-      //send api delete request here, then refetch or update local table data for re-render
-      tableData.splice(row.index, 1);
-      setTableData([...tableData]);
-    },
-    [tableData]
-  );
+  const [tableData, setTableData] = useState<Vension[]>(data);
+  const [rowToEdit, setRowToEdit] = useState<MRT_Row<Vension> | null>(null);
 
   const columns = useMemo<MyColumnDef[]>(
     () => [
@@ -256,15 +199,19 @@ const FreezerTable = ({
         muiTextFieldProps: () => ({
           type: 'number',
           select: true, //change to select for a dropdown
-          defaultValue: '',
+          defaultValue: 'Nicht zugewiesen',
           children: drawer_numbers.map(drawer_number => (
             <MenuItem key={drawer_number} value={drawer_number}>
               {drawer_number}
             </MenuItem>
           )),
         }),
-        GroupedCell: ({ row }) => <>{row.original.drawer_number ? row.original.drawer_number : 'Nicht zugewiesen'}</>,
-        Cell: ({ row }) => <>{row.original.drawer_number ? row.original.drawer_number : 'Nicht zugewiesen'}</>,
+        GroupedCell: ({ row }) => (
+          <>{typeof row.original.drawer_number === 'number' ? row.original.drawer_number : 'Nicht zugewiesen'}</>
+        ),
+        Cell: ({ row }) => (
+          <>{typeof row.original.drawer_number === 'number' ? row.original.drawer_number : 'Nicht zugewiesen'}</>
+        ),
       },
       {
         accessorKey: 'animal_type',
@@ -355,7 +302,7 @@ const FreezerTable = ({
         muiTextFieldProps: () => ({
           type: 'number',
         }),
-        Cell: ({ row }) => <>{row.original.price.toString()?.replace('.', ',')}€</>,
+        Cell: ({ row }) => <>{row.original.price?.toString().replace('.', ',')}€</>,
       },
       {
         accessorKey: 'reserved_for',
@@ -368,6 +315,62 @@ const FreezerTable = ({
     ],
     []
   );
+
+  const defaultValues = columns.reduce((acc, column) => {
+    const defaultValue = column.muiTextFieldProps?.().defaultValue ?? '';
+    acc[column.accessorKey ?? ''] = defaultValue;
+    return acc;
+  }, {} as any);
+
+  const handleCreateRecord = (values: Vension) => {
+    tableData.push(values);
+    setTableData([...tableData]);
+  };
+
+  const handleOnCloseForm = () => {
+    setRecordFormOpen(false);
+    setRowToEdit(null);
+  };
+
+  const handleOpenCreateRecordForm = () => {
+    columns.reduce((acc, column) => {
+      const defaultValue = column.muiTextFieldProps?.().defaultValue ?? '';
+      acc[column.accessorKey ?? ''] = defaultValue;
+      return acc;
+    }, {} as any);
+    setRecordFormOpen(true);
+  };
+
+  const setEditingRow = (row: MRT_Row<Vension>) => {
+    setRowToEdit(row);
+    setRecordFormOpen(true);
+  };
+
+  const handleSaveRowEdits = (values: Vension) => {
+    if (rowToEdit) {
+      tableData[rowToEdit.index] = values;
+      //send/receive api updates here, then refetch or update local table data for re-render
+      setTableData([...tableData]);
+    } else {
+      throw new Error("Can't save edits, no row to edit");
+    }
+  };
+
+  const handleDeleteRow = useCallback(
+    (row: MRT_Row<Vension>) => {
+      if (!confirm('Bist du sicher, dass du diesen Eintrag löschen möchtest?')) {
+        return;
+      }
+      //send api delete request here, then refetch or update local table data for re-render
+      tableData.splice(row.index, 1);
+      setTableData([...tableData]);
+    },
+    [tableData]
+  );
+
+  const handleExpandedChange = () => {
+    onExpandedChange?.(false);
+  };
 
   return (
     <>
@@ -383,8 +386,6 @@ const FreezerTable = ({
         enableHiding={false}
         enableDensityToggle={false}
         positionToolbarAlertBanner="none"
-        onEditingRowSave={handleSaveRowEdits}
-        onEditingRowCancel={handleCancelRowEdits}
         onIsFullScreenChange={handleExpandedChange}
         muiTablePaperProps={{
           elevation: 0,
@@ -397,12 +398,12 @@ const FreezerTable = ({
           isFullScreen: fullscreen,
         }}
         positionActionsColumn="last"
-        renderRowActions={({ row, table }) => (
+        renderRowActions={({ row }) => (
           <Box sx={{ display: 'flex', gap: '1rem' }}>
             <Tooltip arrow placement="left" title="Bearbeiten">
               <IconButton
                 onClick={() => {
-                  table.setEditingRow(row);
+                  setEditingRow(row);
                 }}>
                 <Edit />
               </IconButton>
@@ -415,15 +416,18 @@ const FreezerTable = ({
           </Box>
         )}
         renderTopToolbarCustomActions={() => (
-          <Button color="secondary" onClick={() => setRecordFormOpen(true)} variant="contained">
+          <Button color="secondary" onClick={handleOpenCreateRecordForm} variant="contained">
             Neuer Eintrag
           </Button>
         )}
       />
       <RecordForm
         columns={columns}
+        rowToEdit={rowToEdit?.original ?? null}
+        defaultValues={defaultValues}
         open={createRecordOpen}
-        onClose={() => setRecordFormOpen(false)}
+        onClose={handleOnCloseForm}
+        onUpdate={handleSaveRowEdits}
         onSubmit={handleCreateRecord}
       />
     </>
