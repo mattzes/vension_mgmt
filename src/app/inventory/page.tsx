@@ -1,4 +1,5 @@
 import Freezer from '@/components/Freezer';
+import { Container } from '@mui/material';
 import * as React from 'react';
 
 export default function Home() {
@@ -12,10 +13,12 @@ export default function Home() {
   ];
 
   return (
-    <>
-      {freezers.map(freezer => (
-        <Freezer freezer={freezer} />
-      ))}
-    </>
+    <Container>
+      <>
+        {freezers.map(freezer => (
+          <Freezer freezer={freezer} />
+        ))}
+      </>
+    </Container>
   );
 }

@@ -306,7 +306,7 @@ const FreezerTable = ({
       },
       {
         accessorKey: 'reserved_for',
-        header: 'Reserviert für',
+        header: 'Reserviert',
         size: 0,
         muiTextFieldProps: () => ({
           type: 'text',
@@ -386,6 +386,7 @@ const FreezerTable = ({
         enableHiding={false}
         enableDensityToggle={false}
         positionToolbarAlertBanner="none"
+        enableBottomToolbar={false}
         onIsFullScreenChange={handleExpandedChange}
         muiTablePaperProps={{
           elevation: 0,
@@ -416,7 +417,7 @@ const FreezerTable = ({
           </Box>
         )}
         renderTopToolbarCustomActions={() => (
-          <Button color="secondary" onClick={handleOpenCreateRecordForm} variant="contained">
+          <Button color="secondary" onClick={handleOpenCreateRecordForm} variant="contained" sx={{ ml: 1 }}>
             Neuer Eintrag
           </Button>
         )}

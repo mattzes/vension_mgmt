@@ -17,7 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body style={{ margin: 0 }}>
         <ThemeRegistry>
           <NavBar />
-          <Container>{children}</Container>
+          {children}
         </ThemeRegistry>
       </body>
     </html>

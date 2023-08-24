@@ -41,7 +41,7 @@ export default function Freezer({ freezer }: { freezer: string }) {
 
   return (
     <>
-      <Card sx={{ m: 1, mt: 3, maxWidth: '100%' }} elevation={7}>
+      <Card sx={{ mt: 3, maxWidth: '100%' }} elevation={7}>
         <Box sx={{ p: 2, display: 'flex' }} onClick={handleExpandClick}>
           <Box>
             <KitchenIcon sx={{ pt: 0.7, mr: 1, fontSize: 28 }} />
@@ -57,7 +57,7 @@ export default function Freezer({ freezer }: { freezer: string }) {
           </Box>
         </Box>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
-          <CardContent>
+          <CardContent sx={{ p: 0, pt: 2 }}>
             <FreezerTable fullscreen={isBelowMd} onExpandedChange={setExpanded} />
           </CardContent>
         </Collapse>
