@@ -1,5 +1,6 @@
+import { PricingTable } from '@/components/pricing/PricingTable';
 import * as React from 'react';
 
 export default function Home() {
-  return <h1>Pricing</h1>;
+  return <PricingTable />;
 }
