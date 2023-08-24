@@ -193,11 +193,6 @@ const FreezerTable = ({
   const columns = useMemo<MyColumnDef[]>(
     () => [
       {
-        accessorKey: 'id',
-        header: 'ID',
-        enableEditing: false,
-      },
-      {
         accessorKey: 'drawer_number',
         header: 'Schublade',
         size: 0,
@@ -325,6 +320,7 @@ const FreezerTable = ({
   }, {} as any);
 
   const handleCreateRecord = (values: Vension) => {
+    console.log(values);
     tableData.push(values);
     setTableData([...tableData]);
   };
@@ -335,11 +331,6 @@ const FreezerTable = ({
   };
 
   const handleOpenCreateRecordForm = () => {
-    columns.reduce((acc, column) => {
-      const defaultValue = column.muiTextFieldProps?.().defaultValue ?? '';
-      acc[column.accessorKey ?? ''] = defaultValue;
-      return acc;
-    }, {} as any);
     setRecordFormOpen(true);
   };
 
@@ -349,6 +340,7 @@ const FreezerTable = ({
   };
 
   const handleSaveRowEdits = (values: Vension) => {
+    console.log(values);
     if (rowToEdit) {
       tableData[rowToEdit.index] = values;
       //send/receive api updates here, then refetch or update local table data for re-render
