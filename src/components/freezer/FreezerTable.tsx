@@ -320,7 +320,6 @@ const FreezerTable = ({
   }, {} as any);
 
   const handleCreateRecord = (values: Vension) => {
-    console.log(values);
     tableData.push(values);
     setTableData([...tableData]);
   };
@@ -340,7 +339,6 @@ const FreezerTable = ({
   };
 
   const handleSaveRowEdits = (values: Vension) => {
-    console.log(values);
     if (rowToEdit) {
       tableData[rowToEdit.index] = values;
       //send/receive api updates here, then refetch or update local table data for re-render
