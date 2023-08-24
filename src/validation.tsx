@@ -53,6 +53,33 @@ const vensionSchema: Record<string, any> = {
   }),
 };
 
+const priceSchema: Record<string, any> = {
+  animal_type: Joi.string()
+    .allow(...animal_types)
+    .required()
+    .messages({
+      'strin.base': 'Bitte gib eine Tierart an.',
+      'string.empty': 'Bitte gib eine Tierart an.',
+      'string.allowOnly': 'Bitte gib eine Tierart an.',
+      'any.required': 'Bitte gib eine Tierart an.',
+    }),
+  meat_type: Joi.string()
+    .allow(...meat_types)
+    .required()
+    .messages({
+      'strin.base': 'Bitte gib eine Fleischart an.',
+      'string.empty': 'Bitte gib eine Fleischart an.',
+      'string.allowOnly': 'Bitte gib eine Fleischart an.',
+      'any.required': 'Bitte gib eine Fleischart an.',
+    }),
+  price: Joi.number().min(0).required().messages({
+    'number.base': 'Bitte gib einen Preis an.',
+    'number.empty': 'Bitte gib einen Preis an.',
+    'number.min': 'Der Preis muss größer als 0 sein.',
+    'any.required': 'Bitte gib einen Preis an.',
+  }),
+};
+
 export const validateVension = (values: Record<string, any>) => {
   const errors: Record<string, any> = {};
   for (const key in values) {
@@ -62,5 +89,20 @@ export const validateVension = (values: Record<string, any>) => {
       errors[key] = error.message;
     }
   }
+  return errors;
+};
+
+export const validatePrice = (values: Record<string, any>) => {
+  const errors: Record<string, any> = {};
+  for (const key in values) {
+    if (!priceSchema[key]) continue;
+    const { error } = priceSchema[key].validate(values[key]);
+    if (error) {
+      errors[key] = error.message;
+    }
+  }
+
+  // check if combination of animal_type and meat_type already exists
+
   return errors;
 };

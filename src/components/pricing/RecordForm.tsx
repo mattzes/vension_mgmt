@@ -11,7 +11,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { validateVension } from '@/validation';
+import { validatePrice } from '@/validation';
 import { MyColumnDef, Price } from './PricingTable';
 
 export const RecordForm = ({
@@ -50,7 +50,7 @@ export const RecordForm = ({
   }, [open]);
 
   const handleSubmit = () => {
-    const errors = validateVension(values);
+    const errors = validatePrice(values);
 
     if (Object.keys(errors).length !== 0) {
       setErrors(errors);
