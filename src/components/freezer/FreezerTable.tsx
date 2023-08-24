@@ -176,7 +176,7 @@ export type MuiTextFieldProps = {
 export type MyColumnDef = MRT_ColumnDef<Vension> & {
   accessorKey: 'id' | 'drawer_number' | 'animal_type' | 'meat_type' | 'weight' | 'count' | 'date' | 'price' | 'reserved_for';
   editable?: boolean;
-  muiTextFieldProps: () => MuiTextFieldProps;
+  muiTextFieldProps?: () => MuiTextFieldProps;
 };
 
 const FreezerTable = ({
@@ -192,6 +192,11 @@ const FreezerTable = ({
 
   const columns = useMemo<MyColumnDef[]>(
     () => [
+      {
+        accessorKey: 'id',
+        header: 'ID',
+        enableEditing: false,
+      },
       {
         accessorKey: 'drawer_number',
         header: 'Schublade',
@@ -299,9 +304,6 @@ const FreezerTable = ({
         accessorKey: 'price',
         header: 'Preis',
         size: 0,
-        muiTextFieldProps: () => ({
-          type: 'number',
-        }),
         Cell: ({ row }) => <>{row.original.price?.toString().replace('.', ',')}€</>,
       },
       {

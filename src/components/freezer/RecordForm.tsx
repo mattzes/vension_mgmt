@@ -93,7 +93,7 @@ export const RecordForm = ({
             {columns.map(column => {
               if (column.editable === false) return null;
 
-              const textFieldProps = column.muiTextFieldProps();
+              const textFieldProps = column.muiTextFieldProps ? column.muiTextFieldProps() : {};
 
               return (
                 <TextField

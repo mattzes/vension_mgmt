@@ -1,4 +1,4 @@
-import Freezer from '@/components/Freezer';
+import Freezer from '@/components/freezer/Freezer';
 import { Container } from '@mui/material';
 import * as React from 'react';
 
