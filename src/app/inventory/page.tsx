@@ -1,4 +1,4 @@
-import Freezer from '@/components/freezer/Freezer';
+import Inventory from '@/components/inventory/Inventory';
 import { Container } from '@mui/material';
 import * as React from 'react';
 
@@ -16,7 +16,7 @@ export default function Home() {
     <Container>
       <>
         {freezers.map(freezer => (
-          <Freezer freezer={freezer} />
+          <Inventory freezer={freezer} />
         ))}
       </>
     </Container>

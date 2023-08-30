@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { MyColumnDef, Vension } from './FreezerTable';
+import { MyColumnDef, Vension } from './InventoryTable';
 import {
   Button,
   Dialog,

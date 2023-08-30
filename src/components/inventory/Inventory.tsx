@@ -15,7 +15,7 @@ import {
 import { useTheme } from '@mui/material/styles';
 import KitchenIcon from '@mui/icons-material/Kitchen';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
-import FreezerTable from './FreezerTable';
+import InventoryTable from './InventoryTable';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -30,7 +30,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
     duration: theme.transitions.duration.shortest,
   }),
 }));
-export default function Freezer({ freezer }: { freezer: string }) {
+export default function Inventory({ freezer }: { freezer: string }) {
   const theme = useTheme();
   const [expanded, setExpanded] = useState(false);
   const isBelowMd = useMediaQuery(theme.breakpoints.down('md'));
@@ -58,7 +58,7 @@ export default function Freezer({ freezer }: { freezer: string }) {
         </Box>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent sx={{ p: 0, pt: 2 }}>
-            <FreezerTable fullscreen={isBelowMd} onExpandedChange={setExpanded} />
+            <InventoryTable fullscreen={isBelowMd} onExpandedChange={setExpanded} />
           </CardContent>
         </Collapse>
       </Card>

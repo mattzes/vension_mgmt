@@ -179,7 +179,7 @@ export type MyColumnDef = MRT_ColumnDef<Vension> & {
   muiTextFieldProps?: () => MuiTextFieldProps;
 };
 
-const FreezerTable = ({
+const InventoryTable = ({
   fullscreen,
   onExpandedChange,
 }: {
@@ -427,4 +427,4 @@ const FreezerTable = ({
   );
 };
 
-export default FreezerTable;
+export default InventoryTable;
