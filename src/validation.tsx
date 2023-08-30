@@ -3,6 +3,8 @@ export const animal_types = ['Reh', 'Wildschwein'];
 export const meat_types = ['Rücken', 'Keule', 'Für Wurst'];
 export const drawer_numbers = ['Nicht zugewiesen', 1, 2, 3, 4, 5, 6];
 
+type Schema = Record<string, any>;
+
 const vensionSchema: Record<string, any> = {
   drawer_number: Joi.alternatives()
     .try(Joi.number().integer().min(0), Joi.string().allow('Nicht Zugewiesen'))
@@ -94,11 +96,11 @@ const freezerSchema: Record<string, any> = {
   }),
 };
 
-export const validateVension = (values: Record<string, any>) => {
+const validateValues = (values: Record<string, any>, schema: Schema) => {
   const errors: Record<string, any> = {};
   for (const key in values) {
-    if (!vensionSchema[key]) continue;
-    const { error } = vensionSchema[key].validate(values[key]);
+    if (!schema[key]) continue;
+    const { error } = schema[key].validate(values[key]);
     if (error) {
       errors[key] = error.message;
     }
@@ -106,15 +108,12 @@ export const validateVension = (values: Record<string, any>) => {
   return errors;
 };
 
+export const validateVension = (values: Record<string, any>) => {
+  return validateValues(values, vensionSchema);
+};
+
 export const validatePrice = (values: Record<string, any>) => {
-  const errors: Record<string, any> = {};
-  for (const key in values) {
-    if (!priceSchema[key]) continue;
-    const { error } = priceSchema[key].validate(values[key]);
-    if (error) {
-      errors[key] = error.message;
-    }
-  }
+  const errors = validateValues(values, priceSchema);
 
   // check if combination of animal_type and meat_type already exists
 
@@ -122,16 +121,5 @@ export const validatePrice = (values: Record<string, any>) => {
 };
 
 export const validateFreezer = (values: Record<string, any>) => {
-  const errors: Record<string, any> = {};
-  for (const key in values) {
-    if (!freezerSchema[key]) continue;
-    const { error } = freezerSchema[key].validate(values[key]);
-    if (error) {
-      errors[key] = error.message;
-    }
-  }
-
-  // check if combination of animal_type and meat_type already exists
-
-  return errors;
+  return validateValues(values, freezerSchema);
 };
