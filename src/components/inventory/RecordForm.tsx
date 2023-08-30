@@ -79,7 +79,7 @@ export const RecordForm = ({
   };
 
   return (
-    <Dialog open={open} onKeyDown={handleKeypress} fullScreen={isFullscreen}>
+    <Dialog open={open} onKeyUp={handleKeypress} fullScreen={isFullscreen}>
       <DialogTitle textAlign="center">{rowToEdit ? 'Eintrag Bearbeiten' : 'Neuen Eintrag erstellen'}</DialogTitle>
       <DialogContent>
         <form onSubmit={e => e.preventDefault()}>
