@@ -21,6 +21,7 @@ import {
   ChevronLeft as ChevronLeftIcon,
   Kitchen as KitchenIcon,
   EuroSymbolRounded as EuroSymbolRoundedIcon,
+  RestaurantRounded as RestaurantRoundedIcon,
 } from '@mui/icons-material';
 import NextLink from 'next/link';
 
@@ -28,11 +29,15 @@ export default function NavBar() {
   const pages = {
     Inventar: {
       path: '/inventory',
-      icon: <KitchenIcon />,
+      icon: <RestaurantRoundedIcon />,
     },
     Preise: {
       path: '/pricing',
       icon: <EuroSymbolRoundedIcon />,
+    },
+    Gefriertruhen: {
+      path: '/freezer',
+      icon: <KitchenIcon />,
     },
   };
 

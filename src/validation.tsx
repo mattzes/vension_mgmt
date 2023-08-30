@@ -80,6 +80,20 @@ const priceSchema: Record<string, any> = {
   }),
 };
 
+const freezerSchema: Record<string, any> = {
+  name: Joi.string().required().messages({
+    'strin.base': 'Bitte gib eine Tierart an.',
+    'string.empty': 'Bitte gib eine Tierart an.',
+    'any.required': 'Bitte gib eine Tierart an.',
+  }),
+  drawer_numbers: Joi.number().min(1).required().messages({
+    'number.base': 'Bitte gib einen Anzahl an.',
+    'number.empty': 'Bitte gib eine Anzahl an.',
+    'number.min': 'Die Anzahl muss größer als 0 sein.',
+    'any.required': 'Bitte gib eine Anzahl an.',
+  }),
+};
+
 export const validateVension = (values: Record<string, any>) => {
   const errors: Record<string, any> = {};
   for (const key in values) {
@@ -97,6 +111,21 @@ export const validatePrice = (values: Record<string, any>) => {
   for (const key in values) {
     if (!priceSchema[key]) continue;
     const { error } = priceSchema[key].validate(values[key]);
+    if (error) {
+      errors[key] = error.message;
+    }
+  }
+
+  // check if combination of animal_type and meat_type already exists
+
+  return errors;
+};
+
+export const validateFreezer = (values: Record<string, any>) => {
+  const errors: Record<string, any> = {};
+  for (const key in values) {
+    if (!freezerSchema[key]) continue;
+    const { error } = freezerSchema[key].validate(values[key]);
     if (error) {
       errors[key] = error.message;
     }
