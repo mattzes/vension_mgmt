@@ -14,7 +14,7 @@ reserved_for varchar
 Table freezer {
 id integer [primary key]
 name varchar
-drawer_count integer
+drawer_numbers integer
 }
 
 Table animal_type {
