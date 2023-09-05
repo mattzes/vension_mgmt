@@ -91,12 +91,14 @@ export const RecordForm = ({
               mt: 1,
             }}>
             {columns.map(column => {
-              if (column.editable === false) return null;
+              if (column.showInForm === false) return null;
 
-              const textFieldProps = column.muiTextFieldProps ? column.muiTextFieldProps() : {};
+              let textFieldProps = column.muiTextFieldProps ? column.muiTextFieldProps() : {};
 
               if (!rowToEdit && (column.accessorKey === 'animal_type' || column.accessorKey === 'meat_type')) {
                 if ('select' in textFieldProps) textFieldProps.select = false;
+              } else if (rowToEdit && (column.accessorKey === 'animal_type' || column.accessorKey === 'meat_type')) {
+                textFieldProps = { ...textFieldProps, disabled: true };
               }
 
               return (

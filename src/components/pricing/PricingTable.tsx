@@ -24,7 +24,7 @@ export type MuiTextFieldProps = {
 
 export type MyColumnDef = MRT_ColumnDef<Price> & {
   accessorKey: 'id' | 'animal_type' | 'meat_type' | 'price';
-  editable?: boolean;
+  showInForm?: boolean;
   muiTextFieldProps?: () => MuiTextFieldProps;
 };
 
@@ -71,7 +71,7 @@ export const PricingTable = () => {
   const columns = useMemo<MyColumnDef[]>(
     () => [
       {
-        editable: true,
+        showInForm: true,
         accessorKey: 'animal_type',
         header: 'Tierart',
         size: 0,
@@ -88,7 +88,7 @@ export const PricingTable = () => {
         }),
       },
       {
-        editable: true,
+        showInForm: true,
         accessorKey: 'meat_type',
         header: 'Fleischart',
         size: 0,
@@ -105,7 +105,7 @@ export const PricingTable = () => {
         }),
       },
       {
-        editable: true,
+        showInForm: true,
         accessorKey: 'price',
         header: 'Preis',
         size: 0,

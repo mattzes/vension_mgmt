@@ -91,7 +91,7 @@ export const RecordForm = ({
               mt: 1,
             }}>
             {columns.map(column => {
-              if (column.editable === false) return null;
+              if (column.showInForm === false) return null;
 
               const textFieldProps = column.muiTextFieldProps ? column.muiTextFieldProps() : {};
 

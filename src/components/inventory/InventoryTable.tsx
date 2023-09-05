@@ -175,7 +175,7 @@ export type MuiTextFieldProps = {
 
 export type MyColumnDef = MRT_ColumnDef<Vension> & {
   accessorKey: 'id' | 'drawer_number' | 'animal_type' | 'meat_type' | 'weight' | 'count' | 'date' | 'price' | 'reserved_for';
-  editable?: boolean;
+  showInForm?: boolean;
   muiTextFieldProps?: () => MuiTextFieldProps;
 };
 
@@ -295,7 +295,7 @@ const InventoryTable = ({
         },
       },
       {
-        editable: false,
+        showInForm: false,
         accessorKey: 'price',
         header: 'Preis',
         size: 0,

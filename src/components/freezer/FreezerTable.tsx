@@ -21,7 +21,7 @@ export type MuiTextFieldProps = {
 
 export type MyColumnDef = MRT_ColumnDef<Freezer> & {
   accessorKey: 'id' | 'name' | 'drawer_numbers';
-  editable?: boolean;
+  showInForm?: boolean;
   muiTextFieldProps?: () => MuiTextFieldProps;
 };
 
@@ -53,7 +53,7 @@ export const FreezerTable = () => {
   const columns = useMemo<MyColumnDef[]>(
     () => [
       {
-        editable: true,
+        showInForm: true,
         accessorKey: 'name',
         header: 'Name',
         size: 0,
@@ -64,7 +64,7 @@ export const FreezerTable = () => {
         }),
       },
       {
-        editable: true,
+        showInForm: true,
         accessorKey: 'drawer_numbers',
         header: 'Anzahl Schubladen',
         size: 0,
