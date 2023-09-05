@@ -16,6 +16,7 @@ import { useTheme } from '@mui/material/styles';
 import KitchenIcon from '@mui/icons-material/Kitchen';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import InventoryTable from './InventoryTable';
+import { Freezer } from '../../general_types';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -30,7 +31,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
     duration: theme.transitions.duration.shortest,
   }),
 }));
-export default function Inventory({ freezer }: { freezer: string }) {
+export default function Inventory({ freezer }: { freezer: Freezer }) {
   const theme = useTheme();
   const [expanded, setExpanded] = useState(false);
   const isBelowMd = useMediaQuery(theme.breakpoints.down('md'));
@@ -47,10 +48,9 @@ export default function Inventory({ freezer }: { freezer: string }) {
             <KitchenIcon sx={{ pt: 0.7, mr: 1, fontSize: 28 }} />
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Typography variant="h5">{freezer}</Typography>
+            <Typography variant="h5">{freezer.name}</Typography>
           </Box>
           <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center' }}>
-            {/* <ExpandMoreRoundedIcon fontSize="large" /> */}
             <ExpandMore sx={{ p: 0 }} expand={expanded} aria-expanded={expanded} aria-label="show more">
               <ExpandMoreRoundedIcon sx={{ fontSize: 30 }} />
             </ExpandMore>
@@ -58,7 +58,7 @@ export default function Inventory({ freezer }: { freezer: string }) {
         </Box>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent sx={{ p: 0, pt: 2 }}>
-            <InventoryTable fullscreen={isBelowMd} onExpandedChange={setExpanded} />
+            <InventoryTable freezer_id={freezer.id} fullscreen={isBelowMd} onExpandedChange={setExpanded} />
           </CardContent>
         </Collapse>
       </Card>

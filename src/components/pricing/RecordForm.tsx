@@ -12,7 +12,8 @@ import {
   useTheme,
 } from '@mui/material';
 import { validatePrice } from '@/validation';
-import { MyColumnDef, Price } from './PricingTable';
+import { MyColumnDef } from './PricingTable';
+import { Price } from '@/general_types';
 
 export const RecordForm = ({
   open,

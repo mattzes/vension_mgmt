@@ -4,48 +4,9 @@ import { MaterialReactTable, MRT_Row, type MRT_ColumnDef } from 'material-react-
 import { Box, Button, Container, IconButton, MenuItem, Tooltip, useMediaQuery, useTheme } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import { RecordForm } from './RecordForm';
-
-export const animals: BasicEntity[] = [
-  {
-    id: 1,
-    name: 'Reh',
-  },
-  {
-    id: 2,
-    name: 'Wildschwein',
-  },
-];
-
-export const meats: BasicEntity[] = [
-  {
-    id: 1,
-    name: 'Rücken',
-  },
-  {
-    id: 2,
-    name: 'Keule',
-  },
-  {
-    id: 3,
-    name: 'Schulter',
-  },
-  {
-    id: 4,
-    name: 'Brust',
-  },
-];
-
-export type Price = {
-  id: number;
-  animal_id: BasicEntity['id'];
-  meat_id: BasicEntity['id'];
-  price: number;
-};
-
-export type BasicEntity = {
-  id: number;
-  name: string;
-};
+import { animals, meats } from '../../mocked_general_data';
+import { Price } from '../../general_types';
+import { prices } from '../../mocked_general_data';
 
 export type MuiTextFieldProps = {
   type: 'number' | 'text';
@@ -61,43 +22,10 @@ export type MyColumnDef = MRT_ColumnDef<Price> & {
 };
 
 export const PricingTable = () => {
-  const data: Price[] = [
-    {
-      id: 1,
-      animal_id: 1,
-      meat_id: 1,
-      price: 10.0,
-    },
-    {
-      id: 2,
-      animal_id: 1,
-      meat_id: 2,
-      price: 15.0,
-    },
-    {
-      id: 3,
-      animal_id: 2,
-      meat_id: 3,
-      price: 8.5,
-    },
-    {
-      id: 4,
-      animal_id: 2,
-      meat_id: 4,
-      price: 5.0,
-    },
-    {
-      id: 5,
-      animal_id: 1,
-      meat_id: 5,
-      price: 7.5,
-    },
-  ];
-
   const theme = useTheme();
   const disableGutters = useMediaQuery(() => theme.breakpoints.down('md'));
   const [createRecordOpen, setRecordFormOpen] = useState(false);
-  const [tableData, setTableData] = useState<Price[]>(data);
+  const [tableData, setTableData] = useState<Price[]>(prices);
   const [rowToEdit, setRowToEdit] = useState<MRT_Row<Price> | null>(null);
 
   const columns = useMemo<MyColumnDef[]>(

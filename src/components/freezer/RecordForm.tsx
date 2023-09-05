@@ -12,7 +12,8 @@ import {
   useTheme,
 } from '@mui/material';
 import { validateFreezer } from '@/validation';
-import { MyColumnDef, Freezer } from './FreezerTable';
+import { MyColumnDef } from './FreezerTable';
+import { type Freezer } from '../../general_types';
 
 export const RecordForm = ({
   open,

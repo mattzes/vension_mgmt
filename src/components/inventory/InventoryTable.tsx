@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { MaterialReactTable, type MaterialReactTableProps, type MRT_ColumnDef, type MRT_Row } from 'material-react-table';
+import { MaterialReactTable, type MRT_ColumnDef, type MRT_Row } from 'material-react-table';
 import { Box, Button, IconButton, MenuItem, Tooltip } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import { RecordForm } from './RecordForm';
@@ -180,9 +180,11 @@ export type MyColumnDef = MRT_ColumnDef<Vension> & {
 };
 
 const InventoryTable = ({
+  freezer_id,
   fullscreen,
   onExpandedChange,
 }: {
+  freezer_id: number;
   fullscreen: boolean;
   onExpandedChange?: (expanded: boolean) => void;
 }) => {

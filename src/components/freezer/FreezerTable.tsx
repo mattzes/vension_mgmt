@@ -4,15 +4,8 @@ import { MaterialReactTable, MRT_Row, type MRT_ColumnDef } from 'material-react-
 import { Box, Button, Container, IconButton, MenuItem, Tooltip, useMediaQuery, useTheme } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import { RecordForm } from './RecordForm';
-
-export const animal_types = ['Reh', 'Wildschwein'];
-export const meat_types = ['Rücken', 'Keule', 'Für Wurst'];
-
-export type Freezer = {
-  id: number;
-  name: string;
-  drawer_numbers: number;
-};
+import { type Freezer } from '../../general_types';
+import { freezers } from '../../mocked_general_data';
 
 export type MuiTextFieldProps = {
   type: 'number' | 'text';
@@ -26,28 +19,10 @@ export type MyColumnDef = MRT_ColumnDef<Freezer> & {
 };
 
 export const FreezerTable = () => {
-  const data: Freezer[] = [
-    {
-      id: 1,
-      name: 'Gefrierschrank 1',
-      drawer_numbers: 10,
-    },
-    {
-      id: 2,
-      name: 'Gefrierschrank 2',
-      drawer_numbers: 15,
-    },
-    {
-      id: 3,
-      name: 'Gefrierschrank 3',
-      drawer_numbers: 8,
-    },
-  ];
-
   const theme = useTheme();
   const disableGutters = useMediaQuery(() => theme.breakpoints.down('md'));
   const [createRecordOpen, setRecordFormOpen] = useState(false);
-  const [tableData, setTableData] = useState<Freezer[]>(data);
+  const [tableData, setTableData] = useState<Freezer[]>(freezers);
   const [rowToEdit, setRowToEdit] = useState<MRT_Row<Freezer> | null>(null);
 
   const columns = useMemo<MyColumnDef[]>(
