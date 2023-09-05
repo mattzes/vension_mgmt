@@ -3,166 +3,178 @@ import { MaterialReactTable, type MRT_ColumnDef, type MRT_Row } from 'material-r
 import { Box, Button, IconButton, MenuItem, Tooltip } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import { RecordForm } from './RecordForm';
+import { animals, meats, prices } from '../../mocked_general_data';
+import { Freezer, Price, BasicEntity } from '@/general_types';
 
 export const data: Vension[] = [
   {
     id: 1,
+    freezer_id: 1,
     drawer_number: 'Nicht zugewiesen',
-    animal_type: 'Reh',
-    meat_type: 'Rücken',
+    animal_id: 1,
+    meat_id: 2,
     weight: 380,
     count: 2,
     date: new Date().toISOString().split('T')[0].split('-').slice(0, 2).join('-'),
-    price: 17.8,
+    price_id: 1,
     reserved_for: '',
   },
   {
     id: 8,
+    freezer_id: 1,
     drawer_number: 'Nicht zugewiesen',
-    animal_type: 'Reh',
-    meat_type: 'Rücken',
+    animal_id: 1,
+    meat_id: 2,
     weight: 600,
     count: 2,
     date: new Date().toISOString().split('T')[0].split('-').slice(0, 2).join('-'),
-    price: 13.5,
+    price_id: 3,
     reserved_for: '',
   },
   {
     id: 9,
+    freezer_id: 1,
     drawer_number: 4,
-    animal_type: 'Wildschwein',
-    meat_type: 'Keule',
+    animal_id: 2,
+    meat_id: 1,
     weight: 1100,
     count: 1,
     date: new Date().toISOString().split('T')[0].split('-').slice(0, 2).join('-'),
-    price: 19.0,
+    price_id: 1,
     reserved_for: 'Hans',
   },
   {
     id: 10,
+    freezer_id: 1,
     drawer_number: 1,
-    animal_type: 'Reh',
-    meat_type: 'Für Wurst',
+    animal_id: 1,
+    meat_id: 4,
     weight: 340,
     count: 3,
     date: new Date().toISOString().split('T')[0].split('-').slice(0, 2).join('-'),
-    price: 9.8,
+    price_id: 2,
     reserved_for: '',
   },
   {
     id: 11,
+    freezer_id: 1,
     drawer_number: 3,
-    animal_type: 'Wildschwein',
-    meat_type: 'Rücken',
+    animal_id: 2,
+    meat_id: 2,
     weight: 850,
     count: 2,
     date: new Date().toISOString().split('T')[0].split('-').slice(0, 2).join('-'),
-    price: 14.2,
+    price_id: 4,
     reserved_for: '',
   },
   {
     id: 12,
+    freezer_id: 1,
     drawer_number: 5,
-    animal_type: 'Reh',
-    meat_type: 'Keule',
+    animal_id: 1,
+    meat_id: 1,
     weight: 920,
     count: 1,
     date: new Date().toISOString().split('T')[0].split('-').slice(0, 2).join('-'),
-    price: 15.8,
+    price_id: 5,
     reserved_for: 'Silke',
   },
   {
     id: 13,
+    freezer_id: 1,
     drawer_number: 2,
-    animal_type: 'Wildschwein',
-    meat_type: 'Für Wurst',
+    animal_id: 2,
+    meat_id: 4,
     weight: 380,
     count: 4,
     date: new Date().toISOString().split('T')[0].split('-').slice(0, 2).join('-'),
-    price: 10.5,
+    price_id: 3,
     reserved_for: 'Hans',
   },
   {
     id: 14,
+    freezer_id: 1,
     drawer_number: 6,
-    animal_type: 'Reh',
-    meat_type: 'Rücken',
+    animal_id: 1,
+    meat_id: 2,
     weight: 550,
     count: 2,
     date: new Date().toISOString().split('T')[0].split('-').slice(0, 2).join('-'),
-    price: 12.9,
+    price_id: 2,
     reserved_for: '',
   },
   {
     id: 15,
+    freezer_id: 1,
     drawer_number: 'Nicht zugewiesen',
-    animal_type: 'Wildschwein',
-    meat_type: 'Keule',
+    animal_id: 2,
+    meat_id: 1,
     weight: 1050,
     count: 1,
     date: new Date().toISOString().split('T')[0].split('-').slice(0, 2).join('-'),
-    price: 18.5,
+    price_id: 1,
     reserved_for: 'Silke',
   },
   {
     id: 16,
+    freezer_id: 1,
     drawer_number: 4,
-    animal_type: 'Reh',
-    meat_type: 'Für Wurst',
+    animal_id: 1,
+    meat_id: 4,
     weight: 310,
     count: 3,
     date: new Date().toISOString().split('T')[0].split('-').slice(0, 2).join('-'),
-    price: 9.1,
+    price_id: 3,
     reserved_for: '',
   },
   {
     id: 17,
+    freezer_id: 1,
     drawer_number: 1,
-    animal_type: 'Wildschwein',
-    meat_type: 'Rücken',
+    animal_id: 2,
+    meat_id: 2,
     weight: 820,
     count: 2,
     date: new Date().toISOString().split('T')[0].split('-').slice(0, 2).join('-'),
-    price: 13.7,
+    price_id: 2,
     reserved_for: 'Hans',
   },
   {
     id: 18,
+    freezer_id: 1,
     drawer_number: 3,
-    animal_type: 'Reh',
-    meat_type: 'Keule',
+    animal_id: 1,
+    meat_id: 1,
     weight: 900,
     count: 1,
     date: new Date().toISOString().split('T')[0].split('-').slice(0, 2).join('-'),
-    price: 16.0,
+    price_id: 1,
     reserved_for: 'Silke',
   },
   {
     id: 19,
+    freezer_id: 1,
     drawer_number: 5,
-    animal_type: 'Wildschwein',
-    meat_type: 'Für Wurst',
+    animal_id: 2,
+    meat_id: 4,
     weight: 400,
     count: 4,
     date: new Date().toISOString().split('T')[0].split('-').slice(0, 2).join('-'),
-    price: 10.8,
+    price_id: 4,
     reserved_for: '',
   },
 ];
 
-export const animal_types = ['Reh', 'Wildschwein'];
-export const meat_types = ['Rücken', 'Keule', 'Für Wurst'];
-export const drawer_numbers = ['Nicht zugewiesen', 1, 2, 3, 4, 5, 6];
-
 export type Vension = {
   id: number;
+  freezer_id: number;
   drawer_number: number | string;
-  animal_type: string;
-  meat_type: string;
+  animal_id: BasicEntity['id'];
+  meat_id: BasicEntity['id'];
   weight: number;
   count: number;
   date: string;
-  price: number;
+  price_id: Price['id'];
   reserved_for: string;
 };
 
@@ -174,20 +186,24 @@ export type MuiTextFieldProps = {
 };
 
 export type MyColumnDef = MRT_ColumnDef<Vension> & {
-  accessorKey: 'id' | 'drawer_number' | 'animal_type' | 'meat_type' | 'weight' | 'count' | 'date' | 'price' | 'reserved_for';
+  accessorKey: 'drawer_number' | 'animal_id' | 'meat_id' | 'weight' | 'count' | 'date' | 'price_id' | 'reserved_for';
   showInForm?: boolean;
   muiTextFieldProps?: () => MuiTextFieldProps;
 };
 
 const InventoryTable = ({
-  freezer_id,
+  freezer,
   fullscreen,
   onExpandedChange,
 }: {
-  freezer_id: number;
+  freezer: Freezer;
   fullscreen: boolean;
   onExpandedChange?: (expanded: boolean) => void;
 }) => {
+  const drawer_numbers: Array<string | number> = ['Nicht zugewiesen'];
+  for (let i = 1; i <= freezer.drawer_numbers; i++) {
+    drawer_numbers.push(i);
+  }
   const [createRecordOpen, setRecordFormOpen] = useState(false);
   const [tableData, setTableData] = useState<Vension[]>(data);
   const [rowToEdit, setRowToEdit] = useState<MRT_Row<Vension> | null>(null);
@@ -216,7 +232,7 @@ const InventoryTable = ({
         ),
       },
       {
-        accessorKey: 'animal_type',
+        accessorKey: 'animal_id',
         header: 'Tierart',
         size: 0,
         muiTextFieldProps: () => ({
@@ -224,15 +240,16 @@ const InventoryTable = ({
           type: 'text',
           select: true, //change to select for a dropdown
           defaultValue: '',
-          children: animal_types.map(animal_type => (
-            <MenuItem key={animal_type} value={animal_type}>
-              {animal_type}
+          children: animals.map(animal => (
+            <MenuItem key={animal.id} value={animal.id}>
+              {animal.name}
             </MenuItem>
           )),
         }),
+        Cell: ({ row }) => <>{animals.find(animal => animal.id === row.original.animal_id)?.name}</>,
       },
       {
-        accessorKey: 'meat_type',
+        accessorKey: 'meat_id',
         header: 'Fleischart',
         size: 0,
         muiTextFieldProps: () => ({
@@ -240,12 +257,13 @@ const InventoryTable = ({
           required: true,
           type: 'text',
           select: true, //change to select for a dropdown
-          children: meat_types.map(meat_type => (
-            <MenuItem key={meat_type} value={meat_type}>
-              {meat_type}
+          children: meats.map(meats => (
+            <MenuItem key={meats.id} value={meats.id}>
+              {meats.name}
             </MenuItem>
           )),
         }),
+        Cell: ({ row }) => <>{meats.find(meat => meat.id === row.original.animal_id)?.name}</>,
       },
       {
         accessorKey: 'weight',
@@ -298,10 +316,14 @@ const InventoryTable = ({
       },
       {
         showInForm: false,
-        accessorKey: 'price',
+        accessorKey: 'price_id',
         header: 'Preis',
         size: 0,
-        Cell: ({ row }) => <>{row.original.price?.toString().replace('.', ',')}€</>,
+        Cell: ({ row }) => {
+          const price = prices.find(price => price.id === row.original.price_id);
+          const displayPrice = (price ? price.price : '').toString().replace('.', ',');
+          return <>{displayPrice}€</>;
+        },
       },
       {
         accessorKey: 'reserved_for',
