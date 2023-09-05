@@ -5,14 +5,46 @@ import { Box, Button, Container, IconButton, MenuItem, Tooltip, useMediaQuery, u
 import { Delete, Edit } from '@mui/icons-material';
 import { RecordForm } from './RecordForm';
 
-export const animal_types = ['Reh', 'Wildschwein'];
-export const meat_types = ['Rücken', 'Keule', 'Für Wurst'];
+export const animals: BasicEntity[] = [
+  {
+    id: 1,
+    name: 'Reh',
+  },
+  {
+    id: 2,
+    name: 'Wildschwein',
+  },
+];
+
+export const meats: BasicEntity[] = [
+  {
+    id: 1,
+    name: 'Rücken',
+  },
+  {
+    id: 2,
+    name: 'Keule',
+  },
+  {
+    id: 3,
+    name: 'Schulter',
+  },
+  {
+    id: 4,
+    name: 'Brust',
+  },
+];
 
 export type Price = {
   id: number;
-  animal_type: string;
-  meat_type: string;
+  animal_id: BasicEntity['id'];
+  meat_id: BasicEntity['id'];
   price: number;
+};
+
+export type BasicEntity = {
+  id: number;
+  name: string;
 };
 
 export type MuiTextFieldProps = {
@@ -23,7 +55,7 @@ export type MuiTextFieldProps = {
 };
 
 export type MyColumnDef = MRT_ColumnDef<Price> & {
-  accessorKey: 'id' | 'animal_type' | 'meat_type' | 'price';
+  accessorKey: 'id' | 'animal_id' | 'meat_id' | 'price';
   showInForm?: boolean;
   muiTextFieldProps?: () => MuiTextFieldProps;
 };
@@ -32,32 +64,32 @@ export const PricingTable = () => {
   const data: Price[] = [
     {
       id: 1,
-      animal_type: 'Reh',
-      meat_type: 'Rücken',
+      animal_id: 1,
+      meat_id: 1,
       price: 10.0,
     },
     {
       id: 2,
-      animal_type: 'Hirsch',
-      meat_type: 'Keule',
+      animal_id: 1,
+      meat_id: 2,
       price: 15.0,
     },
     {
       id: 3,
-      animal_type: 'Wildschwein',
-      meat_type: 'Schulter',
+      animal_id: 2,
+      meat_id: 3,
       price: 8.5,
     },
     {
       id: 4,
-      animal_type: 'Fasan',
-      meat_type: 'Brust',
+      animal_id: 2,
+      meat_id: 4,
       price: 5.0,
     },
     {
       id: 5,
-      animal_type: 'Wildente',
-      meat_type: 'Keule',
+      animal_id: 1,
+      meat_id: 5,
       price: 7.5,
     },
   ];
@@ -72,7 +104,7 @@ export const PricingTable = () => {
     () => [
       {
         showInForm: true,
-        accessorKey: 'animal_type',
+        accessorKey: 'animal_id',
         header: 'Tierart',
         size: 0,
         muiTextFieldProps: () => ({
@@ -80,16 +112,17 @@ export const PricingTable = () => {
           type: 'text',
           defaultValue: '',
           select: true, //change to select for a dropdown
-          children: animal_types.map(animal_type => (
-            <MenuItem key={animal_type} value={animal_type}>
-              {animal_type}
+          children: animals.map(animal => (
+            <MenuItem key={animal.id} value={animal.id}>
+              {animal.name}
             </MenuItem>
           )),
         }),
+        Cell: ({ row }) => <>{animals.find(animal => animal.id === row.original.animal_id)?.name}</>,
       },
       {
         showInForm: true,
-        accessorKey: 'meat_type',
+        accessorKey: 'meat_id',
         header: 'Fleischart',
         size: 0,
         muiTextFieldProps: () => ({
@@ -97,12 +130,13 @@ export const PricingTable = () => {
           required: true,
           type: 'text',
           select: true, //change to select for a dropdown
-          children: meat_types.map(meat_type => (
-            <MenuItem key={meat_type} value={meat_type}>
-              {meat_type}
+          children: meats.map(meat => (
+            <MenuItem key={meat.id} value={meat.id}>
+              {meat.name}
             </MenuItem>
           )),
         }),
+        Cell: ({ row }) => <>{meats.find(meat => meat.id === row.original.animal_id)?.name}</>,
       },
       {
         showInForm: true,
