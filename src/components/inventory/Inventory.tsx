@@ -58,7 +58,7 @@ export default function Inventory({ freezer }: { freezer: Freezer }) {
         </Box>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent sx={{ p: 0, pt: 2 }}>
-            <InventoryTable freezer={freezer} fullscreen={isBelowMd} onExpandedChange={setExpanded} />
+            <InventoryTable freezer={freezer} fullscreen={isBelowMd} />
           </CardContent>
         </Collapse>
       </Card>

@@ -191,15 +191,7 @@ export type MyColumnDef = MRT_ColumnDef<Vension> & {
   muiTextFieldProps?: () => MuiTextFieldProps;
 };
 
-const InventoryTable = ({
-  freezer,
-  fullscreen,
-  onExpandedChange,
-}: {
-  freezer: Freezer;
-  fullscreen: boolean;
-  onExpandedChange?: (expanded: boolean) => void;
-}) => {
+const InventoryTable = ({ freezer, fullscreen }: { freezer: Freezer; fullscreen: boolean }) => {
   const drawer_numbers: Array<string | number> = ['Nicht zugewiesen'];
   for (let i = 1; i <= freezer.drawer_numbers; i++) {
     drawer_numbers.push(i);
@@ -384,10 +376,6 @@ const InventoryTable = ({
     [tableData]
   );
 
-  const handleExpandedChange = () => {
-    onExpandedChange?.(false);
-  };
-
   return (
     <>
       <MaterialReactTable
@@ -403,7 +391,7 @@ const InventoryTable = ({
         enableDensityToggle={false}
         positionToolbarAlertBanner="none"
         enableBottomToolbar={false}
-        onIsFullScreenChange={handleExpandedChange}
+        enableFullScreenToggle={true}
         muiTablePaperProps={{
           elevation: 0,
         }}
