@@ -33,7 +33,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 }));
 export default function Inventory({ freezer }: { freezer: Freezer }) {
   const theme = useTheme();
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState(false);
   const isBelowMd = useMediaQuery(theme.breakpoints.down('md'));
 
   const handleExpandClick = () => {
