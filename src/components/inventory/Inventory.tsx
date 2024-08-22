@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   Box,
   Card,
@@ -17,6 +17,7 @@ import KitchenIcon from '@mui/icons-material/Kitchen';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import InventoryTable from './InventoryTable';
 import { Freezer } from '../../general_types';
+import { data_1, data_2, data_3 } from '../../mocked_general_data';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -58,7 +59,13 @@ export default function Inventory({ freezer }: { freezer: Freezer }) {
         </Box>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent sx={{ p: 0, pt: 2 }}>
-            <InventoryTable freezer={freezer} fullscreen={isBelowMd} />
+            {freezer.id === 1 ? (
+              <InventoryTable freezer={freezer} data={data_1} fullscreen={isBelowMd} />
+            ) : freezer.id === 2 ? (
+              <InventoryTable freezer={freezer} data={data_2} fullscreen={isBelowMd} />
+            ) : freezer.id === 3 ? (
+              <InventoryTable freezer={freezer} data={data_3} fullscreen={isBelowMd} />
+            ) : null}
           </CardContent>
         </Collapse>
       </Card>

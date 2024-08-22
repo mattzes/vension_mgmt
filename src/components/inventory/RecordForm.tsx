@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { MyColumnDef, Vension } from './InventoryTable';
+import { MyColumnDef } from './InventoryTable';
 import {
   Button,
   Dialog,
@@ -12,6 +12,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
+import { Vension } from '@/general_types';
 import { validateVension } from '@/validation';
 
 export const RecordForm = ({
