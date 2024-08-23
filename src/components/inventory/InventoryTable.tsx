@@ -4,7 +4,7 @@ import { Box, Button, IconButton, MenuItem, Tooltip } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import { RecordForm } from '@/components/inventory/RecordForm';
 import { animals, meats, prices } from '@/mocked_general_data';
-import { Freezer, Vension } from '@/general_types';
+import { Freezer, Vension, FreezerData } from '@/general_types';
 import { FreezerContext } from '@/app/context/FreezerContext';
 
 export type MuiTextFieldProps = {
@@ -29,13 +29,22 @@ export type MyColumnDef = MRT_ColumnDef<Vension> & {
   muiTextFieldProps?: () => MuiTextFieldProps;
 };
 
-const InventoryTable = ({ freezer, data, fullscreen }: { freezer: Freezer; data: Vension[]; fullscreen: boolean }) => {
+const InventoryTable = ({
+  freezer,
+  freezerData,
+  setFreezerData,
+  fullscreen,
+}: {
+  freezer: Freezer;
+  freezerData: FreezerData;
+  setFreezerData: (data: FreezerData) => void;
+  fullscreen: boolean;
+}) => {
   const drawer_numbers: Array<string | number> = ['Nicht zugewiesen'];
   for (let i = 1; i <= freezer.drawer_numbers; i++) {
     drawer_numbers.push(i);
   }
   const [createRecordOpen, setRecordFormOpen] = useState(false);
-  const [tableData, setTableData] = useState<Vension[]>(data);
   const [rowToEdit, setRowToEdit] = useState<MRT_Row<Vension> | null>(null);
   const freezers = useContext(FreezerContext);
 
@@ -191,8 +200,19 @@ const InventoryTable = ({ freezer, data, fullscreen }: { freezer: Freezer; data:
   }, {} as any);
 
   const handleCreateRecord = (values: Vension) => {
-    tableData.push(values);
-    setTableData([...tableData]);
+    // Create a new copy of the freezerData object
+    const updatedData = { ...freezerData };
+
+    // Ensure the array for the specific freezer ID exists
+    if (!updatedData[freezer.id]) {
+      updatedData[freezer.id] = [];
+    }
+
+    // Create a new array with the new vension added
+    updatedData[freezer.id] = [...updatedData[freezer.id], values];
+
+    // Update the state with the new data
+    setFreezerData(updatedData);
   };
 
   const handleOnCloseForm = () => {
@@ -211,9 +231,27 @@ const InventoryTable = ({ freezer, data, fullscreen }: { freezer: Freezer; data:
 
   const handleSaveRowEdits = (values: Vension) => {
     if (rowToEdit) {
-      tableData[rowToEdit.index] = values;
-      //send/receive api updates here, then refetch or update local table data for re-render
-      setTableData([...tableData]);
+      const updatedFreezerData = { ...freezerData };
+
+      // Create a new array for the specific freezer ID
+      const updatedVensions = updatedFreezerData[freezer.id].map(vension =>
+        vension.id === rowToEdit.original.id ? values : vension
+      );
+
+      updatedFreezerData[freezer.id] = updatedVensions;
+
+      // Check if the vension need to be moved to another freezer
+      if (values.freezer_id !== rowToEdit.original.freezer_id) {
+        // Create a new array for the new freezer ID
+        const newFreezerVensions = updatedFreezerData[values.freezer_id];
+        newFreezerVensions.push(values);
+        updatedFreezerData[values.freezer_id] = newFreezerVensions;
+
+        // Remove the vension from the old freezer ID
+        updatedFreezerData[freezer.id] = updatedVensions.filter(vension => vension.id !== values.id);
+      }
+
+      setFreezerData(updatedFreezerData);
     } else {
       throw new Error("Can't save edits, no row to edit");
     }
@@ -225,17 +263,20 @@ const InventoryTable = ({ freezer, data, fullscreen }: { freezer: Freezer; data:
         return;
       }
       //send api delete request here, then refetch or update local table data for re-render
-      tableData.splice(row.index, 1);
-      setTableData([...tableData]);
+
+      // delete the row from the freezer data
+      const updatedFreezerData = { ...freezerData };
+      updatedFreezerData[freezer.id] = updatedFreezerData[freezer.id].filter(vension => vension.id !== row.original.id);
+      setFreezerData(updatedFreezerData);
     },
-    [tableData]
+    [freezerData]
   );
 
   return (
     <>
       <MaterialReactTable
         columns={columns}
-        data={tableData}
+        data={freezerData[freezer.id] ?? []}
         editingMode="modal"
         enableGrouping
         enableEditing

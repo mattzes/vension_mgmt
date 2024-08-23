@@ -28,3 +28,5 @@ export type Vension = {
   price_id: Price['id'];
   reserved_for: string;
 };
+
+export type FreezerData = Record<number, Vension[]>;
