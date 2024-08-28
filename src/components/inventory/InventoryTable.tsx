@@ -5,7 +5,7 @@ import { Delete, Edit } from '@mui/icons-material';
 import { RecordForm } from '@/components/inventory/RecordForm';
 import { animals, meats, prices } from '@/mocked_general_data';
 import { Vension } from '@/general_types';
-import { FreezerContext } from '@/app/context/FreezerContext';
+import { FreezerContext } from '@/context/FreezerContext';
 
 export type MuiTextFieldProps = {
   type: 'number' | 'text' | 'month';
