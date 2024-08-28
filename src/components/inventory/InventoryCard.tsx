@@ -16,7 +16,7 @@ import { useTheme } from '@mui/material/styles';
 import KitchenIcon from '@mui/icons-material/Kitchen';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import InventoryTable from './InventoryTable';
-import { FreezerContext } from '../../app/context/FreezerContext';
+import { FreezerContext } from '../../context/FreezerContext';
 import { Freezer } from '@/general_types';
 
 interface ExpandMoreProps extends IconButtonProps {
