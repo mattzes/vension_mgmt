@@ -4,7 +4,7 @@ import { Box, Button, IconButton, MenuItem, Tooltip } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import { RecordForm } from '@/components/inventory/RecordForm';
 import { animals, meats, prices } from '@/mocked_general_data';
-import { Freezer, Vension, FreezerData } from '@/general_types';
+import { Vension } from '@/general_types';
 import { FreezerContext } from '@/app/context/FreezerContext';
 
 export type MuiTextFieldProps = {
@@ -29,24 +29,15 @@ export type MyColumnDef = MRT_ColumnDef<Vension> & {
   muiTextFieldProps?: () => MuiTextFieldProps;
 };
 
-const InventoryTable = ({
-  freezer,
-  freezerData,
-  setFreezerData,
-  fullscreen,
-}: {
-  freezer: Freezer;
-  freezerData: FreezerData;
-  setFreezerData: (data: FreezerData) => void;
-  fullscreen: boolean;
-}) => {
+const InventoryTable = ({ freezerId, fullscreen }: { freezerId: number; fullscreen: boolean }) => {
+  const { freezers, addVension, deleteVension, updateVension } = useContext(FreezerContext);
+  const freezer = freezers.find(freezer => freezer.id === freezerId) ?? { id: 0, drawer_numbers: 0, vensions: [] };
   const drawer_numbers: Array<string | number> = ['Nicht zugewiesen'];
-  for (let i = 1; i <= freezer.drawer_numbers; i++) {
+  for (let i = 1; freezer && i <= freezer.drawer_numbers; i++) {
     drawer_numbers.push(i);
   }
   const [createRecordOpen, setRecordFormOpen] = useState(false);
   const [rowToEdit, setRowToEdit] = useState<MRT_Row<Vension> | null>(null);
-  const freezers = useContext(FreezerContext);
 
   const columns = useMemo<MyColumnDef[]>(
     () => [
@@ -198,22 +189,7 @@ const InventoryTable = ({
     acc[column.accessorKey ?? ''] = defaultValue;
     return acc;
   }, {} as any);
-
-  const handleCreateRecord = (values: Vension) => {
-    // Create a new copy of the freezerData object
-    const updatedData = { ...freezerData };
-
-    // Ensure the array for the specific freezer ID exists
-    if (!updatedData[freezer.id]) {
-      updatedData[freezer.id] = [];
-    }
-
-    // Create a new array with the new vension added
-    updatedData[freezer.id] = [...updatedData[freezer.id], values];
-
-    // Update the state with the new data
-    setFreezerData(updatedData);
-  };
+  defaultValues.freezer_id = freezer.id;
 
   const handleOnCloseForm = () => {
     setRecordFormOpen(false);
@@ -231,52 +207,15 @@ const InventoryTable = ({
 
   const handleSaveRowEdits = (values: Vension) => {
     if (rowToEdit) {
-      const updatedFreezerData = { ...freezerData };
-
-      // Create a new array for the specific freezer ID
-      const updatedVensions = updatedFreezerData[freezer.id].map(vension =>
-        vension.id === rowToEdit.original.id ? values : vension
-      );
-
-      updatedFreezerData[freezer.id] = updatedVensions;
-
-      // Check if the vension need to be moved to another freezer
-      if (values.freezer_id !== rowToEdit.original.freezer_id) {
-        // Create a new array for the new freezer ID
-        const newFreezerVensions = updatedFreezerData[values.freezer_id];
-        newFreezerVensions.push(values);
-        updatedFreezerData[values.freezer_id] = newFreezerVensions;
-
-        // Remove the vension from the old freezer ID
-        updatedFreezerData[freezer.id] = updatedVensions.filter(vension => vension.id !== values.id);
-      }
-
-      setFreezerData(updatedFreezerData);
-    } else {
-      throw new Error("Can't save edits, no row to edit");
+      updateVension(freezer.id, values);
     }
   };
-
-  const handleDeleteRow = useCallback(
-    (row: MRT_Row<Vension>) => {
-      if (!confirm('Bist du sicher, dass du diesen Eintrag löschen möchtest?')) {
-        return;
-      }
-      //send api delete request here, then refetch or update local table data for re-render
-
-      // delete the row from the freezer data
-      const updatedFreezerData = { ...freezerData };
-      updatedFreezerData[freezer.id] = updatedFreezerData[freezer.id].filter(vension => vension.id !== row.original.id);
-      setFreezerData(updatedFreezerData);
-    },
-    [freezerData]
-  );
 
   return (
     <>
       <MaterialReactTable
         columns={columns}
-        data={freezerData[freezer.id] ?? []}
+        data={freezer.vensions}
         editingMode="modal"
         enableGrouping
         enableEditing
@@ -311,7 +250,7 @@ const InventoryTable = ({
               </IconButton>
             </Tooltip>
             <Tooltip arrow placement="right" title="Löschen">
-              <IconButton color="error" onClick={() => handleDeleteRow(row)}>
+              <IconButton color="error" onClick={() => deleteVension(freezerId, row.original.id)}>
                 <Delete />
               </IconButton>
             </Tooltip>
@@ -330,7 +269,7 @@ const InventoryTable = ({
         open={createRecordOpen}
         onClose={handleOnCloseForm}
         onUpdate={handleSaveRowEdits}
-        onSubmit={handleCreateRecord}
+        onSubmit={addVension}
       />
     </>
   );

@@ -7,6 +7,7 @@ export type Freezer = {
   id: number;
   name: string;
   drawer_numbers: number;
+  vensions: Vension[];
 };
 
 export type Price = {
@@ -28,5 +29,3 @@ export type Vension = {
   price_id: Price['id'];
   reserved_for: string;
 };
-
-export type FreezerData = Record<number, Vension[]>;
