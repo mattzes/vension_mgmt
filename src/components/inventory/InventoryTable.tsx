@@ -267,6 +267,7 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: number; fullscre
         rowToEdit={rowToEdit?.original ?? null}
         defaultValues={defaultValues}
         open={createRecordOpen}
+        freezers={freezers}
         onClose={handleOnCloseForm}
         onUpdate={handleSaveRowEdits}
         onSubmit={addVension}

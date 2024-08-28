@@ -11,8 +11,9 @@ import {
   TextField,
   useMediaQuery,
   useTheme,
+  MenuItem,
 } from '@mui/material';
-import { Vension } from '@/general_types';
+import { Vension, Freezer } from '@/general_types';
 import { validateVension } from '@/validation';
 
 export const RecordForm = ({
@@ -20,6 +21,7 @@ export const RecordForm = ({
   columns,
   rowToEdit,
   defaultValues,
+  freezers,
   onClose,
   onUpdate,
   onSubmit,
@@ -28,6 +30,7 @@ export const RecordForm = ({
   columns: MyColumnDef[];
   rowToEdit: Vension | null;
   defaultValues: Vension;
+  freezers: Freezer[];
   onClose: () => void;
   onUpdate: (values: Vension) => void;
   onSubmit: (values: Vension) => void;
@@ -37,6 +40,7 @@ export const RecordForm = ({
     else return defaultValues;
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [columnsState, setColumnsState] = useState<MyColumnDef[]>(columns);
   const theme = useTheme();
   const isFullscreen = useMediaQuery(() => theme.breakpoints.down('sm'));
 
@@ -71,6 +75,35 @@ export const RecordForm = ({
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // update drawer number menu items if freezer_id changes
+    if (e.target.name === 'freezer_id') {
+      const freezer = freezers.find(freezer => freezer.id === Number(e.target.value));
+      const drawer_numbers: Array<string | number> = ['Nicht zugewiesen'];
+      for (let i = 1; freezer && i <= freezer.drawer_numbers; i++) {
+        drawer_numbers.push(i);
+      }
+      setColumnsState(
+        columnsState.map(column => {
+          if (column.accessorKey === 'drawer_number') {
+            return {
+              ...column,
+              muiTextFieldProps: () => ({
+                type: 'number',
+                select: true,
+                defaultValue: 'Nicht zugewiesen',
+                children: drawer_numbers.map(drawer_number => (
+                  <MenuItem key={drawer_number} value={drawer_number}>
+                    {drawer_number}
+                  </MenuItem>
+                )),
+              }),
+            };
+          }
+          return column;
+        })
+      );
+    }
+
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
@@ -91,7 +124,7 @@ export const RecordForm = ({
               gap: 3,
               mt: 1,
             }}>
-            {columns.map(column => {
+            {columnsState.map(column => {
               if (column.showInForm === false) return null;
 
               const textFieldProps = column.muiTextFieldProps ? column.muiTextFieldProps() : {};
