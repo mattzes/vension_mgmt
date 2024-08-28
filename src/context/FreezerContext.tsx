@@ -2,7 +2,7 @@
 
 import { freezers as test_data } from '../mocked_general_data';
 import { Freezer, Vension } from '../general_types';
-import { createContext, useState, useContext } from 'react';
+import { createContext, useState } from 'react';
 
 export type FreezerContextType = {
   freezers: Freezer[];
