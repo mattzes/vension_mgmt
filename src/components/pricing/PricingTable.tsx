@@ -93,8 +93,8 @@ export const PricingTable = () => {
         return;
       }
       //send api delete request here, then refetch or update local table data for re-render
-      tableData.splice(row.index, 1);
-      setTableData([...tableData]);
+      const newTableData = tableData.filter((_, index) => index !== row.index);
+      setTableData(newTableData);
     },
     [tableData]
   );
@@ -115,17 +115,18 @@ export const PricingTable = () => {
 
   const handleSaveRowEdits = (values: Price) => {
     if (rowToEdit) {
-      tableData[rowToEdit.index] = values;
       //send/receive api updates here, then refetch or update local table data for re-render
-      setTableData([...tableData]);
+      const editedTableData = [...tableData];
+      editedTableData[rowToEdit.index] = values;
+      setTableData(editedTableData);
     } else {
       throw new Error("Can't save edits, no row to edit");
     }
   };
 
   const handleCreateRecord = (values: Price) => {
-    tableData.push(values);
-    setTableData([...tableData]);
+    const editedTableData = [...tableData];
+    setTableData([...editedTableData, values]);
   };
 
   return (
