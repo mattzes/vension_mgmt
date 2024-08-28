@@ -41,7 +41,6 @@ const InventoryCard = ({ freezer }: { freezer: Freezer }) => {
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
-    console.log(freezers);
   };
 
   return (
