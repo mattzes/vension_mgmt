@@ -1,18 +1,18 @@
 'use client';
 import React, { useCallback, useMemo, useState } from 'react';
 import { MaterialReactTable, MRT_Row, type MRT_ColumnDef } from 'material-react-table';
-import { Box, Button, Container, IconButton, MenuItem, Tooltip, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Button, Container, IconButton, Tooltip, useMediaQuery, useTheme } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import { RecordForm } from './RecordForm';
-import { type Freezer } from '../../general_types';
-import { freezers } from '../../mocked_general_data';
+import { FreezerOnly } from '../../general_types';
+import { freezers_only } from '../../mocked_general_data';
 
 export type MuiTextFieldProps = {
   type: 'number' | 'text';
   defaultValue?: any;
 };
 
-export type MyColumnDef = MRT_ColumnDef<Freezer> & {
+export type MyColumnDef = MRT_ColumnDef<FreezerOnly> & {
   accessorKey: 'id' | 'name' | 'drawer_numbers';
   showInForm?: boolean;
   muiTextFieldProps?: () => MuiTextFieldProps;
@@ -22,8 +22,8 @@ export const FreezerTable = () => {
   const theme = useTheme();
   const disableGutters = useMediaQuery(() => theme.breakpoints.down('md'));
   const [createRecordOpen, setRecordFormOpen] = useState(false);
-  const [tableData, setTableData] = useState<Freezer[]>(freezers);
-  const [rowToEdit, setRowToEdit] = useState<MRT_Row<Freezer> | null>(null);
+  const [tableData, setTableData] = useState<FreezerOnly[]>(freezers_only);
+  const [rowToEdit, setRowToEdit] = useState<MRT_Row<FreezerOnly> | null>(null);
 
   const columns = useMemo<MyColumnDef[]>(
     () => [
@@ -59,13 +59,13 @@ export const FreezerTable = () => {
   }, {} as any);
 
   const handleDeleteRow = useCallback(
-    (row: MRT_Row<Freezer>) => {
+    (row: MRT_Row<FreezerOnly>) => {
       if (!confirm('Bist du sicher, dass du diesen Eintrag löschen möchtest?')) {
         return;
       }
       //send api delete request here, then refetch or update local table data for re-render
-      tableData.splice(row.index, 1);
-      setTableData([...tableData]);
+      const editedTableData = tableData.filter((_, index) => index !== row.index);
+      setTableData(editedTableData);
     },
     [tableData]
   );
@@ -74,7 +74,7 @@ export const FreezerTable = () => {
     setRecordFormOpen(true);
   };
 
-  const setEditingRow = (row: MRT_Row<Freezer>) => {
+  const setEditingRow = (row: MRT_Row<FreezerOnly>) => {
     setRowToEdit(row);
     setRecordFormOpen(true);
   };
@@ -84,19 +84,19 @@ export const FreezerTable = () => {
     setRowToEdit(null);
   };
 
-  const handleSaveRowEdits = (values: Freezer) => {
+  const handleSaveRowEdits = (values: FreezerOnly) => {
     if (rowToEdit) {
-      tableData[rowToEdit.index] = values;
+      const editedTableData = [...tableData];
+      editedTableData[rowToEdit.index] = values;
       //send/receive api updates here, then refetch or update local table data for re-render
-      setTableData([...tableData]);
+      setTableData(editedTableData);
     } else {
       throw new Error("Can't save edits, no row to edit");
     }
   };
 
-  const handleCreateRecord = (values: Freezer) => {
-    tableData.push(values);
-    setTableData([...tableData]);
+  const handleCreateRecord = (values: FreezerOnly) => {
+    setTableData([...tableData, values]);
   };
 
   return (

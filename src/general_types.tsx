@@ -10,6 +10,12 @@ export type Freezer = {
   vensions: Vension[];
 };
 
+export type FreezerOnly = {
+  id: number;
+  name: string;
+  drawer_numbers: number;
+};
+
 export type Price = {
   id: number;
   animal_id: BasicEntity['id'];

@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import { validateFreezer } from '@/validation';
 import { MyColumnDef } from './FreezerTable';
-import { type Freezer } from '../../general_types';
+import { FreezerOnly } from '../../general_types';
 
 export const RecordForm = ({
   open,
@@ -26,13 +26,13 @@ export const RecordForm = ({
 }: {
   open: boolean;
   columns: MyColumnDef[];
-  rowToEdit: Freezer | null;
-  defaultValues: Freezer;
+  rowToEdit: FreezerOnly | null;
+  defaultValues: FreezerOnly;
   onClose: () => void;
-  onUpdate: (values: Freezer) => void;
-  onSubmit: (values: Freezer) => void;
+  onUpdate: (values: FreezerOnly) => void;
+  onSubmit: (values: FreezerOnly) => void;
 }) => {
-  const [values, setValues] = useState<Freezer>(() => {
+  const [values, setValues] = useState<FreezerOnly>(() => {
     if (rowToEdit) return rowToEdit;
     else return defaultValues;
   });

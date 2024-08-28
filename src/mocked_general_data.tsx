@@ -1,4 +1,4 @@
-import { BasicEntity, Price, Freezer, Vension } from './general_types';
+import { BasicEntity, Price, Freezer, FreezerOnly } from './general_types';
 
 export const animals: BasicEntity[] = [
   {
@@ -27,6 +27,24 @@ export const meats: BasicEntity[] = [
   {
     id: 4,
     name: 'Brust',
+  },
+];
+
+export const freezers_only: FreezerOnly[] = [
+  {
+    id: 1,
+    name: 'Gefrierschrank 1',
+    drawer_numbers: 10,
+  },
+  {
+    id: 2,
+    name: 'Gefrierschrank 2',
+    drawer_numbers: 5,
+  },
+  {
+    id: 3,
+    name: 'Gefrierschrank 3',
+    drawer_numbers: 8,
   },
 ];
 
