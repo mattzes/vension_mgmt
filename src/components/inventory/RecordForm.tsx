@@ -57,6 +57,13 @@ export const RecordForm = ({
   const handleSubmit = () => {
     const errors = validateVension(values);
 
+    const freezer_drawer_numbers = freezers.find(freezer => freezer.id === values.freezer_id)?.drawer_numbers;
+    if (freezer_drawer_numbers) {
+      if (values.drawer_number !== 'Nicht zugewiesen' && Number(values.drawer_number) > freezer_drawer_numbers!) {
+        errors.drawer_number = 'Diese Schublade existiert nicht';
+      }
+    }
+
     if (Object.keys(errors).length !== 0) {
       setErrors(errors);
     } else {
@@ -64,6 +71,7 @@ export const RecordForm = ({
       else onSubmit(values);
 
       onClose();
+      setValues(defaultValues);
       setErrors({});
     }
   };
@@ -109,6 +117,7 @@ export const RecordForm = ({
 
   const handleCancle = () => {
     onClose();
+    setValues(defaultValues);
     setErrors({});
   };
 
