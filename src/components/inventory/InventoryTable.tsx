@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { MaterialReactTable, type MRT_ColumnDef, type MRT_Row } from 'material-react-table';
 import { Box, Button, IconButton, MenuItem, Tooltip } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
@@ -39,150 +39,147 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: number; fullscre
   const [createRecordOpen, setRecordFormOpen] = useState(false);
   const [rowToEdit, setRowToEdit] = useState<MRT_Row<Vension> | null>(null);
 
-  const columns = useMemo<MyColumnDef[]>(
-    () => [
-      {
-        accessorKey: 'freezer_id',
-        header: 'Gefrierschrank',
-        size: 0,
-        muiTextFieldProps: () => ({
-          type: 'text',
-          select: true, //change to select for a dropdown
-          defaultValue: 'Nicht zugewiesen',
-          children: freezers.map(freezer => (
-            <MenuItem key={freezer.id} value={freezer.id}>
-              {freezer.name}
-            </MenuItem>
-          )),
-        }),
-        Cell: ({ row }) => <>{freezers.find(freezer => freezer.id === row.original.freezer_id)?.name}</>,
+  const [columns, setColums] = useState<MyColumnDef[]>([
+    {
+      accessorKey: 'freezer_id',
+      header: 'Gefrierschrank',
+      size: 0,
+      muiTextFieldProps: () => ({
+        type: 'text',
+        select: true, //change to select for a dropdown
+        defaultValue: 'Nicht zugewiesen',
+        children: freezers.map(freezer => (
+          <MenuItem key={freezer.id} value={freezer.id}>
+            {freezer.name}
+          </MenuItem>
+        )),
+      }),
+      Cell: ({ row }) => <>{freezers.find(freezer => freezer.id === row.original.freezer_id)?.name}</>,
+    },
+    {
+      accessorKey: 'drawer_number',
+      header: 'Schublade',
+      size: 0,
+      muiTextFieldProps: () => ({
+        type: 'number',
+        select: true, //change to select for a dropdown
+        defaultValue: 'Nicht zugewiesen',
+        children: drawer_numbers.map(drawer_number => (
+          <MenuItem key={drawer_number} value={drawer_number}>
+            {drawer_number}
+          </MenuItem>
+        )),
+      }),
+      GroupedCell: ({ row }) => (
+        <>{typeof row.original.drawer_number === 'number' ? row.original.drawer_number : 'Nicht zugewiesen'}</>
+      ),
+      Cell: ({ row }) => (
+        <>{typeof row.original.drawer_number === 'number' ? row.original.drawer_number : 'Nicht zugewiesen'}</>
+      ),
+    },
+    {
+      accessorKey: 'animal_id',
+      header: 'Tierart',
+      size: 0,
+      muiTextFieldProps: () => ({
+        required: true,
+        type: 'text',
+        select: true, //change to select for a dropdown
+        defaultValue: '',
+        children: animals.map(animal => (
+          <MenuItem key={animal.id} value={animal.id}>
+            {animal.name}
+          </MenuItem>
+        )),
+      }),
+      Cell: ({ row }) => <>{animals.find(animal => animal.id === row.original.animal_id)?.name}</>,
+    },
+    {
+      accessorKey: 'meat_id',
+      header: 'Fleischart',
+      size: 0,
+      muiTextFieldProps: () => ({
+        defaultValue: '',
+        required: true,
+        type: 'text',
+        select: true, //change to select for a dropdown
+        children: meats.map(meats => (
+          <MenuItem key={meats.id} value={meats.id}>
+            {meats.name}
+          </MenuItem>
+        )),
+      }),
+      Cell: ({ row }) => <>{meats.find(meat => meat.id === row.original.animal_id)?.name}</>,
+    },
+    {
+      accessorKey: 'weight',
+      header: 'Gewicht',
+      size: 0,
+      muiTextFieldProps: () => ({
+        required: true,
+        type: 'number',
+      }),
+      Cell: ({ row }) => <>{row.original.weight}g</>,
+    },
+    {
+      accessorKey: 'count',
+      header: 'Anzahl',
+      size: 0,
+      muiTextFieldProps: () => ({
+        required: true,
+        type: 'number',
+        defaultValue: 1,
+      }),
+    },
+    {
+      accessorKey: 'date',
+      header: 'Datum',
+      size: 130,
+      muiTextFieldProps: () => ({
+        required: true,
+        type: 'month',
+        defaultValue: `${new Date().getFullYear()}-${new Date().toLocaleString('de-DE', { month: '2-digit' })}`,
+      }),
+      Cell: ({ row }) => {
+        const currentDate = new Date(row.original.date);
+        const monthNames = [
+          'Januar',
+          'Februar',
+          'März',
+          'April',
+          'Mai',
+          'Juni',
+          'July',
+          'August',
+          'September',
+          'Oktober',
+          'November',
+          'Dezember',
+        ];
+        const formattedDate = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+        return <>{formattedDate}</>;
       },
-      {
-        accessorKey: 'drawer_number',
-        header: 'Schublade',
-        size: 0,
-        muiTextFieldProps: () => ({
-          type: 'number',
-          select: true, //change to select for a dropdown
-          defaultValue: 'Nicht zugewiesen',
-          children: drawer_numbers.map(drawer_number => (
-            <MenuItem key={drawer_number} value={drawer_number}>
-              {drawer_number}
-            </MenuItem>
-          )),
-        }),
-        GroupedCell: ({ row }) => (
-          <>{typeof row.original.drawer_number === 'number' ? row.original.drawer_number : 'Nicht zugewiesen'}</>
-        ),
-        Cell: ({ row }) => (
-          <>{typeof row.original.drawer_number === 'number' ? row.original.drawer_number : 'Nicht zugewiesen'}</>
-        ),
+    },
+    {
+      showInForm: false,
+      accessorKey: 'price_id',
+      header: 'Preis',
+      size: 0,
+      Cell: ({ row }) => {
+        const price = prices.find(price => price.id === row.original.price_id);
+        const displayPrice = (price ? price.price : '').toString().replace('.', ',');
+        return <>{displayPrice}€</>;
       },
-      {
-        accessorKey: 'animal_id',
-        header: 'Tierart',
-        size: 0,
-        muiTextFieldProps: () => ({
-          required: true,
-          type: 'text',
-          select: true, //change to select for a dropdown
-          defaultValue: '',
-          children: animals.map(animal => (
-            <MenuItem key={animal.id} value={animal.id}>
-              {animal.name}
-            </MenuItem>
-          )),
-        }),
-        Cell: ({ row }) => <>{animals.find(animal => animal.id === row.original.animal_id)?.name}</>,
-      },
-      {
-        accessorKey: 'meat_id',
-        header: 'Fleischart',
-        size: 0,
-        muiTextFieldProps: () => ({
-          defaultValue: '',
-          required: true,
-          type: 'text',
-          select: true, //change to select for a dropdown
-          children: meats.map(meats => (
-            <MenuItem key={meats.id} value={meats.id}>
-              {meats.name}
-            </MenuItem>
-          )),
-        }),
-        Cell: ({ row }) => <>{meats.find(meat => meat.id === row.original.animal_id)?.name}</>,
-      },
-      {
-        accessorKey: 'weight',
-        header: 'Gewicht',
-        size: 0,
-        muiTextFieldProps: () => ({
-          required: true,
-          type: 'number',
-        }),
-        Cell: ({ row }) => <>{row.original.weight}g</>,
-      },
-      {
-        accessorKey: 'count',
-        header: 'Anzahl',
-        size: 0,
-        muiTextFieldProps: () => ({
-          required: true,
-          type: 'number',
-          defaultValue: 1,
-        }),
-      },
-      {
-        accessorKey: 'date',
-        header: 'Datum',
-        size: 130,
-        muiTextFieldProps: () => ({
-          required: true,
-          type: 'month',
-          defaultValue: `${new Date().getFullYear()}-${new Date().toLocaleString('de-DE', { month: '2-digit' })}`,
-        }),
-        Cell: ({ row }) => {
-          const currentDate = new Date(row.original.date);
-          const monthNames = [
-            'Januar',
-            'Februar',
-            'März',
-            'April',
-            'Mai',
-            'Juni',
-            'July',
-            'August',
-            'September',
-            'Oktober',
-            'November',
-            'Dezember',
-          ];
-          const formattedDate = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
-          return <>{formattedDate}</>;
-        },
-      },
-      {
-        showInForm: false,
-        accessorKey: 'price_id',
-        header: 'Preis',
-        size: 0,
-        Cell: ({ row }) => {
-          const price = prices.find(price => price.id === row.original.price_id);
-          const displayPrice = (price ? price.price : '').toString().replace('.', ',');
-          return <>{displayPrice}€</>;
-        },
-      },
-      {
-        accessorKey: 'reserved_for',
-        header: 'Reserviert',
-        size: 0,
-        muiTextFieldProps: () => ({
-          type: 'text',
-        }),
-      },
-    ],
-    []
-  );
+    },
+    {
+      accessorKey: 'reserved_for',
+      header: 'Reserviert',
+      size: 0,
+      muiTextFieldProps: () => ({
+        type: 'text',
+      }),
+    },
+  ]);
 
   const defaultValues = columns.reduce((acc, column) => {
     const defaultValue = column.muiTextFieldProps?.().defaultValue ?? '';
@@ -209,6 +206,10 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: number; fullscre
     if (rowToEdit) {
       updateVension(freezer.id, values);
     }
+  };
+
+  const setColumsFromForm = (columns: MyColumnDef[]) => {
+    setColums(columns);
   };
 
   return (
@@ -271,6 +272,7 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: number; fullscre
         onClose={handleOnCloseForm}
         onUpdate={handleSaveRowEdits}
         onSubmit={addVension}
+        setColumnsState={setColumsFromForm}
       />
     </>
   );

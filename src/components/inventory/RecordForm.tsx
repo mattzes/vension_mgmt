@@ -25,6 +25,7 @@ export const RecordForm = ({
   onClose,
   onUpdate,
   onSubmit,
+  setColumnsState,
 }: {
   open: boolean;
   columns: MyColumnDef[];
@@ -34,13 +35,13 @@ export const RecordForm = ({
   onClose: () => void;
   onUpdate: (values: Vension) => void;
   onSubmit: (values: Vension) => void;
+  setColumnsState: (columns: MyColumnDef[]) => void;
 }) => {
   const [values, setValues] = useState<Vension>(() => {
     if (rowToEdit) return rowToEdit;
     else return defaultValues;
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [columnsState, setColumnsState] = useState<MyColumnDef[]>(columns);
   const theme = useTheme();
   const isFullscreen = useMediaQuery(() => theme.breakpoints.down('sm'));
 
@@ -91,7 +92,7 @@ export const RecordForm = ({
         drawer_numbers.push(i);
       }
       setColumnsState(
-        columnsState.map(column => {
+        columns.map(column => {
           if (column.accessorKey === 'drawer_number') {
             return {
               ...column,
@@ -133,7 +134,7 @@ export const RecordForm = ({
               gap: 3,
               mt: 1,
             }}>
-            {columnsState.map(column => {
+            {columns.map(column => {
               if (column.showInForm === false) return null;
 
               const textFieldProps = column.muiTextFieldProps ? column.muiTextFieldProps() : {};
