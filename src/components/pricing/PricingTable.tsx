@@ -4,7 +4,6 @@ import { MaterialReactTable, MRT_Row, type MRT_ColumnDef } from 'material-react-
 import { Box, Button, Container, IconButton, MenuItem, Tooltip, useMediaQuery, useTheme } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import { RecordForm } from './RecordForm';
-import { animals, meats } from '../../mocked_general_data';
 import { Price } from '../../general_types';
 import { prices } from '../../mocked_general_data';
 
@@ -16,7 +15,7 @@ export type MuiTextFieldProps = {
 };
 
 export type MyColumnDef = MRT_ColumnDef<Price> & {
-  accessorKey: 'id' | 'animal_id' | 'meat_id' | 'price';
+  accessorKey: 'animal' | 'animalPart' | 'price';
   showInForm?: boolean;
   muiTextFieldProps?: () => MuiTextFieldProps;
 };
@@ -32,7 +31,7 @@ export const PricingTable = () => {
     () => [
       {
         showInForm: true,
-        accessorKey: 'animal_id',
+        accessorKey: 'animal',
         header: 'Tierart',
         size: 0,
         muiTextFieldProps: () => ({
@@ -40,17 +39,16 @@ export const PricingTable = () => {
           type: 'text',
           defaultValue: '',
           select: true, //change to select for a dropdown
-          children: animals.map(animal => (
-            <MenuItem key={animal.id} value={animal.id}>
-              {animal.name}
+          children: prices.map(price => (
+            <MenuItem key={'${price.animal}_${price.animalPart}'} value={'${price.animal}_${price.animalPart}'}>
+              {price.animal}
             </MenuItem>
           )),
         }),
-        Cell: ({ row }) => <>{animals.find(animal => animal.id === row.original.animal_id)?.name}</>,
       },
       {
         showInForm: true,
-        accessorKey: 'meat_id',
+        accessorKey: 'animalPart',
         header: 'Fleischart',
         size: 0,
         muiTextFieldProps: () => ({
@@ -58,13 +56,12 @@ export const PricingTable = () => {
           required: true,
           type: 'text',
           select: true, //change to select for a dropdown
-          children: meats.map(meat => (
-            <MenuItem key={meat.id} value={meat.id}>
-              {meat.name}
+          children: prices.map(price => (
+            <MenuItem key={'${price.animal}_${price.animalPart}'} value={'${price.animal}_${price.animalPart}'}>
+              {price.animalPart}
             </MenuItem>
           )),
         }),
-        Cell: ({ row }) => <>{meats.find(meat => meat.id === row.original.animal_id)?.name}</>,
       },
       {
         showInForm: true,
