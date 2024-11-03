@@ -1,37 +1,31 @@
-export type BasicEntity = {
-  id: number;
+export type FreezerWithVensions = {
+  id: string;
   name: string;
+  drawerNumbers: number;
+  vensions: Vensions[];
 };
 
 export type Freezer = {
-  id: number;
+  id: string;
   name: string;
-  drawer_numbers: number;
-  vensions: Vension[];
-};
-
-export type FreezerOnly = {
-  id: number;
-  name: string;
-  drawer_numbers: number;
+  drawerNumbers: number;
 };
 
 export type Price = {
-  id: number;
-  animal_id: BasicEntity['id'];
-  meat_id: BasicEntity['id'];
+  animal: string;
+  animalPart: string;
   price: number;
 };
 
-export type Vension = {
-  id: number;
-  freezer_id: number;
-  drawer_number: number | string;
-  animal_id: BasicEntity['id'];
-  meat_id: BasicEntity['id'];
+export type Vensions = {
+  id: string;
+  freezerId: string;
+  drawerNumber: number | string;
+  animal: string;
+  animalPart: string;
   weight: number;
   count: number;
   date: string;
-  price_id: Price['id'];
-  reserved_for: string;
+  price: number;
+  reservedFor: string;
 };

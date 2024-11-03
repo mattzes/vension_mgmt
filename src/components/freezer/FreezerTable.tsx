@@ -4,7 +4,7 @@ import { MaterialReactTable, MRT_Row, type MRT_ColumnDef } from 'material-react-
 import { Box, Button, Container, IconButton, Tooltip, useMediaQuery, useTheme } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import { RecordForm } from './RecordForm';
-import { FreezerOnly } from '../../general_types';
+import { Freezer } from '../../general_types';
 import { freezers_only } from '../../mocked_general_data';
 
 export type MuiTextFieldProps = {
@@ -12,7 +12,7 @@ export type MuiTextFieldProps = {
   defaultValue?: any;
 };
 
-export type MyColumnDef = MRT_ColumnDef<FreezerOnly> & {
+export type MyColumnDef = MRT_ColumnDef<Freezer> & {
   accessorKey: 'id' | 'name' | 'drawer_numbers';
   showInForm?: boolean;
   muiTextFieldProps?: () => MuiTextFieldProps;
@@ -22,8 +22,8 @@ export const FreezerTable = () => {
   const theme = useTheme();
   const disableGutters = useMediaQuery(() => theme.breakpoints.down('md'));
   const [createRecordOpen, setRecordFormOpen] = useState(false);
-  const [tableData, setTableData] = useState<FreezerOnly[]>(freezers_only);
-  const [rowToEdit, setRowToEdit] = useState<MRT_Row<FreezerOnly> | null>(null);
+  const [tableData, setTableData] = useState<Freezer[]>(freezers_only);
+  const [rowToEdit, setRowToEdit] = useState<MRT_Row<Freezer> | null>(null);
 
   const columns = useMemo<MyColumnDef[]>(
     () => [
@@ -59,7 +59,7 @@ export const FreezerTable = () => {
   }, {} as any);
 
   const handleDeleteRow = useCallback(
-    (row: MRT_Row<FreezerOnly>) => {
+    (row: MRT_Row<Freezer>) => {
       if (!confirm('Bist du sicher, dass du diesen Eintrag löschen möchtest?')) {
         return;
       }
@@ -74,7 +74,7 @@ export const FreezerTable = () => {
     setRecordFormOpen(true);
   };
 
-  const setEditingRow = (row: MRT_Row<FreezerOnly>) => {
+  const setEditingRow = (row: MRT_Row<Freezer>) => {
     setRowToEdit(row);
     setRecordFormOpen(true);
   };
@@ -84,7 +84,7 @@ export const FreezerTable = () => {
     setRowToEdit(null);
   };
 
-  const handleSaveRowEdits = (values: FreezerOnly) => {
+  const handleSaveRowEdits = (values: Freezer) => {
     if (rowToEdit) {
       const editedTableData = [...tableData];
       editedTableData[rowToEdit.index] = values;
@@ -95,7 +95,7 @@ export const FreezerTable = () => {
     }
   };
 
-  const handleCreateRecord = (values: FreezerOnly) => {
+  const handleCreateRecord = (values: Freezer) => {
     setTableData([...tableData, values]);
   };
 

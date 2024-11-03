@@ -13,7 +13,7 @@ import {
   useTheme,
   MenuItem,
 } from '@mui/material';
-import { Vension, Freezer } from '@/general_types';
+import { Vensions, FreezerWithVensions } from '@/general_types';
 import { validateVension } from '@/validation';
 
 export const RecordForm = ({
@@ -29,15 +29,15 @@ export const RecordForm = ({
 }: {
   open: boolean;
   columns: MyColumnDef[];
-  rowToEdit: Vension | null;
-  defaultValues: Vension;
-  freezers: Freezer[];
+  rowToEdit: Vensions | null;
+  defaultValues: Vensions;
+  freezers: FreezerWithVensions[];
   onClose: () => void;
-  onUpdate: (values: Vension) => void;
-  onSubmit: (values: Vension) => void;
+  onUpdate: (values: Vensions) => void;
+  onSubmit: (values: Vensions) => void;
   setColumnsState: (columns: MyColumnDef[]) => void;
 }) => {
-  const [values, setValues] = useState<Vension>(() => {
+  const [values, setValues] = useState<Vensions>(() => {
     if (rowToEdit) return rowToEdit;
     else return defaultValues;
   });
@@ -58,9 +58,9 @@ export const RecordForm = ({
   const handleSubmit = () => {
     const errors = validateVension(values);
 
-    const freezer_drawer_numbers = freezers.find(freezer => freezer.id === values.freezer_id)?.drawer_numbers;
+    const freezer_drawer_numbers = freezers.find(freezer => freezer.id === values.freezerId)?.drawerNumbers;
     if (freezer_drawer_numbers) {
-      if (values.drawer_number !== 'Nicht zugewiesen' && Number(values.drawer_number) > freezer_drawer_numbers!) {
+      if (values.drawerNumber !== 'Nicht zugewiesen' && Number(values.drawerNumber) > freezer_drawer_numbers!) {
         errors.drawer_number = 'Diese Schublade existiert nicht';
       }
     }
@@ -88,7 +88,7 @@ export const RecordForm = ({
     if (e.target.name === 'freezer_id') {
       const freezer = freezers.find(freezer => freezer.id === Number(e.target.value));
       const drawer_numbers: Array<string | number> = ['Nicht zugewiesen'];
-      for (let i = 1; freezer && i <= freezer.drawer_numbers; i++) {
+      for (let i = 1; freezer && i <= freezer.drawerNumbers; i++) {
         drawer_numbers.push(i);
       }
       setColumnsState(

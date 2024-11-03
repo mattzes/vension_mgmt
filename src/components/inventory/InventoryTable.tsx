@@ -4,7 +4,7 @@ import { Box, Button, IconButton, MenuItem, Tooltip } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import { RecordForm } from '@/components/inventory/RecordForm';
 import { animals, meats, prices } from '@/mocked_general_data';
-import { Vension } from '@/general_types';
+import { Vensions } from '@/general_types';
 import { FreezerContext } from '@/context/FreezerContext';
 
 export type MuiTextFieldProps = {
@@ -14,7 +14,7 @@ export type MuiTextFieldProps = {
   defaultValue?: any;
 };
 
-export type MyColumnDef = MRT_ColumnDef<Vension> & {
+export type MyColumnDef = MRT_ColumnDef<Vensions> & {
   accessorKey:
     | 'freezer_id'
     | 'drawer_number'
@@ -31,13 +31,13 @@ export type MyColumnDef = MRT_ColumnDef<Vension> & {
 
 const InventoryTable = ({ freezerId, fullscreen }: { freezerId: number; fullscreen: boolean }) => {
   const { freezers, addVension, deleteVension, updateVension } = useContext(FreezerContext);
-  const freezer = freezers.find(freezer => freezer.id === freezerId) ?? { id: 0, drawer_numbers: 0, vensions: [] };
+  const freezer = freezers.find(freezer => freezer.id === freezerId) ?? { id: 0, drawerNumbers: 0, vensions: [] };
   const drawer_numbers: Array<string | number> = ['Nicht zugewiesen'];
-  for (let i = 1; freezer && i <= freezer.drawer_numbers; i++) {
+  for (let i = 1; freezer && i <= freezer.drawerNumbers; i++) {
     drawer_numbers.push(i);
   }
   const [createRecordOpen, setRecordFormOpen] = useState(false);
-  const [rowToEdit, setRowToEdit] = useState<MRT_Row<Vension> | null>(null);
+  const [rowToEdit, setRowToEdit] = useState<MRT_Row<Vensions> | null>(null);
 
   const [columns, setColums] = useState<MyColumnDef[]>([
     {
@@ -54,7 +54,7 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: number; fullscre
           </MenuItem>
         )),
       }),
-      Cell: ({ row }) => <>{freezers.find(freezer => freezer.id === row.original.freezer_id)?.name}</>,
+      Cell: ({ row }) => <>{freezers.find(freezer => freezer.id === row.original.freezerId)?.name}</>,
     },
     {
       accessorKey: 'drawer_number',
@@ -71,10 +71,10 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: number; fullscre
         )),
       }),
       GroupedCell: ({ row }) => (
-        <>{typeof row.original.drawer_number === 'number' ? row.original.drawer_number : 'Nicht zugewiesen'}</>
+        <>{typeof row.original.drawerNumber === 'number' ? row.original.drawerNumber : 'Nicht zugewiesen'}</>
       ),
       Cell: ({ row }) => (
-        <>{typeof row.original.drawer_number === 'number' ? row.original.drawer_number : 'Nicht zugewiesen'}</>
+        <>{typeof row.original.drawerNumber === 'number' ? row.original.drawerNumber : 'Nicht zugewiesen'}</>
       ),
     },
     {
@@ -197,12 +197,12 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: number; fullscre
     setRecordFormOpen(true);
   };
 
-  const setEditingRow = (row: MRT_Row<Vension>) => {
+  const setEditingRow = (row: MRT_Row<Vensions>) => {
     setRowToEdit(row);
     setRecordFormOpen(true);
   };
 
-  const handleSaveRowEdits = (values: Vension) => {
+  const handleSaveRowEdits = (values: Vensions) => {
     if (rowToEdit) {
       updateVension(freezer.id, values);
     }

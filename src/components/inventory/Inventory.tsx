@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { FreezerContext } from '../../context/FreezerContext';
 import InventoryCard from './InventoryCard';
 import { Typography } from '@mui/material';
-import { Freezer } from '@/general_types';
+import { FreezerWithVensions } from '@/general_types';
 
 export default function Inventory() {
   const { freezers } = useContext(FreezerContext);
