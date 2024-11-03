@@ -40,7 +40,7 @@ export const PricingTable = () => {
           defaultValue: '',
           select: true, //change to select for a dropdown
           children: prices.map(price => (
-            <MenuItem key={'${price.animal}_${price.animalPart}'} value={'${price.animal}_${price.animalPart}'}>
+            <MenuItem key={price.animal} value={price.animal}>
               {price.animal}
             </MenuItem>
           )),
@@ -57,7 +57,7 @@ export const PricingTable = () => {
           type: 'text',
           select: true, //change to select for a dropdown
           children: prices.map(price => (
-            <MenuItem key={'${price.animal}_${price.animalPart}'} value={'${price.animal}_${price.animalPart}'}>
+            <MenuItem key={price.animalPart} value={price.animalPart}>
               {price.animalPart}
             </MenuItem>
           )),
