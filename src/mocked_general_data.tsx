@@ -181,7 +181,7 @@ export const prices: Price[] = [
 
 export const animals: Animal[] = [
   {
-    animal: 'Reh',
+    name: 'Reh',
     parts: [
       { part: 'Keule', price: 10.0 },
       { part: 'Rücken', price: 12.5 },
@@ -189,7 +189,7 @@ export const animals: Animal[] = [
     ],
   },
   {
-    animal: 'Hirsch',
+    name: 'Hirsch',
     parts: [
       { part: 'Keule', price: 15.0 },
       { part: 'Nacken', price: 9.5 },
