@@ -85,7 +85,7 @@ export const RecordForm = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // update drawer number menu items if freezer_id changes
-    if (e.target.name === 'freezer_id') {
+    if (e.target.name === 'freezerId') {
       const freezer = freezers.find(freezer => freezer.id === String(e.target.value));
       const drawer_numbers: Array<string | number> = ['Nicht zugewiesen'];
       for (let i = 1; freezer && i <= freezer.drawerNumbers; i++) {
