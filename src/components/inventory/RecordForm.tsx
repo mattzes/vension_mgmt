@@ -96,16 +96,14 @@ export const RecordForm = ({
           if (column.accessorKey === 'drawerNumber') {
             return {
               ...column,
-              muiTextFieldProps: () => ({
-                type: 'number',
-                select: true,
-                defaultValue: 'Nicht zugewiesen',
+              muiTextFieldProps: {
+                ...column.muiTextFieldProps,
                 children: drawer_numbers.map(drawer_number => (
                   <MenuItem key={drawer_number} value={drawer_number}>
                     {drawer_number}
                   </MenuItem>
                 )),
-              }),
+              },
             };
           }
           return column;
@@ -137,7 +135,7 @@ export const RecordForm = ({
             {columns.map(column => {
               if (column.showInForm === false) return null;
 
-              const textFieldProps = column.muiTextFieldProps ? column.muiTextFieldProps() : {};
+              const textFieldProps = column.muiTextFieldProps ? column.muiTextFieldProps : {};
 
               return (
                 <TextField

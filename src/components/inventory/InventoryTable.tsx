@@ -12,6 +12,8 @@ export type MuiTextFieldProps = {
   select?: boolean;
   children?: React.ReactNode;
   defaultValue?: any;
+  required?: boolean;
+  onChange?: any;
 };
 
 export type MyColumnDef = MRT_ColumnDef<Vensions> & {
@@ -26,7 +28,7 @@ export type MyColumnDef = MRT_ColumnDef<Vensions> & {
     | 'price'
     | 'reservedFor';
   showInForm?: boolean;
-  muiTextFieldProps?: () => MuiTextFieldProps;
+  muiTextFieldProps?: Partial<MuiTextFieldProps>;
 };
 
 const InventoryTable = ({ freezerId, fullscreen }: { freezerId: string; fullscreen: boolean }) => {
@@ -45,7 +47,7 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: string; fullscre
       accessorKey: 'freezerId',
       header: 'Gefrierschrank',
       size: 0,
-      muiTextFieldProps: () => ({
+      muiTextFieldProps: {
         type: 'text',
         select: true, //change to select for a dropdown
         defaultValue: 'Nicht zugewiesen',
@@ -54,14 +56,14 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: string; fullscre
             {freezer.name}
           </MenuItem>
         )),
-      }),
+      },
       Cell: ({ row }) => <>{freezers.find(freezer => freezer.id === row.original.freezerId)?.name}</>,
     },
     {
       accessorKey: 'drawerNumber',
       header: 'Schublade',
       size: 0,
-      muiTextFieldProps: () => ({
+      muiTextFieldProps: {
         type: 'number',
         select: true, //change to select for a dropdown
         defaultValue: 'Nicht zugewiesen',
@@ -70,7 +72,7 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: string; fullscre
             {drawerNumber}
           </MenuItem>
         )),
-      }),
+      },
       GroupedCell: ({ row }) => (
         <>{typeof row.original.drawerNumber === 'number' ? row.original.drawerNumber : 'Nicht zugewiesen'}</>
       ),
@@ -82,7 +84,7 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: string; fullscre
       accessorKey: 'animal',
       header: 'Tierart',
       size: 0,
-      muiTextFieldProps: () => ({
+      muiTextFieldProps: {
         required: true,
         type: 'text',
         select: true, //change to select for a dropdown
@@ -93,13 +95,13 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: string; fullscre
             {animal.name}
           </MenuItem>
         )),
-      }),
+      },
     },
     {
       accessorKey: 'animalPart',
       header: 'Fleischart',
       size: 0,
-      muiTextFieldProps: () => ({
+      muiTextFieldProps: {
         defaultValue: '',
         required: true,
         type: 'text',
@@ -113,37 +115,37 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: string; fullscre
                 </MenuItem>
               ))
           : null,
-      }),
+      },
     },
     {
       accessorKey: 'weight',
       header: 'Gewicht',
       size: 0,
-      muiTextFieldProps: () => ({
+      muiTextFieldProps: {
         required: true,
         type: 'number',
-      }),
+      },
       Cell: ({ row }) => <>{row.original.weight}g</>,
     },
     {
       accessorKey: 'count',
       header: 'Anzahl',
       size: 0,
-      muiTextFieldProps: () => ({
+      muiTextFieldProps: {
         required: true,
         type: 'number',
         defaultValue: 1,
-      }),
+      },
     },
     {
       accessorKey: 'date',
       header: 'Datum',
       size: 130,
-      muiTextFieldProps: () => ({
+      muiTextFieldProps: {
         required: true,
         type: 'month',
         defaultValue: `${new Date().getFullYear()}-${new Date().toLocaleString('de-DE', { month: '2-digit' })}`,
-      }),
+      },
       Cell: ({ row }) => {
         const currentDate = new Date(row.original.date);
         const monthNames = [
@@ -178,14 +180,14 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: string; fullscre
       accessorKey: 'reservedFor',
       header: 'Reserviert',
       size: 0,
-      muiTextFieldProps: () => ({
+      muiTextFieldProps: {
         type: 'text',
-      }),
+      },
     },
   ]);
 
   const defaultValues = columns.reduce((acc, column) => {
-    const defaultValue = column.muiTextFieldProps?.().defaultValue ?? '';
+    const defaultValue = column.muiTextFieldProps?.defaultValue ?? '';
     acc[column.accessorKey ?? ''] = defaultValue;
     return acc;
   }, {} as any);
