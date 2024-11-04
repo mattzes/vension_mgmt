@@ -237,10 +237,10 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: string; fullscre
         initialState={{
           density: 'compact',
           expanded: true, //expand all groups by default
-          grouping: ['drawer_number'], //an array of columns to group by by default (can be multiple)
-          sorting: [{ id: 'drawer_number', desc: false }], //sort by state by default
+          grouping: ['drawerNumber'], //an array of columns to group by by default (can be multiple)
+          sorting: [{ id: 'drawerNumber', desc: false }], //sort by state by default
           isFullScreen: fullscreen,
-          columnVisibility: { freezer_id: false },
+          columnVisibility: { freezerId: false },
         }}
         positionActionsColumn="last"
         renderRowActions={({ row }) => (
