@@ -1,4 +1,4 @@
-import { Price, FreezerWithVensions, Freezer } from './general_types';
+import { Price, FreezerWithVensions, Freezer, Animal } from './general_types';
 
 export const freezers_only: Freezer[] = [
   {
@@ -176,5 +176,24 @@ export const prices: Price[] = [
     animal: 'Reh',
     animalPart: 'Brust',
     price: 7.5,
+  },
+];
+
+export const animals: Animal[] = [
+  {
+    animal: 'Reh',
+    parts: [
+      { part: 'Keule', price: 10.0 },
+      { part: 'Rücken', price: 12.5 },
+      // Weitere Teile...
+    ],
+  },
+  {
+    animal: 'Hirsch',
+    parts: [
+      { part: 'Keule', price: 15.0 },
+      { part: 'Nacken', price: 9.5 },
+      // Weitere Teile...
+    ],
   },
 ];

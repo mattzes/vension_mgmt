@@ -7,8 +7,8 @@ import { createContext, useState } from 'react';
 export type FreezerContextType = {
   freezers: FreezerWithVensions[];
   addVension: (newVension: Vensions) => void;
-  deleteVension: (freezerId: number, vensionId: number) => void;
-  updateVension: (currentfreezerId: number, updatedVension: Vensions) => void;
+  deleteVension: (freezerId: string, vensionId: string) => void;
+  updateVension: (currentfreezerId: string, updatedVension: Vensions) => void;
 };
 
 export const FreezerContext = createContext<FreezerContextType>({
@@ -16,10 +16,10 @@ export const FreezerContext = createContext<FreezerContextType>({
   addVension: function (newVension: Vensions): void {
     throw new Error('Function not implemented.');
   },
-  deleteVension: function (freezerId: number, vensionId: number): void {
+  deleteVension: function (freezerId: string, vensionId: string): void {
     throw new Error('Function not implemented.');
   },
-  updateVension: function (currentfreezerId: number, updatedVension: Vensions): void {
+  updateVension: function (currentfreezerId: string, updatedVension: Vensions): void {
     throw new Error('Function not implemented.');
   },
 });
@@ -37,7 +37,7 @@ export const FreezerContextProvider = ({ children }: { children: React.ReactNode
     setFreezers(updatedFreezers);
   };
 
-  const deleteVension = (freezerId: number, vensionId: number) => {
+  const deleteVension = (freezerId: string, vensionId: string) => {
     const updatedFreezers = freezers.map(freezer => {
       if (freezer.id === freezerId) {
         return {
@@ -50,7 +50,7 @@ export const FreezerContextProvider = ({ children }: { children: React.ReactNode
     setFreezers(updatedFreezers);
   };
 
-  const updateVension = (currentFreezerId: number, updatedVension: Vensions) => {
+  const updateVension = (currentFreezerId: string, updatedVension: Vensions) => {
     const updatedFreezers = freezers.map(freezer => {
       if (currentFreezerId === updatedVension.freezerId && freezer.id === updatedVension.freezerId) {
         // if the vension is updated in the current freezer, update the vension in the current freezer

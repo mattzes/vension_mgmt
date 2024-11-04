@@ -3,7 +3,7 @@ import { MaterialReactTable, type MRT_ColumnDef, type MRT_Row } from 'material-r
 import { Box, Button, IconButton, MenuItem, Tooltip } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import { RecordForm } from '@/components/inventory/RecordForm';
-import { animals, meats, prices } from '@/mocked_general_data';
+import { animals } from '@/mocked_general_data';
 import { Vensions } from '@/general_types';
 import { FreezerContext } from '@/context/FreezerContext';
 
@@ -16,32 +16,33 @@ export type MuiTextFieldProps = {
 
 export type MyColumnDef = MRT_ColumnDef<Vensions> & {
   accessorKey:
-    | 'freezer_id'
-    | 'drawer_number'
-    | 'animal_id'
-    | 'meat_id'
+    | 'freezerId'
+    | 'drawerNumber'
+    | 'animal'
+    | 'animalPart'
     | 'weight'
     | 'count'
     | 'date'
-    | 'price_id'
-    | 'reserved_for';
+    | 'price'
+    | 'reservedFor';
   showInForm?: boolean;
   muiTextFieldProps?: () => MuiTextFieldProps;
 };
 
-const InventoryTable = ({ freezerId, fullscreen }: { freezerId: number; fullscreen: boolean }) => {
+const InventoryTable = ({ freezerId, fullscreen }: { freezerId: string; fullscreen: boolean }) => {
   const { freezers, addVension, deleteVension, updateVension } = useContext(FreezerContext);
-  const freezer = freezers.find(freezer => freezer.id === freezerId) ?? { id: 0, drawerNumbers: 0, vensions: [] };
-  const drawer_numbers: Array<string | number> = ['Nicht zugewiesen'];
+  const freezer = freezers.find(freezer => freezer.id === freezerId) ?? { id: '0', drawerNumbers: 0, vensions: [] };
+  const drawerNumbers: Array<string | number> = ['Nicht zugewiesen'];
   for (let i = 1; freezer && i <= freezer.drawerNumbers; i++) {
-    drawer_numbers.push(i);
+    drawerNumbers.push(i);
   }
   const [createRecordOpen, setRecordFormOpen] = useState(false);
   const [rowToEdit, setRowToEdit] = useState<MRT_Row<Vensions> | null>(null);
+  const [selectedAnimal, setSelectedAnimal] = useState<string | null>(null);
 
   const [columns, setColums] = useState<MyColumnDef[]>([
     {
-      accessorKey: 'freezer_id',
+      accessorKey: 'freezerId',
       header: 'Gefrierschrank',
       size: 0,
       muiTextFieldProps: () => ({
@@ -57,16 +58,16 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: number; fullscre
       Cell: ({ row }) => <>{freezers.find(freezer => freezer.id === row.original.freezerId)?.name}</>,
     },
     {
-      accessorKey: 'drawer_number',
+      accessorKey: 'drawerNumber',
       header: 'Schublade',
       size: 0,
       muiTextFieldProps: () => ({
         type: 'number',
         select: true, //change to select for a dropdown
         defaultValue: 'Nicht zugewiesen',
-        children: drawer_numbers.map(drawer_number => (
-          <MenuItem key={drawer_number} value={drawer_number}>
-            {drawer_number}
+        children: drawerNumbers.map(drawerNumber => (
+          <MenuItem key={drawerNumber} value={drawerNumber}>
+            {drawerNumber}
           </MenuItem>
         )),
       }),
@@ -78,7 +79,7 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: number; fullscre
       ),
     },
     {
-      accessorKey: 'animal_id',
+      accessorKey: 'animal',
       header: 'Tierart',
       size: 0,
       muiTextFieldProps: () => ({
@@ -86,16 +87,16 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: number; fullscre
         type: 'text',
         select: true, //change to select for a dropdown
         defaultValue: '',
+        onChange: (e: React.ChangeEvent<HTMLInputElement>) => setSelectedAnimal(e.target.value),
         children: animals.map(animal => (
-          <MenuItem key={animal.id} value={animal.id}>
+          <MenuItem key={animal.name} value={animal.name}>
             {animal.name}
           </MenuItem>
         )),
       }),
-      Cell: ({ row }) => <>{animals.find(animal => animal.id === row.original.animal_id)?.name}</>,
     },
     {
-      accessorKey: 'meat_id',
+      accessorKey: 'animalPart',
       header: 'Fleischart',
       size: 0,
       muiTextFieldProps: () => ({
@@ -103,13 +104,16 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: number; fullscre
         required: true,
         type: 'text',
         select: true, //change to select for a dropdown
-        children: meats.map(meats => (
-          <MenuItem key={meats.id} value={meats.id}>
-            {meats.name}
-          </MenuItem>
-        )),
+        children: selectedAnimal
+          ? animals
+              .filter(animal => animal.name === selectedAnimal)[0]
+              .parts.map(part => (
+                <MenuItem key={part.part} value={part.part}>
+                  {part.part} - {part.price}€
+                </MenuItem>
+              ))
+          : null,
       }),
-      Cell: ({ row }) => <>{meats.find(meat => meat.id === row.original.animal_id)?.name}</>,
     },
     {
       accessorKey: 'weight',
@@ -162,17 +166,16 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: number; fullscre
     },
     {
       showInForm: false,
-      accessorKey: 'price_id',
+      accessorKey: 'price',
       header: 'Preis',
       size: 0,
       Cell: ({ row }) => {
-        const price = prices.find(price => price.id === row.original.price_id);
-        const displayPrice = (price ? price.price : '').toString().replace('.', ',');
+        const displayPrice = row.original.price.toString().replace('.', ',');
         return <>{displayPrice}€</>;
       },
     },
     {
-      accessorKey: 'reserved_for',
+      accessorKey: 'reservedFor',
       header: 'Reserviert',
       size: 0,
       muiTextFieldProps: () => ({

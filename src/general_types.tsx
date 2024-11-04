@@ -17,6 +17,16 @@ export type Price = {
   price: number;
 };
 
+export type Animal = {
+  name: string;
+  parts: AnimalParts[];
+};
+
+export type AnimalParts = {
+  part: string;
+  price: number;
+};
+
 export type Vensions = {
   id: string;
   freezerId: string;
