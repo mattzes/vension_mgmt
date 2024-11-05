@@ -40,7 +40,6 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: string; fullscre
   }
   const [createRecordOpen, setRecordFormOpen] = useState(false);
   const [rowToEdit, setRowToEdit] = useState<MRT_Row<Vensions> | null>(null);
-  const [selectedAnimal, setSelectedAnimal] = useState<string | null>(null);
 
   const [columns, setColums] = useState<MyColumnDef[]>([
     {
@@ -89,7 +88,6 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: string; fullscre
         type: 'text',
         select: true, //change to select for a dropdown
         defaultValue: '',
-        onChange: (e: React.ChangeEvent<HTMLInputElement>) => setSelectedAnimal(e.target.value),
         children: animals.map(animal => (
           <MenuItem key={animal.name} value={animal.name}>
             {animal.name}
@@ -106,15 +104,11 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: string; fullscre
         required: true,
         type: 'text',
         select: true, //change to select for a dropdown
-        children: selectedAnimal
-          ? animals
-              .filter(animal => animal.name === selectedAnimal)[0]
-              .parts.map(part => (
-                <MenuItem key={part.part} value={part.part}>
-                  {part.part} - {part.price}€
-                </MenuItem>
-              ))
-          : null,
+        children: (
+          <MenuItem key={'Rücken'} value={'Rücken'}>
+            {'Rücken'}
+          </MenuItem>
+        ),
       },
     },
     {

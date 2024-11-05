@@ -13,8 +13,9 @@ import {
   useTheme,
   MenuItem,
 } from '@mui/material';
-import { Vensions, FreezerWithVensions } from '@/general_types';
+import { Vensions, FreezerWithVensions, AnimalParts } from '@/general_types';
 import { validateVension } from '@/validation';
+import { animals } from '@/mocked_general_data';
 
 export const RecordForm = ({
   open,
@@ -85,7 +86,29 @@ export const RecordForm = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // update drawer number menu items if freezer_id changes
-    if (e.target.name === 'freezerId') {
+    if (e.target.name == 'animal') {
+      const animal = animals.find(animal => animal.name === String(e.target.value));
+      const animalParts: AnimalParts[] = animal ? animal?.parts : [];
+      setColumnsState(
+        columns.map(column => {
+          if (column.accessorKey === 'animalPart') {
+            return {
+              ...column,
+              muiTextFieldProps: {
+                ...column.muiTextFieldProps,
+                children: animalParts.map(animalPart => (
+                  <MenuItem key={animalPart.part} value={animalPart.part}>
+                    {animalPart.part}
+                  </MenuItem>
+                )),
+              },
+            };
+          }
+          return column;
+        })
+      );
+    }
+    if (e.target.name == 'freezerId') {
       const freezer = freezers.find(freezer => freezer.id === String(e.target.value));
       const drawer_numbers: Array<string | number> = ['Nicht zugewiesen'];
       for (let i = 1; freezer && i <= freezer.drawerNumbers; i++) {
