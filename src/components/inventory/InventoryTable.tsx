@@ -51,7 +51,6 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: string; fullscre
         required: true,
         type: 'text',
         select: true, //change to select for a dropdown
-        defaultValue: 'Nicht zugewiesen',
         children: freezers.map(freezer => (
           <MenuItem key={freezer.id} value={freezer.id}>
             {freezer.name}
@@ -70,7 +69,11 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: string; fullscre
         disabled: true,
         select: true, //change to select for a dropdown
         defaultValue: 'Nicht zugewiesen',
-        children: null,
+        children: (
+          <MenuItem key={'Nicht zugewiesen'} value={'Nicht zugewiesen'}>
+            {'Nicht zugewiesen'}
+          </MenuItem>
+        ),
       },
       GroupedCell: ({ row }) => (
         <>{typeof row.original.drawerNumber === 'number' ? row.original.drawerNumber : 'Nicht zugewiesen'}</>
@@ -105,7 +108,7 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: string; fullscre
         type: 'text',
         disabled: true,
         select: true, //change to select for a dropdown
-        children: null,
+        children: <MenuItem></MenuItem>,
       },
     },
     {
