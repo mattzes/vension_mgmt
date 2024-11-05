@@ -14,6 +14,7 @@ export type MuiTextFieldProps = {
   defaultValue?: any;
   required?: boolean;
   onChange?: any;
+  disabled?: boolean;
 };
 
 export type MyColumnDef = MRT_ColumnDef<Vensions> & {
@@ -47,6 +48,7 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: string; fullscre
       header: 'Gefrierschrank',
       size: 0,
       muiTextFieldProps: {
+        required: true,
         type: 'text',
         select: true, //change to select for a dropdown
         defaultValue: 'Nicht zugewiesen',
@@ -63,9 +65,12 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: string; fullscre
       header: 'Schublade',
       size: 0,
       muiTextFieldProps: {
+        required: true,
         type: 'number',
+        disabled: true,
         select: true, //change to select for a dropdown
         defaultValue: 'Nicht zugewiesen',
+        children: null,
       },
       GroupedCell: ({ row }) => (
         <>{typeof row.original.drawerNumber === 'number' ? row.original.drawerNumber : 'Nicht zugewiesen'}</>
@@ -98,12 +103,9 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: string; fullscre
         defaultValue: '',
         required: true,
         type: 'text',
+        disabled: true,
         select: true, //change to select for a dropdown
-        children: (
-          <MenuItem key={'Rücken'} value={'Rücken'}>
-            {'Rücken'}
-          </MenuItem>
-        ),
+        children: null,
       },
     },
     {
@@ -196,6 +198,7 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: string; fullscre
             ...column,
             muiTextFieldProps: {
               ...column.muiTextFieldProps,
+              disabled: false,
               children: drawerNumbers.map(drawer_number => (
                 <MenuItem key={drawer_number} value={drawer_number}>
                   {drawer_number}
@@ -209,6 +212,7 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: string; fullscre
             ...column,
             muiTextFieldProps: {
               ...column.muiTextFieldProps,
+              disabled: false,
               children: animalParts.map(animalPart => (
                 <MenuItem key={animalPart} value={animalPart}>
                   {animalPart}
