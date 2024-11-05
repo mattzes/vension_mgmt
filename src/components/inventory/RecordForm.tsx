@@ -13,8 +13,9 @@ import {
   useTheme,
   MenuItem,
 } from '@mui/material';
-import { Vension, Freezer } from '@/general_types';
+import { Vensions, FreezerWithVensions, AnimalParts } from '@/general_types';
 import { validateVension } from '@/validation';
+import { animals } from '@/mocked_general_data';
 
 export const RecordForm = ({
   open,
@@ -25,19 +26,19 @@ export const RecordForm = ({
   onClose,
   onUpdate,
   onSubmit,
-  setColumnsState,
+  updateDropDowns,
 }: {
   open: boolean;
   columns: MyColumnDef[];
-  rowToEdit: Vension | null;
-  defaultValues: Vension;
-  freezers: Freezer[];
+  rowToEdit: Vensions | null;
+  defaultValues: Vensions;
+  freezers: FreezerWithVensions[];
   onClose: () => void;
-  onUpdate: (values: Vension) => void;
-  onSubmit: (values: Vension) => void;
-  setColumnsState: (columns: MyColumnDef[]) => void;
+  onUpdate: (values: Vensions) => void;
+  onSubmit: (values: Vensions) => void;
+  updateDropDowns: ({ freezerId, animalName }: { freezerId?: string; animalName?: string }) => void;
 }) => {
-  const [values, setValues] = useState<Vension>(() => {
+  const [values, setValues] = useState<Vensions>(() => {
     if (rowToEdit) return rowToEdit;
     else return defaultValues;
   });
@@ -58,9 +59,9 @@ export const RecordForm = ({
   const handleSubmit = () => {
     const errors = validateVension(values);
 
-    const freezer_drawer_numbers = freezers.find(freezer => freezer.id === values.freezer_id)?.drawer_numbers;
+    const freezer_drawer_numbers = freezers.find(freezer => freezer.id === values.freezerId)?.drawerNumbers;
     if (freezer_drawer_numbers) {
-      if (values.drawer_number !== 'Nicht zugewiesen' && Number(values.drawer_number) > freezer_drawer_numbers!) {
+      if (values.drawerNumber !== 'Nicht zugewiesen' && Number(values.drawerNumber) > freezer_drawer_numbers!) {
         errors.drawer_number = 'Diese Schublade existiert nicht';
       }
     }
@@ -85,32 +86,11 @@ export const RecordForm = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // update drawer number menu items if freezer_id changes
-    if (e.target.name === 'freezer_id') {
-      const freezer = freezers.find(freezer => freezer.id === Number(e.target.value));
-      const drawer_numbers: Array<string | number> = ['Nicht zugewiesen'];
-      for (let i = 1; freezer && i <= freezer.drawer_numbers; i++) {
-        drawer_numbers.push(i);
-      }
-      setColumnsState(
-        columns.map(column => {
-          if (column.accessorKey === 'drawer_number') {
-            return {
-              ...column,
-              muiTextFieldProps: () => ({
-                type: 'number',
-                select: true,
-                defaultValue: 'Nicht zugewiesen',
-                children: drawer_numbers.map(drawer_number => (
-                  <MenuItem key={drawer_number} value={drawer_number}>
-                    {drawer_number}
-                  </MenuItem>
-                )),
-              }),
-            };
-          }
-          return column;
-        })
-      );
+    if (e.target.name == 'animal') {
+      updateDropDowns({ animalName: String(e.target.value) });
+    }
+    if (e.target.name == 'freezerId') {
+      updateDropDowns({ freezerId: String(e.target.value) });
     }
 
     setValues({ ...values, [e.target.name]: e.target.value });
@@ -137,7 +117,7 @@ export const RecordForm = ({
             {columns.map(column => {
               if (column.showInForm === false) return null;
 
-              const textFieldProps = column.muiTextFieldProps ? column.muiTextFieldProps() : {};
+              const textFieldProps = column.muiTextFieldProps ? column.muiTextFieldProps : {};
 
               return (
                 <TextField

@@ -1,35 +1,35 @@
 'use client';
 
 import { freezers as test_data } from '../mocked_general_data';
-import { Freezer, Vension } from '../general_types';
+import { FreezerWithVensions, Vensions } from '../general_types';
 import { createContext, useState } from 'react';
 
 export type FreezerContextType = {
-  freezers: Freezer[];
-  addVension: (newVension: Vension) => void;
-  deleteVension: (freezerId: number, vensionId: number) => void;
-  updateVension: (currentfreezerId: number, updatedVension: Vension) => void;
+  freezers: FreezerWithVensions[];
+  addVension: (newVension: Vensions) => void;
+  deleteVension: (freezerId: string, vensionId: string) => void;
+  updateVension: (currentfreezerId: string, updatedVension: Vensions) => void;
 };
 
 export const FreezerContext = createContext<FreezerContextType>({
   freezers: [],
-  addVension: function (newVension: Vension): void {
+  addVension: function (newVension: Vensions): void {
     throw new Error('Function not implemented.');
   },
-  deleteVension: function (freezerId: number, vensionId: number): void {
+  deleteVension: function (freezerId: string, vensionId: string): void {
     throw new Error('Function not implemented.');
   },
-  updateVension: function (currentfreezerId: number, updatedVension: Vension): void {
+  updateVension: function (currentfreezerId: string, updatedVension: Vensions): void {
     throw new Error('Function not implemented.');
   },
 });
 
 export const FreezerContextProvider = ({ children }: { children: React.ReactNode }) => {
-  const [freezers, setFreezers] = useState<Freezer[]>(test_data); // test_data is the mocked data
+  const [freezers, setFreezers] = useState<FreezerWithVensions[]>(test_data); // test_data is the mocked data
 
-  const addVension = (newVension: Vension) => {
+  const addVension = (newVension: Vensions) => {
     const updatedFreezers = freezers.map(freezer => {
-      if (freezer.id === newVension.freezer_id) {
+      if (freezer.id === newVension.freezerId) {
         return { ...freezer, vensions: [...freezer.vensions, newVension] };
       }
       return freezer;
@@ -37,7 +37,7 @@ export const FreezerContextProvider = ({ children }: { children: React.ReactNode
     setFreezers(updatedFreezers);
   };
 
-  const deleteVension = (freezerId: number, vensionId: number) => {
+  const deleteVension = (freezerId: string, vensionId: string) => {
     const updatedFreezers = freezers.map(freezer => {
       if (freezer.id === freezerId) {
         return {
@@ -50,19 +50,19 @@ export const FreezerContextProvider = ({ children }: { children: React.ReactNode
     setFreezers(updatedFreezers);
   };
 
-  const updateVension = (currentFreezerId: number, updatedVension: Vension) => {
+  const updateVension = (currentFreezerId: string, updatedVension: Vensions) => {
     const updatedFreezers = freezers.map(freezer => {
-      if (currentFreezerId === updatedVension.freezer_id && freezer.id === updatedVension.freezer_id) {
+      if (currentFreezerId === updatedVension.freezerId && freezer.id === updatedVension.freezerId) {
         // if the vension is updated in the current freezer, update the vension in the current freezer
         const updatedVensions = freezer.vensions.map(vension =>
           vension.id === updatedVension.id ? updatedVension : vension
         );
         return { ...freezer, vensions: updatedVensions };
-      } else if (currentFreezerId !== updatedVension.freezer_id && freezer.id === currentFreezerId) {
+      } else if (currentFreezerId !== updatedVension.freezerId && freezer.id === currentFreezerId) {
         // if the vension is moved to another freezer and the current freezer is not the updated freezer, remove the vension from the current freezer
         const updatedVensions = freezer.vensions.filter(vension => vension.id !== updatedVension.id);
         return { ...freezer, vensions: updatedVensions };
-      } else if (currentFreezerId !== updatedVension.freezer_id && freezer.id === updatedVension.freezer_id) {
+      } else if (currentFreezerId !== updatedVension.freezerId && freezer.id === updatedVension.freezerId) {
         // if the vension is moved to another freezer and the current freezer is the updated freezer, add the vension to the updated freezer
         return { ...freezer, vensions: [...freezer.vensions, updatedVension] };
       }

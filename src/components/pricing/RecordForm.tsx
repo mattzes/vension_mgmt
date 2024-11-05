@@ -96,9 +96,9 @@ export const RecordForm = ({
 
               let textFieldProps = column.muiTextFieldProps ? column.muiTextFieldProps() : {};
 
-              if (!rowToEdit && (column.accessorKey === 'animal_id' || column.accessorKey === 'meat_id')) {
+              if (!rowToEdit && (column.accessorKey === 'animal' || column.accessorKey === 'animalPart')) {
                 if ('select' in textFieldProps) textFieldProps.select = false;
-              } else if (rowToEdit && (column.accessorKey === 'animal_id' || column.accessorKey === 'meat_id')) {
+              } else if (rowToEdit && (column.accessorKey === 'animal' || column.accessorKey === 'animalPart')) {
                 textFieldProps = { ...textFieldProps, disabled: true };
               }
 

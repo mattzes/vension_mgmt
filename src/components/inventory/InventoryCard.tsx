@@ -17,7 +17,7 @@ import KitchenIcon from '@mui/icons-material/Kitchen';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import InventoryTable from './InventoryTable';
 import { FreezerContext } from '../../context/FreezerContext';
-import { Freezer } from '@/general_types';
+import { FreezerWithVensions } from '@/general_types';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -32,7 +32,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
     duration: theme.transitions.duration.shortest,
   }),
 }));
-const InventoryCard = ({ freezer }: { freezer: Freezer }) => {
+const InventoryCard = ({ freezer }: { freezer: FreezerWithVensions }) => {
   const theme = useTheme();
   const [expanded, setExpanded] = useState(true);
   const isBelowMd = useMediaQuery(theme.breakpoints.down('md'));
