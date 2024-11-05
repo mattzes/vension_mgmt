@@ -1,11 +1,10 @@
 'use client';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { use, useCallback, useMemo, useState, useEffect } from 'react';
 import { MaterialReactTable, MRT_Row, type MRT_ColumnDef } from 'material-react-table';
 import { Box, Button, Container, IconButton, MenuItem, Tooltip, useMediaQuery, useTheme } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import { RecordForm } from './RecordForm';
 import { Price } from '../../general_types';
-import { prices } from '../../mocked_general_data';
 
 export type MuiTextFieldProps = {
   type: 'number' | 'text';
@@ -24,7 +23,7 @@ export const PricingTable = () => {
   const theme = useTheme();
   const disableGutters = useMediaQuery(() => theme.breakpoints.down('md'));
   const [createRecordOpen, setRecordFormOpen] = useState(false);
-  const [tableData, setTableData] = useState<Price[]>(prices);
+  const [prices, setPrices] = useState<Price[]>([]);
   const [rowToEdit, setRowToEdit] = useState<MRT_Row<Price> | null>(null);
 
   const columns = useMemo<MyColumnDef[]>(
@@ -78,6 +77,15 @@ export const PricingTable = () => {
     []
   );
 
+  useEffect(() => {
+    const fetchPrices = async () => {
+      const prices = await fetch('/api/price').then(res => res.json());
+      setPrices(prices);
+    };
+
+    fetchPrices();
+  }, []);
+
   const defaultValues = columns.reduce((acc, column) => {
     const defaultValue = column.muiTextFieldProps?.().defaultValue ?? '';
     acc[column.accessorKey ?? ''] = defaultValue;
@@ -90,10 +98,10 @@ export const PricingTable = () => {
         return;
       }
       //send api delete request here, then refetch or update local table data for re-render
-      const newTableData = tableData.filter((_, index) => index !== row.index);
-      setTableData(newTableData);
+      const newTableData = prices.filter((_, index) => index !== row.index);
+      setPrices(newTableData);
     },
-    [tableData]
+    [prices]
   );
 
   const handleOpenCreateRecordForm = () => {
@@ -113,24 +121,24 @@ export const PricingTable = () => {
   const handleSaveRowEdits = (values: Price) => {
     if (rowToEdit) {
       //send/receive api updates here, then refetch or update local table data for re-render
-      const editedTableData = [...tableData];
+      const editedTableData = [...prices];
       editedTableData[rowToEdit.index] = values;
-      setTableData(editedTableData);
+      setPrices(editedTableData);
     } else {
       throw new Error("Can't save edits, no row to edit");
     }
   };
 
   const handleCreateRecord = (values: Price) => {
-    const editedTableData = [...tableData];
-    setTableData([...editedTableData, values]);
+    const editedTableData = [...prices];
+    setPrices([...editedTableData, values]);
   };
 
   return (
     <Container disableGutters={disableGutters}>
       <MaterialReactTable
         columns={columns}
-        data={tableData}
+        data={prices}
         editingMode="row"
         enableEditing={true}
         enableColumnDragging={false}

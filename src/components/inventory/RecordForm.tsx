@@ -13,9 +13,8 @@ import {
   useTheme,
   MenuItem,
 } from '@mui/material';
-import { Vensions, FreezerWithVensions, AnimalParts } from '@/general_types';
+import { Vensions, FreezerWithVensions } from '@/general_types';
 import { validateVension } from '@/validation';
-import { animals } from '@/mocked_general_data';
 
 export const RecordForm = ({
   open,

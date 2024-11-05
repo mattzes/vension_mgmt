@@ -1,10 +1,9 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { MaterialReactTable, type MRT_ColumnDef, type MRT_Row } from 'material-react-table';
 import { Box, Button, IconButton, MenuItem, Tooltip } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import { RecordForm } from '@/components/inventory/RecordForm';
-import { animals } from '@/mocked_general_data';
-import { Vensions, AnimalParts } from '@/general_types';
+import { Animal, Vensions } from '@/general_types';
 import { FreezerContext } from '@/context/FreezerContext';
 
 export type MuiTextFieldProps = {
@@ -35,6 +34,7 @@ export type MyColumnDef = MRT_ColumnDef<Vensions> & {
 const InventoryTable = ({ freezerId, fullscreen }: { freezerId: string; fullscreen: boolean }) => {
   const { freezers, addVension, deleteVension, updateVension } = useContext(FreezerContext);
   const freezer = freezers.find(freezer => freezer.id === freezerId) ?? { id: '0', drawerNumbers: 0, vensions: [] };
+  const [animals, setAnimals] = useState<Animal[]>([]);
   const drawerNumbers: Array<string | number> = ['Nicht zugewiesen'];
   for (let i = 1; freezer && i <= freezer.drawerNumbers; i++) {
     drawerNumbers.push(i);
@@ -179,6 +179,15 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: string; fullscre
       },
     },
   ]);
+
+  useEffect(() => {
+    const fetchAnimals = async () => {
+      const animals = await fetch('/api/animals').then(res => res.json());
+      setAnimals(animals);
+    };
+
+    fetchAnimals();
+  }, []);
 
   const updateDropDowns = ({ freezerId = '', animalName = '' }: { freezerId?: string; animalName?: string }) => {
     if (freezerId) {

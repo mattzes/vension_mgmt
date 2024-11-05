@@ -1,11 +1,10 @@
 'use client';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { MaterialReactTable, MRT_Row, type MRT_ColumnDef } from 'material-react-table';
 import { Box, Button, Container, IconButton, Tooltip, useMediaQuery, useTheme } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import { RecordForm } from './RecordForm';
 import { Freezer } from '../../general_types';
-import { freezers_only } from '../../mocked_general_data';
 
 export type MuiTextFieldProps = {
   type: 'number' | 'text';
@@ -22,7 +21,7 @@ export const FreezerTable = () => {
   const theme = useTheme();
   const disableGutters = useMediaQuery(() => theme.breakpoints.down('md'));
   const [createRecordOpen, setRecordFormOpen] = useState(false);
-  const [tableData, setTableData] = useState<Freezer[]>(freezers_only);
+  const [tableData, setTableData] = useState<Freezer[]>([]);
   const [rowToEdit, setRowToEdit] = useState<MRT_Row<Freezer> | null>(null);
 
   const columns = useMemo<MyColumnDef[]>(
@@ -57,6 +56,15 @@ export const FreezerTable = () => {
     acc[column.accessorKey ?? ''] = defaultValue;
     return acc;
   }, {} as any);
+
+  useEffect(() => {
+    const fetchFreezers = async () => {
+      const freezers = await fetch('/api/freezer').then(res => res.json());
+      setTableData(freezers);
+    };
+
+    fetchFreezers();
+  }, []);
 
   const handleDeleteRow = useCallback(
     (row: MRT_Row<Freezer>) => {

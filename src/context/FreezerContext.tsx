@@ -1,8 +1,7 @@
 'use client';
 
-import { freezers as test_data } from '../mocked_general_data';
 import { FreezerWithVensions, Vensions } from '../general_types';
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 
 export type FreezerContextType = {
   freezers: FreezerWithVensions[];
@@ -25,7 +24,16 @@ export const FreezerContext = createContext<FreezerContextType>({
 });
 
 export const FreezerContextProvider = ({ children }: { children: React.ReactNode }) => {
-  const [freezers, setFreezers] = useState<FreezerWithVensions[]>(test_data); // test_data is the mocked data
+  const [freezers, setFreezers] = useState<FreezerWithVensions[]>([]);
+
+  useEffect(() => {
+    const fetchFreezers = async () => {
+      const freezer = await fetch('/api/freezers').then(res => res.json());
+      setFreezers(freezer);
+    };
+
+    fetchFreezers();
+  }, []);
 
   const addVension = (newVension: Vensions) => {
     const updatedFreezers = freezers.map(freezer => {
