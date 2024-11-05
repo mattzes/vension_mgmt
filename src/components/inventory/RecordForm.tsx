@@ -26,7 +26,7 @@ export const RecordForm = ({
   onClose,
   onUpdate,
   onSubmit,
-  setColumnsState,
+  updateDropDowns,
 }: {
   open: boolean;
   columns: MyColumnDef[];
@@ -36,7 +36,7 @@ export const RecordForm = ({
   onClose: () => void;
   onUpdate: (values: Vensions) => void;
   onSubmit: (values: Vensions) => void;
-  setColumnsState: (columns: MyColumnDef[]) => void;
+  updateDropDowns: ({ freezerId, animalName }: { freezerId?: string; animalName?: string }) => void;
 }) => {
   const [values, setValues] = useState<Vensions>(() => {
     if (rowToEdit) return rowToEdit;
@@ -87,51 +87,10 @@ export const RecordForm = ({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // update drawer number menu items if freezer_id changes
     if (e.target.name == 'animal') {
-      const animal = animals.find(animal => animal.name === String(e.target.value));
-      const animalParts: AnimalParts[] = animal ? animal?.parts : [];
-      setColumnsState(
-        columns.map(column => {
-          if (column.accessorKey === 'animalPart') {
-            return {
-              ...column,
-              muiTextFieldProps: {
-                ...column.muiTextFieldProps,
-                children: animalParts.map(animalPart => (
-                  <MenuItem key={animalPart.part} value={animalPart.part}>
-                    {animalPart.part}
-                  </MenuItem>
-                )),
-              },
-            };
-          }
-          return column;
-        })
-      );
+      updateDropDowns({ animalName: String(e.target.value) });
     }
     if (e.target.name == 'freezerId') {
-      const freezer = freezers.find(freezer => freezer.id === String(e.target.value));
-      const drawer_numbers: Array<string | number> = ['Nicht zugewiesen'];
-      for (let i = 1; freezer && i <= freezer.drawerNumbers; i++) {
-        drawer_numbers.push(i);
-      }
-      setColumnsState(
-        columns.map(column => {
-          if (column.accessorKey === 'drawerNumber') {
-            return {
-              ...column,
-              muiTextFieldProps: {
-                ...column.muiTextFieldProps,
-                children: drawer_numbers.map(drawer_number => (
-                  <MenuItem key={drawer_number} value={drawer_number}>
-                    {drawer_number}
-                  </MenuItem>
-                )),
-              },
-            };
-          }
-          return column;
-        })
-      );
+      updateDropDowns({ freezerId: String(e.target.value) });
     }
 
     setValues({ ...values, [e.target.name]: e.target.value });

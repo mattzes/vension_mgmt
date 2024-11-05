@@ -4,7 +4,7 @@ import { Box, Button, IconButton, MenuItem, Tooltip } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import { RecordForm } from '@/components/inventory/RecordForm';
 import { animals } from '@/mocked_general_data';
-import { Vensions } from '@/general_types';
+import { Vensions, AnimalParts } from '@/general_types';
 import { FreezerContext } from '@/context/FreezerContext';
 
 export type MuiTextFieldProps = {
@@ -41,7 +41,7 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: string; fullscre
   const [createRecordOpen, setRecordFormOpen] = useState(false);
   const [rowToEdit, setRowToEdit] = useState<MRT_Row<Vensions> | null>(null);
 
-  const [columns, setColums] = useState<MyColumnDef[]>([
+  const [columns, setColumns] = useState<MyColumnDef[]>([
     {
       accessorKey: 'freezerId',
       header: 'Gefrierschrank',
@@ -66,11 +66,6 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: string; fullscre
         type: 'number',
         select: true, //change to select for a dropdown
         defaultValue: 'Nicht zugewiesen',
-        children: drawerNumbers.map(drawerNumber => (
-          <MenuItem key={drawerNumber} value={drawerNumber}>
-            {drawerNumber}
-          </MenuItem>
-        )),
       },
       GroupedCell: ({ row }) => (
         <>{typeof row.original.drawerNumber === 'number' ? row.original.drawerNumber : 'Nicht zugewiesen'}</>
@@ -180,6 +175,53 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: string; fullscre
     },
   ]);
 
+  const updateDropDowns = ({ freezerId = '', animalName = '' }: { freezerId?: string; animalName?: string }) => {
+    if (freezerId) {
+      const freezer = freezers.find(freezer => freezer.id === freezerId);
+      const drawerNumbers: Array<string | number> = ['Nicht zugewiesen'];
+      if (freezer) {
+        for (let i = 1; i <= freezer.drawerNumbers; i++) {
+          drawerNumbers.push(i);
+        }
+      }
+    }
+
+    const animal = animals.find(animal => animal.name === animalName);
+    const animalParts: Array<string> = animal ? animal.parts.map(part => part.part) : [];
+
+    setColumns(
+      columns.map(column => {
+        if (column.accessorKey === 'drawerNumber' && freezerId) {
+          return {
+            ...column,
+            muiTextFieldProps: {
+              ...column.muiTextFieldProps,
+              children: drawerNumbers.map(drawer_number => (
+                <MenuItem key={drawer_number} value={drawer_number}>
+                  {drawer_number}
+                </MenuItem>
+              )),
+            },
+          };
+        }
+        if (column.accessorKey === 'animalPart' && animalName) {
+          return {
+            ...column,
+            muiTextFieldProps: {
+              ...column.muiTextFieldProps,
+              children: animalParts.map(animalPart => (
+                <MenuItem key={animalPart} value={animalPart}>
+                  {animalPart}
+                </MenuItem>
+              )),
+            },
+          };
+        }
+        return column;
+      })
+    );
+  };
+
   const defaultValues = columns.reduce((acc, column) => {
     const defaultValue = column.muiTextFieldProps?.defaultValue ?? '';
     acc[column.accessorKey ?? ''] = defaultValue;
@@ -198,6 +240,7 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: string; fullscre
 
   const setEditingRow = (row: MRT_Row<Vensions>) => {
     setRowToEdit(row);
+    updateDropDowns({ freezerId: row.original.freezerId, animalName: row.original.animal });
     setRecordFormOpen(true);
   };
 
@@ -205,10 +248,6 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: string; fullscre
     if (rowToEdit) {
       updateVension(freezer.id, values);
     }
-  };
-
-  const setColumsFromForm = (columns: MyColumnDef[]) => {
-    setColums(columns);
   };
 
   return (
@@ -271,7 +310,7 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: string; fullscre
         onClose={handleOnCloseForm}
         onUpdate={handleSaveRowEdits}
         onSubmit={addVension}
-        setColumnsState={setColumsFromForm}
+        updateDropDowns={updateDropDowns}
       />
     </>
   );
