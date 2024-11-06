@@ -2,7 +2,7 @@ export type FreezerWithVensions = {
   id: string;
   name: string;
   drawerCount: number;
-  vensions: Vensions[];
+  vensions: Vension[];
 };
 
 export type Freezer = {
@@ -22,7 +22,7 @@ export type Animal = {
   parts: Record<string, number>;
 };
 
-export type Vensions = {
+export type Vension = {
   id: string;
   freezerId: string;
   drawerNumber: number | string;
@@ -33,4 +33,13 @@ export type Vensions = {
   date: string;
   price: number;
   reservedFor: string;
+};
+
+export type VensionToDB = Omit<Vension, 'price'> & { date: number };
+
+export const pepareVensionForDB = (vension: Vension): VensionToDB => {
+  const data = { ...vension, date: new Date(vension.date).getTime() } as any;
+  delete data.price;
+
+  return data;
 };

@@ -3,7 +3,7 @@ import { MaterialReactTable, type MRT_ColumnDef, type MRT_Row } from 'material-r
 import { Box, Button, IconButton, MenuItem, Tooltip } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import { RecordForm } from '@/components/inventory/RecordForm';
-import { Animal, FreezerWithVensions, Vensions } from '@/general_types';
+import { Animal, FreezerWithVensions, Vension } from '@/general_types';
 import { FreezerContext } from '@/context/FreezerContext';
 
 export type MuiTextFieldProps = {
@@ -16,7 +16,7 @@ export type MuiTextFieldProps = {
   value?: any;
 };
 
-export type MyColumnDef = MRT_ColumnDef<Vensions> & {
+export type MyColumnDef = MRT_ColumnDef<Vension> & {
   accessorKey:
     | 'freezerId'
     | 'drawerNumber'
@@ -48,7 +48,7 @@ const InventoryTable = ({
     drawerCount.push(i);
   }
   const [createRecordOpen, setRecordFormOpen] = useState(false);
-  const [rowToEdit, setRowToEdit] = useState<MRT_Row<Vensions> | null>(null);
+  const [rowToEdit, setRowToEdit] = useState<MRT_Row<Vension> | null>(null);
 
   const defaultColumns: MyColumnDef[] = [
     {
@@ -260,7 +260,7 @@ const InventoryTable = ({
     setRecordFormOpen(true);
   };
 
-  const setEditingRow = (row: MRT_Row<Vensions>) => {
+  const setEditingRow = (row: MRT_Row<Vension>) => {
     const rowNew = {
       ...row,
       original: {
@@ -273,7 +273,7 @@ const InventoryTable = ({
     setRecordFormOpen(true);
   };
 
-  const handleSaveRowEdits = (values: Vensions) => {
+  const handleSaveRowEdits = (values: Vension) => {
     if (rowToEdit) {
       updateVension(freezer.id, values);
     }

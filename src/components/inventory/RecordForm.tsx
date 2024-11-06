@@ -13,7 +13,7 @@ import {
   useTheme,
   MenuItem,
 } from '@mui/material';
-import { Vensions, FreezerWithVensions } from '@/general_types';
+import { Vension, FreezerWithVensions } from '@/general_types';
 import { validateVension } from '@/validation';
 
 export const RecordForm = ({
@@ -30,16 +30,16 @@ export const RecordForm = ({
 }: {
   open: boolean;
   columns: MyColumnDef[];
-  rowToEdit: Vensions | null;
-  defaultValues: Vensions;
+  rowToEdit: Vension | null;
+  defaultValues: Vension;
   freezers: FreezerWithVensions[];
   onClose: () => void;
-  onUpdate: (values: Vensions) => void;
-  onSubmit: (values: Vensions) => void;
+  onUpdate: (values: Vension) => void;
+  onSubmit: (values: Vension) => void;
   updateDropDowns: ({ freezerId, animalName }: { freezerId?: string; animalName?: string }) => void;
   setDefaultColumns: () => void;
 }) => {
-  const [values, setValues] = useState<Vensions>(() => {
+  const [values, setValues] = useState<Vension>(() => {
     if (rowToEdit) return rowToEdit;
     else return defaultValues;
   });
