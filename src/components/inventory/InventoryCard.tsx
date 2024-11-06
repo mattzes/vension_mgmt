@@ -37,8 +37,6 @@ const InventoryCard = ({ freezer }: { freezer: FreezerWithVensions }) => {
   const [expanded, setExpanded] = useState(true);
   const isBelowMd = useMediaQuery(theme.breakpoints.down('md'));
 
-  const { freezers } = useContext(FreezerContext);
-
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
