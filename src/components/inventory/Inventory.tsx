@@ -17,9 +17,9 @@ export default function Inventory() {
   }, []);
   return (
     <>
-      {freezers.length === 0 ? (
+      {freezers.length === 0 || animals.length === 0 ? (
         <Typography variant="h6" align="center" mt={5}>
-          Derzeit sind keine Gefriertruhen angelegt.
+          Derzeit sind keine Gefriertruhen oder Preiskombinationen angelegt.
         </Typography>
       ) : (
         freezers.map(freezer => <InventoryCard key={freezer.id} freezer={freezer} animals={animals} />)
