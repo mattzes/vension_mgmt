@@ -38,6 +38,12 @@ export async function PUT(req: NextRequest) {
 
     const docRef = doc(db, 'freezer', data.id);
 
+    const docSnap = await getDoc(docRef);
+    if (!docSnap.exists()) {
+      // Return a message if the document doesn't exist
+      return NextResponse.json({ error: `No document found to update with id: ${data.id}` }, { status: 404 });
+    }
+
     await updateDoc(docRef, data);
 
     return NextResponse.json({ message: 'success' }, { status: 202 });
@@ -48,14 +54,14 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
-    const data = await req.json();
+    const { id } = await req.json();
 
-    const docRef = doc(db, 'freezer', data.id);
+    const docRef = doc(db, 'freezer', id);
 
     const docSnap = await getDoc(docRef);
     if (!docSnap.exists()) {
       // Return a message if the document doesn't exist
-      return NextResponse.json({ error: 'No document found to delete' }, { status: 404 });
+      return NextResponse.json({ error: `No document found to delete with id: ${id}` }, { status: 404 });
     }
 
     await deleteDoc(docRef);
