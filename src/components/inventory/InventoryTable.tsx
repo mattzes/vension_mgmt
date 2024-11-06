@@ -145,7 +145,7 @@ const InventoryTable = ({
       muiTextFieldProps: {
         required: true,
         type: 'month',
-        defaultValue: `${new Date().getFullYear()}-${new Date().toLocaleString('de-DE', { month: '2-digit' })}`,
+        defaultValue: new Date(),
       },
       Cell: ({ row }) => {
         const currentDate = new Date(row.original.date);
