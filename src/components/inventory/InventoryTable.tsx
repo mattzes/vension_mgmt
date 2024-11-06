@@ -33,11 +33,11 @@ export type MyColumnDef = MRT_ColumnDef<Vensions> & {
 
 const InventoryTable = ({ freezerId, fullscreen }: { freezerId: string; fullscreen: boolean }) => {
   const { freezers, addVension, deleteVension, updateVension } = useContext(FreezerContext);
-  const freezer = freezers.find(freezer => freezer.id === freezerId) ?? { id: '0', drawerNumbers: 0, vensions: [] };
+  const freezer = freezers.find(freezer => freezer.id === freezerId) ?? { id: '0', drawerCount: 0, vensions: [] };
   const [animals, setAnimals] = useState<Animal[]>([]);
-  const drawerNumbers: Array<string | number> = ['Nicht zugewiesen'];
-  for (let i = 1; freezer && i <= freezer.drawerNumbers; i++) {
-    drawerNumbers.push(i);
+  const drawerCount: Array<string | number> = ['Nicht zugewiesen'];
+  for (let i = 1; freezer && i <= freezer.drawerCount; i++) {
+    drawerCount.push(i);
   }
   const [createRecordOpen, setRecordFormOpen] = useState(false);
   const [rowToEdit, setRowToEdit] = useState<MRT_Row<Vensions> | null>(null);
@@ -192,16 +192,16 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: string; fullscre
   const updateDropDowns = ({ freezerId = '', animalName = '' }: { freezerId?: string; animalName?: string }) => {
     if (freezerId) {
       const freezer = freezers.find(freezer => freezer.id === freezerId);
-      const drawerNumbers: Array<string | number> = ['Nicht zugewiesen'];
+      const drawerCount: Array<string | number> = ['Nicht zugewiesen'];
       if (freezer) {
-        for (let i = 1; i <= freezer.drawerNumbers; i++) {
-          drawerNumbers.push(i);
+        for (let i = 1; i <= freezer.drawerCount; i++) {
+          drawerCount.push(i);
         }
       }
     }
 
     const animal = animals.find(animal => animal.name === animalName);
-    const animalParts: Array<string> = animal ? animal.parts.map(part => part.part) : [];
+    const animalParts: Array<string> = animal && animal.parts ? Object.keys(animal.parts) : [];
 
     setColumns(
       columns.map(column => {
@@ -211,9 +211,9 @@ const InventoryTable = ({ freezerId, fullscreen }: { freezerId: string; fullscre
             muiTextFieldProps: {
               ...column.muiTextFieldProps,
               disabled: false,
-              children: drawerNumbers.map(drawer_number => (
-                <MenuItem key={drawer_number} value={drawer_number}>
-                  {drawer_number}
+              children: drawerCount.map(drawerNumber => (
+                <MenuItem key={drawerNumber} value={drawerNumber}>
+                  {drawerNumber}
                 </MenuItem>
               )),
             },

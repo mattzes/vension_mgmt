@@ -4,17 +4,17 @@ export const freezers_only: Freezer[] = [
   {
     id: '1',
     name: 'Gefrierschrank 1',
-    drawerNumbers: 10,
+    drawerCount: 10,
   },
   {
     id: '2',
     name: 'Gefrierschrank 2',
-    drawerNumbers: 5,
+    drawerCount: 5,
   },
   {
     id: '3',
     name: 'Gefrierschrank 3',
-    drawerNumbers: 8,
+    drawerCount: 8,
   },
 ];
 
@@ -22,7 +22,7 @@ export const freezers: FreezerWithVensions[] = [
   {
     id: '1',
     name: 'Gefrierschrank 1',
-    drawerNumbers: 10,
+    drawerCount: 10,
     vensions: [
       {
         id: '1',
@@ -102,7 +102,7 @@ export const freezers: FreezerWithVensions[] = [
   {
     id: '2',
     name: 'Gefrierschrank 2',
-    drawerNumbers: 5,
+    drawerCount: 5,
     vensions: [
       {
         id: '1',
@@ -146,7 +146,7 @@ export const freezers: FreezerWithVensions[] = [
   {
     id: '3',
     name: 'Gefrierschrank 3',
-    drawerNumbers: 8,
+    drawerCount: 8,
     vensions: [],
   },
 ];
@@ -182,18 +182,18 @@ export const prices: Price[] = [
 export const animals: Animal[] = [
   {
     name: 'Reh',
-    parts: [
-      { part: 'Keule', price: 10.0 },
-      { part: 'Rücken', price: 12.5 },
-      // Weitere Teile...
-    ],
+    parts: {
+      Rücken: 10.0,
+      Keule: 15.0,
+      Brust: 7.5,
+    },
   },
   {
     name: 'Hirsch',
-    parts: [
-      { part: 'Keule', price: 15.0 },
-      { part: 'Nacken', price: 9.5 },
-      // Weitere Teile...
-    ],
+    parts: {
+      Rücken: 12.0,
+      Keule: 17.0,
+      Brust: 8.5,
+    },
   },
 ];

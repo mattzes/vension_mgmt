@@ -1,14 +1,14 @@
 export type FreezerWithVensions = {
   id: string;
   name: string;
-  drawerNumbers: number;
+  drawerCount: number;
   vensions: Vensions[];
 };
 
 export type Freezer = {
   id: string;
   name: string;
-  drawerNumbers: number;
+  drawerCount: number;
 };
 
 export type Price = {

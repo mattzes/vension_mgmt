@@ -58,7 +58,7 @@ export const RecordForm = ({
   const handleSubmit = () => {
     const errors = validateVension(values);
 
-    const freezer_drawer_numbers = freezers.find(freezer => freezer.id === values.freezerId)?.drawerNumbers;
+    const freezer_drawer_numbers = freezers.find(freezer => freezer.id === values.freezerId)?.drawerCount;
     if (freezer_drawer_numbers) {
       if (values.drawerNumber !== 'Nicht zugewiesen' && Number(values.drawerNumber) > freezer_drawer_numbers!) {
         errors.drawer_number = 'Diese Schublade existiert nicht';
