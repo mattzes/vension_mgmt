@@ -93,11 +93,21 @@ export const PricingTable = () => {
   }, {} as any);
 
   const handleDeleteRow = useCallback(
-    (row: MRT_Row<Price>) => {
+    async (row: MRT_Row<Price>) => {
       if (!confirm('Bist du sicher, dass du diesen Eintrag löschen möchtest?')) {
         return;
       }
-      //send api delete request here, then refetch or update local table data for re-render
+
+      const req = await fetch('/api/price/', {
+        method: 'DELETE',
+        body: JSON.stringify(row.original),
+      });
+
+      if (!req.ok) {
+        alert('Ein Fehler ist aufgetreten. Bitte versuche es später erneut.');
+        return;
+      }
+
       const newTableData = prices.filter((_, index) => index !== row.index);
       setPrices(newTableData);
     },
@@ -118,9 +128,18 @@ export const PricingTable = () => {
     setRowToEdit(null);
   };
 
-  const handleSaveRowEdits = (values: Price) => {
+  const handleSaveRowEdits = async (values: Price) => {
     if (rowToEdit) {
-      //send/receive api updates here, then refetch or update local table data for re-render
+      const req = await fetch('/api/price/', {
+        method: 'PUT',
+        body: JSON.stringify(values),
+      });
+
+      if (!req.ok) {
+        alert('Ein Fehler ist aufgetreten. Bitte versuche es später erneut.');
+        return;
+      }
+
       const editedTableData = [...prices];
       editedTableData[rowToEdit.index] = values;
       setPrices(editedTableData);
@@ -129,7 +148,17 @@ export const PricingTable = () => {
     }
   };
 
-  const handleCreateRecord = (values: Price) => {
+  const handleCreateRecord = async (values: Price) => {
+    const req = await fetch('/api/price/', {
+      method: 'POST',
+      body: JSON.stringify(values),
+    });
+
+    if (!req.ok) {
+      alert('Ein Fehler ist aufgetreten. Bitte versuche es später erneut.');
+      return;
+    }
+
     const editedTableData = [...prices];
     setPrices([...editedTableData, values]);
   };
