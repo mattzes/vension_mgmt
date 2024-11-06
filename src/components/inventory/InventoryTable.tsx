@@ -5,6 +5,7 @@ import { Delete, Edit } from '@mui/icons-material';
 import { RecordForm } from '@/components/inventory/RecordForm';
 import { Animal, FreezerWithVensions, Vensions } from '@/general_types';
 import { FreezerContext } from '@/context/FreezerContext';
+import { date } from 'joi';
 
 export type MuiTextFieldProps = {
   type: 'number' | 'text' | 'month';
@@ -14,6 +15,7 @@ export type MuiTextFieldProps = {
   required?: boolean;
   onChange?: any;
   disabled?: boolean;
+  value?: any;
 };
 
 export type MyColumnDef = MRT_ColumnDef<Vensions> & {
@@ -254,8 +256,15 @@ const InventoryTable = ({
   };
 
   const setEditingRow = (row: MRT_Row<Vensions>) => {
-    setRowToEdit(row);
-    updateDropDowns({ freezerId: row.original.freezerId, animalName: row.original.animal });
+    const rowNew = {
+      ...row,
+      original: {
+        ...row.original,
+        date: new Date(row.original.date).toISOString().substring(0, 7),
+      },
+    };
+    setRowToEdit(rowNew);
+    updateDropDowns({ freezerId: rowNew.original.freezerId, animalName: rowNew.original.animal });
     setRecordFormOpen(true);
   };
 
