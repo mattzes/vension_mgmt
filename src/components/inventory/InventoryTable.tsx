@@ -75,13 +75,13 @@ const InventoryTable = ({
       muiTextFieldProps: {
         required: true,
         type: 'number',
-        disabled: true,
+        disabled: false,
         select: true, //change to select for a dropdown
-        children: (
-          <MenuItem key={'Nicht zugewiesen'} value={'Nicht zugewiesen'}>
-            {'Nicht zugewiesen'}
+        children: drawerCount.map(drawerNumber => (
+          <MenuItem key={drawerNumber} value={drawerNumber}>
+            {drawerNumber}
           </MenuItem>
-        ),
+        )),
       },
       GroupedCell: ({ row }) => (
         <>{typeof row.original.drawerNumber === 'number' ? row.original.drawerNumber : 'Nicht zugewiesen'}</>
@@ -244,7 +244,7 @@ const InventoryTable = ({
     acc[column.accessorKey ?? ''] = defaultValue;
     return acc;
   }, {} as any);
-  defaultValues.freezer_id = freezer.id;
+  defaultValues.freezerId = freezer.id;
 
   const setDefaultColumns = () => {
     setColumns(defaultColumns);
