@@ -14,7 +14,7 @@ export async function GET() {
     const animals = animalSnapshot.docs.map(doc => doc.data());
 
     const findPrice = (animalName: string, animalPart: string) => {
-      const animal = animals.find(animal => animal.animal === animalName);
+      const animal = animals.find(animal => animal.name === animalName);
       return animal && animal.parts ? animal.parts[animalPart] : 0;
     };
 
