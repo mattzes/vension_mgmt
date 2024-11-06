@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { collection, Timestamp, doc, getDoc, addDoc, updateDoc } from 'firebase/firestore';
+import { collection, Timestamp, doc, getDoc, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '@/util/firebaseConfig';
 
 export async function POST(req: NextRequest) {
@@ -46,6 +46,21 @@ export async function PUT(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-  console.log(await req.json());
-  return NextResponse.json({ message: 'success' }, { status: 204 });
+  try {
+    const { id } = await req.json();
+
+    const docRef = doc(db, 'item', id);
+
+    const docSnap = await getDoc(docRef);
+    if (!docSnap.exists()) {
+      // Return a message if the document doesn't exist
+      return NextResponse.json({ error: `No document found to delete with id: ${id}` }, { status: 404 });
+    }
+
+    await deleteDoc(docRef);
+
+    return NextResponse.json({ message: 'success' }, { status: 202 });
+  } catch (error) {
+    return NextResponse.json({ message: error }, { status: 500 });
+  }
 }
