@@ -19,12 +19,7 @@ export type Price = {
 
 export type Animal = {
   name: string;
-  parts: AnimalParts[];
-};
-
-export type AnimalParts = {
-  part: string;
-  price: number;
+  parts: Record<string, number>;
 };
 
 export type Vensions = {
