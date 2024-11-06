@@ -131,7 +131,6 @@ export const RecordForm = ({
                   onChange={handleChange}
                   error={!!errors[column.accessorKey]}
                   helperText={errors[column.accessorKey]}
-                  // defaultValue={rowToEdit ? rowToEdit[column.accessorKey] : defaultValues[column.accessorKey]}
                   value={values[column.accessorKey] || ''}
                 />
               );
