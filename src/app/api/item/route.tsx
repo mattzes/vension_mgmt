@@ -10,3 +10,8 @@ export async function PUT(req: NextRequest) {
   console.log(await req.json());
   return NextResponse.json({ message: 'success' }, { status: 202 });
 }
+
+export async function DELETE(req: NextRequest) {
+  console.log(await req.json());
+  return NextResponse.json({ message: 'success' }, { status: 204 });
+}
