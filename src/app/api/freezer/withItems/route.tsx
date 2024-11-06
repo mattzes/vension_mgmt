@@ -31,6 +31,7 @@ export async function GET() {
           id: doc.id,
           price: findPrice(data.animal, data.animalPart),
           ...data,
+          date: data.date.seconds * 1000 + data.date.nanoseconds / 1000000,
         };
       });
 
