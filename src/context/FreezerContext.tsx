@@ -28,7 +28,7 @@ export const FreezerContextProvider = ({ children }: { children: React.ReactNode
 
   useEffect(() => {
     const fetchFreezers = async () => {
-      const freezer = await fetch('/api/freezers').then(res => res.json());
+      const freezer = await fetch('/api/item/all').then(res => res.json());
       setFreezers(freezer);
     };
 
