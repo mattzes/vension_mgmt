@@ -188,12 +188,13 @@ const InventoryTable = ({
   ]);
 
   const updateDropDowns = ({ freezerId = '', animalName = '' }: { freezerId?: string; animalName?: string }) => {
+    let newSelectedFreezer: FreezerWithVensions | undefined = { id: '', name: '', drawerCount: 0, vensions: [] };
+    let currentDrawerCount: Array<string | number> = ['Nicht zugewiesen'];
     if (freezerId) {
-      const freezer = freezers.find(freezer => freezer.id === freezerId);
-      const drawerCount: Array<string | number> = ['Nicht zugewiesen'];
-      if (freezer) {
-        for (let i = 1; i <= freezer.drawerCount; i++) {
-          drawerCount.push(i);
+      newSelectedFreezer = freezers.find(freezer => freezer.id == freezerId);
+      if (newSelectedFreezer) {
+        for (let i = 1; i <= newSelectedFreezer.drawerCount; i++) {
+          currentDrawerCount.push(i);
         }
       }
     }
@@ -209,7 +210,7 @@ const InventoryTable = ({
             muiTextFieldProps: {
               ...column.muiTextFieldProps,
               disabled: false,
-              children: drawerCount.map(drawerNumber => (
+              children: currentDrawerCount.map(drawerNumber => (
                 <MenuItem key={drawerNumber} value={drawerNumber}>
                   {drawerNumber}
                 </MenuItem>
