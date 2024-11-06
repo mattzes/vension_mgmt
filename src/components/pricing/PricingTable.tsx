@@ -37,7 +37,7 @@ export const PricingTable = () => {
           required: true,
           type: 'text',
           defaultValue: '',
-          select: true, //change to select for a dropdown
+          select: false, //change to select for a dropdown
           children: prices.map(price => (
             <MenuItem key={price.animal} value={price.animal}>
               {price.animal}
@@ -54,7 +54,7 @@ export const PricingTable = () => {
           defaultValue: '',
           required: true,
           type: 'text',
-          select: true, //change to select for a dropdown
+          select: false, //change to select for a dropdown
           children: prices.map(price => (
             <MenuItem key={price.animalPart} value={price.animalPart}>
               {price.animalPart}
