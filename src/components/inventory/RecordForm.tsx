@@ -26,6 +26,7 @@ export const RecordForm = ({
   onUpdate,
   onSubmit,
   updateDropDowns,
+  setDefaultColumns,
 }: {
   open: boolean;
   columns: MyColumnDef[];
@@ -36,6 +37,7 @@ export const RecordForm = ({
   onUpdate: (values: Vensions) => void;
   onSubmit: (values: Vensions) => void;
   updateDropDowns: ({ freezerId, animalName }: { freezerId?: string; animalName?: string }) => void;
+  setDefaultColumns: () => void;
 }) => {
   const [values, setValues] = useState<Vensions>(() => {
     if (rowToEdit) return rowToEdit;
@@ -92,13 +94,14 @@ export const RecordForm = ({
       updateDropDowns({ freezerId: String(e.target.value) });
     }
 
-    setValues({ ...values, [e.target.name]: e.target.value });
+    setValues(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleCancle = () => {
-    onClose();
     setValues(defaultValues);
+    setDefaultColumns();
     setErrors({});
+    onClose();
   };
 
   return (
@@ -128,7 +131,8 @@ export const RecordForm = ({
                   onChange={handleChange}
                   error={!!errors[column.accessorKey]}
                   helperText={errors[column.accessorKey]}
-                  defaultValue={rowToEdit ? rowToEdit[column.accessorKey] : defaultValues[column.accessorKey]}
+                  // defaultValue={rowToEdit ? rowToEdit[column.accessorKey] : defaultValues[column.accessorKey]}
+                  value={values[column.accessorKey] || ''}
                 />
               );
             })}

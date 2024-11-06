@@ -5,13 +5,11 @@ import { Delete, Edit } from '@mui/icons-material';
 import { RecordForm } from '@/components/inventory/RecordForm';
 import { Animal, FreezerWithVensions, Vensions } from '@/general_types';
 import { FreezerContext } from '@/context/FreezerContext';
-import { date } from 'joi';
 
 export type MuiTextFieldProps = {
   type: 'number' | 'text' | 'month';
   select?: boolean;
   children?: React.ReactNode;
-  defaultValue?: any;
   required?: boolean;
   onChange?: any;
   disabled?: boolean;
@@ -30,6 +28,7 @@ export type MyColumnDef = MRT_ColumnDef<Vensions> & {
     | 'price'
     | 'reservedFor';
   showInForm?: boolean;
+  defaultValue?: any;
   muiTextFieldProps?: Partial<MuiTextFieldProps>;
 };
 
@@ -51,7 +50,7 @@ const InventoryTable = ({
   const [createRecordOpen, setRecordFormOpen] = useState(false);
   const [rowToEdit, setRowToEdit] = useState<MRT_Row<Vensions> | null>(null);
 
-  const [columns, setColumns] = useState<MyColumnDef[]>([
+  const defaultColumns: MyColumnDef[] = [
     {
       accessorKey: 'freezerId',
       header: 'Gefrierschrank',
@@ -72,12 +71,12 @@ const InventoryTable = ({
       accessorKey: 'drawerNumber',
       header: 'Schublade',
       size: 0,
+      defaultValue: 'Nicht zugewiesen',
       muiTextFieldProps: {
         required: true,
         type: 'number',
         disabled: true,
         select: true, //change to select for a dropdown
-        defaultValue: 'Nicht zugewiesen',
         children: (
           <MenuItem key={'Nicht zugewiesen'} value={'Nicht zugewiesen'}>
             {'Nicht zugewiesen'}
@@ -95,11 +94,11 @@ const InventoryTable = ({
       accessorKey: 'animal',
       header: 'Tierart',
       size: 0,
+      defaultValue: '',
       muiTextFieldProps: {
         required: true,
         type: 'text',
         select: true, //change to select for a dropdown
-        defaultValue: '',
         children: animals.map(animal => (
           <MenuItem key={animal.name} value={animal.name}>
             {animal.name}
@@ -111,8 +110,8 @@ const InventoryTable = ({
       accessorKey: 'animalPart',
       header: 'Fleischart',
       size: 0,
+      defaultValue: '',
       muiTextFieldProps: {
-        defaultValue: '',
         required: true,
         type: 'text',
         disabled: true,
@@ -134,20 +133,20 @@ const InventoryTable = ({
       accessorKey: 'count',
       header: 'Anzahl',
       size: 0,
+      defaultValue: 1,
       muiTextFieldProps: {
         required: true,
         type: 'number',
-        defaultValue: 1,
       },
     },
     {
       accessorKey: 'date',
       header: 'Datum',
       size: 130,
+      defaultValue: new Date().toISOString().substring(0, 7),
       muiTextFieldProps: {
         required: true,
         type: 'month',
-        defaultValue: new Date().toISOString().substring(0, 7),
       },
       Cell: ({ row }) => {
         const currentDate = new Date(row.original.date);
@@ -187,7 +186,8 @@ const InventoryTable = ({
         type: 'text',
       },
     },
-  ]);
+  ];
+  const [columns, setColumns] = useState<MyColumnDef[]>(defaultColumns);
 
   const updateDropDowns = ({ freezerId = '', animalName = '' }: { freezerId?: string; animalName?: string }) => {
     let newSelectedFreezer: FreezerWithVensions | undefined = { id: '', name: '', drawerCount: 0, vensions: [] };
@@ -240,15 +240,20 @@ const InventoryTable = ({
   };
 
   const defaultValues = columns.reduce((acc, column) => {
-    const defaultValue = column.muiTextFieldProps?.defaultValue ?? '';
+    const defaultValue = column?.defaultValue ?? '';
     acc[column.accessorKey ?? ''] = defaultValue;
     return acc;
   }, {} as any);
   defaultValues.freezer_id = freezer.id;
 
+  const setDefaultColumns = () => {
+    setColumns(defaultColumns);
+  };
+
   const handleOnCloseForm = () => {
     setRecordFormOpen(false);
     setRowToEdit(null);
+    setDefaultColumns();
   };
 
   const handleOpenCreateRecordForm = () => {
@@ -335,6 +340,7 @@ const InventoryTable = ({
         onUpdate={handleSaveRowEdits}
         onSubmit={addVension}
         updateDropDowns={updateDropDowns}
+        setDefaultColumns={setDefaultColumns}
       />
     </>
   );
