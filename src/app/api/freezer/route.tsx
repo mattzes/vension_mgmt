@@ -36,15 +36,17 @@ export async function PUT(req: NextRequest) {
 
     // validate data
 
-    const docRef = doc(db, 'freezer', data.id);
+    const { id, ...dataToUpdate } = data;
+
+    const docRef = doc(db, 'freezer', id);
 
     const docSnap = await getDoc(docRef);
     if (!docSnap.exists()) {
       // Return a message if the document doesn't exist
-      return NextResponse.json({ error: `No document found to update with id: ${data.id}` }, { status: 404 });
+      return NextResponse.json({ error: `No document found to update with id: ${id}` }, { status: 404 });
     }
 
-    await updateDoc(docRef, data);
+    await updateDoc(docRef, dataToUpdate);
 
     return NextResponse.json({ message: 'success' }, { status: 202 });
   } catch (error) {
