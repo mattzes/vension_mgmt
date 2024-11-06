@@ -1,11 +1,20 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { FreezerContext } from '../../context/FreezerContext';
 import InventoryCard from './InventoryCard';
 import { Typography } from '@mui/material';
 
 export default function Inventory() {
   const { freezers } = useContext(FreezerContext);
+  const [animals, setAnimals] = useState([]);
 
+  useEffect(() => {
+    const fetchAnimals = async () => {
+      const animals = await fetch('/api/animal').then(res => res.json());
+      setAnimals(animals);
+    };
+
+    fetchAnimals();
+  }, []);
   return (
     <>
       {freezers.length === 0 ? (
@@ -13,7 +22,7 @@ export default function Inventory() {
           Derzeit sind keine Gefriertruhen angelegt.
         </Typography>
       ) : (
-        freezers.map(freezer => <InventoryCard key={freezer.id} freezer={freezer} />)
+        freezers.map(freezer => <InventoryCard key={freezer.id} freezer={freezer} animals={animals} />)
       )}
     </>
   );

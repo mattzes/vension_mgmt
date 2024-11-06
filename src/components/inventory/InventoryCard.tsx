@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Card,
@@ -16,8 +16,7 @@ import { useTheme } from '@mui/material/styles';
 import KitchenIcon from '@mui/icons-material/Kitchen';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import InventoryTable from './InventoryTable';
-import { FreezerContext } from '../../context/FreezerContext';
-import { FreezerWithVensions } from '@/general_types';
+import { FreezerWithVensions, Animal } from '@/general_types';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -32,7 +31,8 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
     duration: theme.transitions.duration.shortest,
   }),
 }));
-const InventoryCard = ({ freezer }: { freezer: FreezerWithVensions }) => {
+
+const InventoryCard = ({ freezer, animals }: { freezer: FreezerWithVensions; animals: Animal[] }) => {
   const theme = useTheme();
   const [expanded, setExpanded] = useState(true);
   const isBelowMd = useMediaQuery(theme.breakpoints.down('md'));
@@ -59,7 +59,7 @@ const InventoryCard = ({ freezer }: { freezer: FreezerWithVensions }) => {
         </Box>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent sx={{ p: 0, pt: 2 }}>
-            <InventoryTable key={freezer.id} freezerId={freezer.id} fullscreen={isBelowMd} />
+            <InventoryTable key={freezer.id} freezerId={freezer.id} fullscreen={isBelowMd} animals={animals} />
           </CardContent>
         </Collapse>
       </Card>
