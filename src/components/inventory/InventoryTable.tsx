@@ -147,7 +147,7 @@ const InventoryTable = ({
       muiTextFieldProps: {
         required: true,
         type: 'month',
-        defaultValue: new Date(),
+        defaultValue: new Date().toISOString().substring(0, 7),
       },
       Cell: ({ row }) => {
         const currentDate = new Date(row.original.date);
