@@ -67,11 +67,22 @@ export const FreezerTable = () => {
   }, []);
 
   const handleDeleteRow = useCallback(
-    (row: MRT_Row<Freezer>) => {
+    async (row: MRT_Row<Freezer>) => {
       if (!confirm('Bist du sicher, dass du diesen Eintrag löschen möchtest?')) {
         return;
       }
-      //send api delete request here, then refetch or update local table data for re-render
+
+      // send fetch request to delete row from database
+      const req = await fetch('/api/freezer/', {
+        method: 'DELETE',
+        body: JSON.stringify({ id: row.original.id }),
+      });
+
+      if (!req.ok) {
+        alert('Ein Fehler ist aufgetreten. Bitte versuche es später erneut.');
+        return;
+      }
+
       const editedTableData = tableData.filter((_, index) => index !== row.index);
       setTableData(editedTableData);
     },
@@ -92,18 +103,39 @@ export const FreezerTable = () => {
     setRowToEdit(null);
   };
 
-  const handleSaveRowEdits = (values: Freezer) => {
+  const handleSaveRowEdits = async (values: Freezer) => {
     if (rowToEdit) {
       const editedTableData = [...tableData];
       editedTableData[rowToEdit.index] = values;
-      //send/receive api updates here, then refetch or update local table data for re-render
+
+      // send fetch request to update row in database
+      const req = await fetch('/api/freezer/', {
+        method: 'PUT',
+        body: JSON.stringify(values),
+      });
+
+      if (!req.ok) {
+        alert('Ein Fehler ist aufgetreten. Bitte versuche es später erneut.');
+        return;
+      }
+
       setTableData(editedTableData);
     } else {
       throw new Error("Can't save edits, no row to edit");
     }
   };
 
-  const handleCreateRecord = (values: Freezer) => {
+  const handleCreateRecord = async (values: Freezer) => {
+    const req = await fetch('/api/freezer/', {
+      method: 'POST',
+      body: JSON.stringify(values),
+    });
+
+    if (!req.ok) {
+      alert('Ein Fehler ist aufgetreten. Bitte versuche es später erneut.');
+      return;
+    }
+
     setTableData([...tableData, values]);
   };
 
