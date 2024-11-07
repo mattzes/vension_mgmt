@@ -121,7 +121,7 @@ const InventoryTable = ({
     },
     {
       accessorKey: 'weight',
-      header: 'Gewicht',
+      header: 'Gewicht in g',
       size: 0,
       muiTextFieldProps: {
         required: true,
