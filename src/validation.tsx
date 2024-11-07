@@ -1,36 +1,27 @@
 import Joi from 'joi';
-export const animal_types = ['Reh', 'Wildschwein'];
-export const meat_types = ['Rücken', 'Keule', 'Für Wurst'];
-export const drawer_numbers = ['Nicht zugewiesen', 1, 2, 3, 4, 5, 6];
 
 type Schema = Record<string, any>;
 
 const vensionSchema: Record<string, any> = {
-  drawer_number: Joi.alternatives()
+  drawerNumber: Joi.alternatives()
     .try(Joi.number().integer().min(0), Joi.string().allow('Nicht Zugewiesen'))
     .required()
     .messages({
       'any.required': 'Bitte gib eine Schubladennummer an.',
       'alternatives.types': 'Bitte gib eine Schubladennummer an.',
     }),
-  animal_type: Joi.string()
-    .allow(...animal_types)
-    .required()
-    .messages({
-      'strin.base': 'Bitte gib eine Tierart an.',
-      'string.empty': 'Bitte gib eine Tierart an.',
-      'string.allowOnly': 'Bitte gib eine Tierart an.',
-      'any.required': 'Bitte gib eine Tierart an.',
-    }),
-  meat_type: Joi.string()
-    .allow(...meat_types)
-    .required()
-    .messages({
-      'strin.base': 'Bitte gib eine Fleischart an.',
-      'string.empty': 'Bitte gib eine Fleischart an.',
-      'string.allowOnly': 'Bitte gib eine Fleischart an.',
-      'any.required': 'Bitte gib eine Fleischart an.',
-    }),
+  animal: Joi.string().required().messages({
+    'strin.base': 'Bitte gib eine Tierart an.',
+    'string.empty': 'Bitte gib eine Tierart an.',
+    'string.allowOnly': 'Bitte gib eine Tierart an.',
+    'any.required': 'Bitte gib eine Tierart an.',
+  }),
+  animalPart: Joi.string().required().messages({
+    'strin.base': 'Bitte gib eine Fleischart an.',
+    'string.empty': 'Bitte gib eine Fleischart an.',
+    'string.allowOnly': 'Bitte gib eine Fleischart an.',
+    'any.required': 'Bitte gib eine Fleischart an.',
+  }),
   weight: Joi.number().min(0).required().messages({
     'number.base': 'Bitte gib ein Gewicht an.',
     'number.empty': 'Bitte gib ein Gewicht an.',
@@ -38,42 +29,34 @@ const vensionSchema: Record<string, any> = {
     'any.required': 'Bitte gib ein Gewicht an.',
   }),
   count: Joi.number().integer().min(0).required().messages({
-    'number.base': 'Bitte gib ein Gewicht an.',
-    'number.empty': 'Bitte gib ein Gewicht an.',
+    'number.base': 'Bitte gib ein Anzahl an.',
+    'number.empty': 'Bitte gib ein Anzahl an.',
     'number.min': 'Die Zahl muss größer als 0 sein.',
-    'number.integer': 'Bitte gib eine ganze Zahl an.',
-    'any.required': 'Bitte gib ein Gewicht an.',
+    'number.integer': 'Bitte gib eine ganze Anzahl an.',
+    'any.required': 'Bitte gib ein Anzahl an.',
   }),
   date: Joi.date().iso().required().messages({
     'date.base': 'Bitte gib ein gültiges Datum im ISO Format an.',
     'date.iso': 'Bitte gib ein gültiges Datum im ISO Format an.',
     'any.required': 'Bitte gib ein Datum an.',
   }),
-  reserved_for: Joi.string().max(255).allow(null, '').messages({
+  reservedFor: Joi.string().max(255).allow(null, '').messages({
     'string.base': 'Bitte gib nur Buchstaben an.',
     'string.max': 'Bitte gib maximal 255 Buchstaben an.',
   }),
 };
 
 const priceSchema: Record<string, any> = {
-  animal_type: Joi.string()
-    .allow(...animal_types)
-    .required()
-    .messages({
-      'strin.base': 'Bitte gib eine Tierart an.',
-      'string.empty': 'Bitte gib eine Tierart an.',
-      'string.allowOnly': 'Bitte gib eine Tierart an.',
-      'any.required': 'Bitte gib eine Tierart an.',
-    }),
-  meat_type: Joi.string()
-    .allow(...meat_types)
-    .required()
-    .messages({
-      'strin.base': 'Bitte gib eine Fleischart an.',
-      'string.empty': 'Bitte gib eine Fleischart an.',
-      'string.allowOnly': 'Bitte gib eine Fleischart an.',
-      'any.required': 'Bitte gib eine Fleischart an.',
-    }),
+  animal: Joi.string().required().messages({
+    'strin.base': 'Bitte gib eine Tierart an.',
+    'string.empty': 'Bitte gib eine Tierart an.',
+    'any.required': 'Bitte gib eine Tierart an.',
+  }),
+  animalPart: Joi.string().required().messages({
+    'strin.base': 'Bitte gib eine Fleischart an.',
+    'string.empty': 'Bitte gib eine Fleischart an.',
+    'any.required': 'Bitte gib eine Fleischart an.',
+  }),
   price: Joi.number().min(0).required().messages({
     'number.base': 'Bitte gib einen Preis an.',
     'number.empty': 'Bitte gib einen Preis an.',
@@ -84,14 +67,15 @@ const priceSchema: Record<string, any> = {
 
 const freezerSchema: Record<string, any> = {
   name: Joi.string().required().messages({
-    'strin.base': 'Bitte gib eine Tierart an.',
-    'string.empty': 'Bitte gib eine Tierart an.',
-    'any.required': 'Bitte gib eine Tierart an.',
+    'strin.base': 'Bitte gib eine Namen an.',
+    'string.empty': 'Bitte gib eine Namen an.',
+    'any.required': 'Bitte gib eine Namen an.',
   }),
-  drawer_numbers: Joi.number().min(1).required().messages({
+  drawerCount: Joi.number().min(1).max(20).required().messages({
     'number.base': 'Bitte gib einen Anzahl an.',
     'number.empty': 'Bitte gib eine Anzahl an.',
     'number.min': 'Die Anzahl muss größer als 0 sein.',
+    'number.max': 'Die Anzahl muss kleiner als 20 sein.',
     'any.required': 'Bitte gib eine Anzahl an.',
   }),
 };
@@ -121,5 +105,7 @@ export const validatePrice = (values: Record<string, any>) => {
 };
 
 export const validateFreezer = (values: Record<string, any>) => {
-  return validateValues(values, freezerSchema);
+  const errors = validateValues(values, freezerSchema);
+  console.log(errors);
+  return errors;
 };
