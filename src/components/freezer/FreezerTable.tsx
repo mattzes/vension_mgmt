@@ -134,6 +134,9 @@ export const FreezerTable = () => {
     if (!req.ok) {
       alert('Ein Fehler ist aufgetreten. Bitte versuche es später erneut.');
       return;
+    } else {
+      const { id } = await req.json();
+      values.id = id;
     }
 
     setTableData([...tableData, values]);

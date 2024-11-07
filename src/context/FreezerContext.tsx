@@ -57,6 +57,16 @@ export const FreezerContextProvider = ({ children }: { children: React.ReactNode
     if (!req.ok) {
       deleteVensionlocaly(newVension.freezerId, newVension.id);
       alert('Ein Fehler ist aufgetreten. Bitte versuche es später erneut.');
+    } else {
+      const { id } = await req.json();
+      const updatedFreezers = freezers.map(freezer => {
+        if (freezer.id === newVension.freezerId) {
+          return { ...freezer, vensions: [...freezer.vensions, { ...newVension, id: id }] };
+        }
+        return freezer;
+      });
+      console.log(updatedFreezers);
+      setFreezers(updatedFreezers);
     }
   };
 
@@ -91,7 +101,17 @@ export const FreezerContextProvider = ({ children }: { children: React.ReactNode
     }
   };
 
-  const updateVension = (currentFreezerId: string, updatedVension: Vension) => {
+  const updateVension = async (currentFreezerId: string, updatedVension: Vension) => {
+    const req = await fetch('/api/item', {
+      method: 'PUT',
+      body: JSON.stringify(pepareVensionForDB(updatedVension)),
+    });
+
+    if (!req.ok) {
+      alert('Ein Fehler ist aufgetreten. Bitte versuche es später erneut.');
+      return;
+    }
+
     const updatedFreezers = freezers.map(freezer => {
       if (currentFreezerId === updatedVension.freezerId && freezer.id === updatedVension.freezerId) {
         // if the vension is updated in the current freezer, update the vension in the current freezer
