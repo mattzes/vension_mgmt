@@ -16,7 +16,7 @@ export type MuiTextFieldProps = {
 export type MyColumnDef = MRT_ColumnDef<Price> & {
   accessorKey: 'animal' | 'animalPart' | 'price';
   showInForm?: boolean;
-  muiTextFieldProps?: () => MuiTextFieldProps;
+  muiTextFieldProps?: MuiTextFieldProps;
 };
 
 export const PricingTable = () => {
@@ -33,44 +33,34 @@ export const PricingTable = () => {
         accessorKey: 'animal',
         header: 'Tierart',
         size: 0,
-        muiTextFieldProps: () => ({
+        muiTextFieldProps: {
           required: true,
           type: 'text',
           defaultValue: '',
           select: false, //change to select for a dropdown
-          children: prices.map(price => (
-            <MenuItem key={price.animal} value={price.animal}>
-              {price.animal}
-            </MenuItem>
-          )),
-        }),
+        },
       },
       {
         showInForm: true,
         accessorKey: 'animalPart',
         header: 'Fleischart',
         size: 0,
-        muiTextFieldProps: () => ({
+        muiTextFieldProps: {
           defaultValue: '',
           required: true,
           type: 'text',
           select: false, //change to select for a dropdown
-          children: prices.map(price => (
-            <MenuItem key={price.animalPart} value={price.animalPart}>
-              {price.animalPart}
-            </MenuItem>
-          )),
-        }),
+        },
       },
       {
         showInForm: true,
         accessorKey: 'price',
         header: 'Preis',
         size: 0,
-        muiTextFieldProps: () => ({
+        muiTextFieldProps: {
           required: true,
           type: 'number',
-        }),
+        },
         Cell: ({ row }) => <>{row.original.price?.toString().replace('.', ',')}€</>,
       },
     ],
@@ -87,7 +77,7 @@ export const PricingTable = () => {
   }, []);
 
   const defaultValues = columns.reduce((acc, column) => {
-    const defaultValue = column.muiTextFieldProps?.().defaultValue ?? '';
+    const defaultValue = column.muiTextFieldProps?.defaultValue ?? '';
     acc[column.accessorKey ?? ''] = defaultValue;
     return acc;
   }, {} as any);
