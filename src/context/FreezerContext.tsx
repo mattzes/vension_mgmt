@@ -65,7 +65,6 @@ export const FreezerContextProvider = ({ children }: { children: React.ReactNode
         }
         return freezer;
       });
-      console.log(updatedFreezers);
       setFreezers(updatedFreezers);
     }
   };
