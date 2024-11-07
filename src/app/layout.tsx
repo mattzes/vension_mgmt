@@ -1,5 +1,6 @@
 import NavBar from '@/components/NavBar';
 import ThemeRegistry from '@/components/ThemeRegistry/ThemeRegistry';
+import { ConfirmAlertContextProvider } from '@/context/ConfirmAlertContext';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -12,8 +13,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body style={{ margin: 0 }}>
         <ThemeRegistry>
-          <NavBar />
-          {children}
+          <ConfirmAlertContextProvider>
+            <NavBar />
+            {children}
+          </ConfirmAlertContextProvider>
         </ThemeRegistry>
       </body>
     </html>
