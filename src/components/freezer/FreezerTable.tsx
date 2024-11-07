@@ -68,7 +68,11 @@ export const FreezerTable = () => {
 
   const handleDeleteRow = useCallback(
     async (row: MRT_Row<Freezer>) => {
-      if (!confirm('Bist du sicher, dass du diesen Eintrag löschen möchtest?')) {
+      if (
+        !confirm(
+          'Bist du sicher, dass du diesen Eintrag löschen möchtest? Es werden auch alle Gegenstände in diesem Gefrierschrank gelöscht.'
+        )
+      ) {
         return;
       }
 

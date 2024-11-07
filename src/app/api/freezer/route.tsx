@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/util/firebaseConfig';
-import { collection, doc, getDoc, getDocs, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, where, query } from 'firebase/firestore';
 
 export async function GET() {
   try {
@@ -58,15 +58,21 @@ export async function DELETE(req: NextRequest) {
   try {
     const { id } = await req.json();
 
-    const docRef = doc(db, 'freezer', id);
+    const freezerRef = doc(db, 'freezer', id);
 
-    const docSnap = await getDoc(docRef);
+    const docSnap = await getDoc(freezerRef);
     if (!docSnap.exists()) {
       // Return a message if the document doesn't exist
       return NextResponse.json({ error: `No document found to delete with id: ${id}` }, { status: 404 });
     }
 
-    await deleteDoc(docRef);
+    const itemsRef = collection(db, 'item');
+    const itemsQuery = query(itemsRef, where('freezerId', '==', id));
+    const itemSnapshot = await getDocs(itemsQuery);
+    const deletePromises = itemSnapshot.docs.map(doc => deleteDoc(doc.ref));
+    await Promise.all(deletePromises);
+
+    await deleteDoc(freezerRef);
 
     return NextResponse.json({ message: 'success' }, { status: 202 });
   } catch (error) {
