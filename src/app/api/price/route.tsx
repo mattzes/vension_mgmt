@@ -2,24 +2,34 @@ import { NextRequest, NextResponse } from 'next/server';
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, query, where } from 'firebase/firestore';
 import { db } from '@/util/firebaseConfig';
 
+export const getPrice = async (animal: string, animalPart: string) => {
+  const animalPartsRef = collection(db, 'animalParts');
+  const animalPartsQuery = query(animalPartsRef, where('name', '==', animal));
+  const animalPartsSnapshot = await getDocs(animalPartsQuery);
+
+  if (animalPartsSnapshot.empty) {
+    return { success: false, error: 'Animal does not exist', status: 409 };
+  } else if (animalPartsSnapshot.docs.length > 1) {
+    return { success: false, error: 'Multiple documents found', status: 500 };
+  } else {
+    const docData = animalPartsSnapshot.docs[0].data();
+    if (!docData.parts[animalPart]) {
+      return { success: false, error: 'Animal part does not exist', status: 409 };
+    }
+    return { success: true, price: docData.parts[animalPart] };
+  }
+};
+
 export async function GET(req: NextRequest) {
   try {
     const animal = req.nextUrl.searchParams.get('animal') ?? '';
     const animalPart = req.nextUrl.searchParams.get('animalPart') ?? '';
-    const animalPartsRef = collection(db, 'animalParts');
-    const animalPartsQuery = query(animalPartsRef, where('name', '==', animal));
-    const animalPartsSnapshot = await getDocs(animalPartsQuery);
+    const result = await getPrice(animal, animalPart);
 
-    if (animalPartsSnapshot.empty) {
-      return NextResponse.json({ message: 'Animal does not exist' }, { status: 409 });
-    } else if (animalPartsSnapshot.docs.length > 1) {
-      return NextResponse.json({ message: 'Multiple documents found' }, { status: 500 });
+    if (result.success) {
+      return NextResponse.json({ animal, animalPart, price: result.price });
     } else {
-      const docData = animalPartsSnapshot.docs[0].data();
-      if (!docData.parts[animalPart]) {
-        return NextResponse.json({ message: 'Animal part does not exist' }, { status: 409 });
-      }
-      return NextResponse.json({ animal: animal, animalPart: animalPart, price: docData.parts[animalPart] });
+      return NextResponse.json({ message: result.error }, { status: result.status });
     }
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 500 });

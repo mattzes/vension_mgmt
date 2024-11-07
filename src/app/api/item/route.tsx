@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { collection, Timestamp, doc, getDoc, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '@/util/firebaseConfig';
+import { getPrice } from '@/app/api/price/route';
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,8 +15,23 @@ export async function POST(req: NextRequest) {
     };
 
     const docRef = await addDoc(collection(db, 'item'), dataToStore);
+    const docSnap = await getDoc(docRef);
+    const createdData = docSnap.data();
 
-    return NextResponse.json({ id: docRef.id, message: 'success' }, { status: 201 });
+    const animalPrice = await getPrice(createdData.animal, createdData.animalPart);
+
+    if (!animalPrice.success) {
+      return NextResponse.json({ message: animalPrice.error }, { status: animalPrice.status });
+    }
+
+    const item = {
+      id: docSnap.id,
+      ...createdData,
+      date: createdData.date.seconds * 1000 + createdData.date.nanoseconds / 1000000,
+      price: animalPrice.price,
+    };
+
+    return NextResponse.json({ item: item, message: 'success' }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 500 });
   }
