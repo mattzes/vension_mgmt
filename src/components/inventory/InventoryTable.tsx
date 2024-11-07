@@ -174,8 +174,10 @@ const InventoryTable = ({
       header: 'Preis',
       size: 0,
       Cell: ({ row }) => {
-        const displayPrice = row.original.price ? row.original.price.toString().replace('.', ',') : 0;
-        return <>{displayPrice}€</>;
+        let displayPrice = row.original.price ? row.original.price : 0;
+        displayPrice *= row.original.weight / 1000;
+        displayPrice = Math.round(displayPrice * 100) / 100;
+        return <>{displayPrice.toString().replace('.', ',')}€</>;
       },
     },
     {
