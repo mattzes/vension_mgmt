@@ -11,7 +11,7 @@ export function ConfirmAlert() {
       onClose={confirmAlertHandleCancel}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description">
-      <DialogTitle id="alert-dialog-title">{confirmAlertData.titel}</DialogTitle>
+      <DialogTitle id="alert-dialog-title">{confirmAlertData.title}</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">{confirmAlertData.message}</DialogContentText>
       </DialogContent>

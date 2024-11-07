@@ -12,14 +12,14 @@ export type ConfirmAlertContextType = {
 };
 
 export type ConfirmAlertProviderData = {
-  titel: string;
+  title: string;
   message: string;
   onConfirm: () => void;
   onCancel: () => void;
 };
 
 const defautlConfirmAlertData = {
-  titel: '',
+  title: '',
   message: '',
   onConfirm: () => {},
   onCancel: () => {},

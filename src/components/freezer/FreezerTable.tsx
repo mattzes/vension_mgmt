@@ -1,10 +1,11 @@
 'use client';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState, useContext } from 'react';
 import { MaterialReactTable, MRT_Row, type MRT_ColumnDef } from 'material-react-table';
 import { Box, Button, Container, IconButton, Tooltip, useMediaQuery, useTheme } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import { RecordForm } from './RecordForm';
 import { Freezer } from '../../general_types';
+import { ConfirmAlertContext } from '@/context/ConfirmAlertContext';
 
 export type MuiTextFieldProps = {
   type: 'number' | 'text';
@@ -24,6 +25,7 @@ export const FreezerTable = () => {
   const [tableData, setTableData] = useState<Freezer[]>([]);
   const [rowToEdit, setRowToEdit] = useState<MRT_Row<Freezer> | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { setConfirmAlertData } = useContext(ConfirmAlertContext);
 
   const columns = useMemo<MyColumnDef[]>(
     () => [
@@ -68,29 +70,30 @@ export const FreezerTable = () => {
     fetchFreezers();
   }, []);
 
+  const deleteRow = async (row: MRT_Row<Freezer>) => {
+    // send fetch request to delete row from database
+    const req = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/freezer`, {
+      method: 'DELETE',
+      body: JSON.stringify({ id: row.original.id }),
+    });
+
+    if (!req.ok) {
+      alert('Ein Fehler ist aufgetreten. Bitte versuche es später erneut.');
+      return;
+    }
+
+    const editedTableData = tableData.filter((_, index) => index !== row.index);
+    setTableData(editedTableData);
+  };
+
   const handleDeleteRow = useCallback(
     async (row: MRT_Row<Freezer>) => {
-      if (
-        !confirm(
-          'Bist du sicher, dass du diesen Eintrag löschen möchtest? Es werden auch alle Gegenstände in diesem Gefrierschrank gelöscht.'
-        )
-      ) {
-        return;
-      }
-
-      // send fetch request to delete row from database
-      const req = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/freezer`, {
-        method: 'DELETE',
-        body: JSON.stringify({ id: row.original.id }),
+      setConfirmAlertData({
+        title: 'Eintrag löschen',
+        message: `Bist du sicher, dass du ${row.original.name} löschen möchtest?`,
+        onConfirm: () => deleteRow(row),
+        onCancel: () => {},
       });
-
-      if (!req.ok) {
-        alert('Ein Fehler ist aufgetreten. Bitte versuche es später erneut.');
-        return;
-      }
-
-      const editedTableData = tableData.filter((_, index) => index !== row.index);
-      setTableData(editedTableData);
     },
     [tableData]
   );

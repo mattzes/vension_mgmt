@@ -1,10 +1,11 @@
 'use client';
-import React, { use, useCallback, useMemo, useState, useEffect } from 'react';
+import React, { useContext, useCallback, useMemo, useState, useEffect } from 'react';
 import { MaterialReactTable, MRT_Row, type MRT_ColumnDef } from 'material-react-table';
 import { Box, Button, Container, IconButton, MenuItem, Tooltip, useMediaQuery, useTheme } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import { RecordForm } from './RecordForm';
 import { Price } from '../../general_types';
+import { ConfirmAlertContext } from '@/context/ConfirmAlertContext';
 
 export type MuiTextFieldProps = {
   type: 'number' | 'text';
@@ -26,6 +27,7 @@ export const PricingTable = () => {
   const [prices, setPrices] = useState<Price[]>([]);
   const [rowToEdit, setRowToEdit] = useState<MRT_Row<Price> | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { setConfirmAlertData } = useContext(ConfirmAlertContext);
 
   const columns = useMemo<MyColumnDef[]>(
     () => [
@@ -84,24 +86,29 @@ export const PricingTable = () => {
     return acc;
   }, {} as any);
 
+  const deleteRow = async (row: MRT_Row<Price>) => {
+    const req = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/price`, {
+      method: 'DELETE',
+      body: JSON.stringify(row.original),
+    });
+
+    if (!req.ok) {
+      alert('Ein Fehler ist aufgetreten. Bitte versuche es später erneut.');
+      return;
+    }
+
+    const newTableData = prices.filter((_, index) => index !== row.index);
+    setPrices(newTableData);
+  };
+
   const handleDeleteRow = useCallback(
     async (row: MRT_Row<Price>) => {
-      if (!confirm('Bist du sicher, dass du diesen Eintrag löschen möchtest?')) {
-        return;
-      }
-
-      const req = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/price`, {
-        method: 'DELETE',
-        body: JSON.stringify(row.original),
+      setConfirmAlertData({
+        title: 'Eintrag löschen',
+        message: 'Bist du sicher, dass du diesen Eintrag löschen möchtest?',
+        onConfirm: () => deleteRow(row),
+        onCancel: () => {},
       });
-
-      if (!req.ok) {
-        alert('Ein Fehler ist aufgetreten. Bitte versuche es später erneut.');
-        return;
-      }
-
-      const newTableData = prices.filter((_, index) => index !== row.index);
-      setPrices(newTableData);
     },
     [prices]
   );

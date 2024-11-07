@@ -1,7 +1,8 @@
 'use client';
 
 import { FreezerWithVensions, Vension, Animal, VensionToDB, pepareVensionForDB } from '../general_types';
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { ConfirmAlertContext } from './ConfirmAlertContext';
 
 export type InventoryContextType = {
   freezers: FreezerWithVensions[];
@@ -31,6 +32,7 @@ export const InventoryContextProvider = ({ children }: { children: React.ReactNo
   const [freezers, setFreezers] = useState<FreezerWithVensions[]>([]);
   const [animals, setAnimals] = useState<Animal[]>([]);
   const [loadingFreezers, setLoadingFreezers] = useState(true);
+  const { setConfirmAlertData } = useContext(ConfirmAlertContext);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,7 +56,7 @@ export const InventoryContextProvider = ({ children }: { children: React.ReactNo
     setFreezers(updatedFreezers);
   };
 
-  const addVension = async (newVension: Vension) => {
+  const handleAddVension = async (newVension: Vension) => {
     addVensionLocaly(newVension);
 
     const vensionToDB: VensionToDB = pepareVensionForDB(newVension);
@@ -92,10 +94,6 @@ export const InventoryContextProvider = ({ children }: { children: React.ReactNo
   };
 
   const deleteVension = async (vension: Vension) => {
-    if (!confirm('Bist du sicher, dass du diesen Eintrag löschen möchtest?')) {
-      return;
-    }
-
     deleteVensionlocaly(vension.freezerId, vension.id);
 
     const req = await fetch(`/api/item`, {
@@ -109,7 +107,16 @@ export const InventoryContextProvider = ({ children }: { children: React.ReactNo
     }
   };
 
-  const updateVension = async (currentFreezerId: string, updatedVension: Vension) => {
+  const handleDeleteVension = async (vension: Vension) => {
+    setConfirmAlertData({
+      title: 'Löschen bestätigen',
+      message: 'Möchtest du diesen Eintrag wirklich löschen?',
+      onConfirm: () => deleteVension(vension),
+      onCancel: () => {},
+    });
+  };
+
+  const handleUpdateVension = async (currentFreezerId: string, updatedVension: Vension) => {
     const req = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/item`, {
       method: 'PUT',
       body: JSON.stringify(pepareVensionForDB(updatedVension)),
@@ -144,7 +151,15 @@ export const InventoryContextProvider = ({ children }: { children: React.ReactNo
   };
 
   return (
-    <InventoryContext.Provider value={{ freezers, loadingFreezers, animals, addVension, deleteVension, updateVension }}>
+    <InventoryContext.Provider
+      value={{
+        freezers,
+        loadingFreezers,
+        animals,
+        addVension: handleAddVension,
+        deleteVension: handleDeleteVension,
+        updateVension: handleUpdateVension,
+      }}>
       {children}
     </InventoryContext.Provider>
   );
