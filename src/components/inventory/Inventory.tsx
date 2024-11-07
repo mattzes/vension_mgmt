@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
-import { FreezerContext } from '../../context/FreezerContext';
+import { InventoryContext } from '../../context/InventoryContext';
 import InventoryCard from './InventoryCard';
 import { CircularProgress, Typography, Box } from '@mui/material';
 
 export default function Inventory() {
-  const { freezers, animals, loadingFreezers } = useContext(FreezerContext);
+  const { freezers, animals, loadingFreezers } = useContext(InventoryContext);
 
   return loadingFreezers ? (
     <Box display="flex" justifyContent="center" alignItems="center" mt={5}>

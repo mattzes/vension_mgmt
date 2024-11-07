@@ -4,7 +4,7 @@ import { Box, Button, IconButton, MenuItem, Tooltip } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import { RecordForm } from '@/components/inventory/RecordForm';
 import { Animal, FreezerWithVensions, Vension } from '@/general_types';
-import { FreezerContext } from '@/context/FreezerContext';
+import { InventoryContext } from '@/context/InventoryContext';
 
 export type MuiTextFieldProps = {
   type: 'number' | 'text' | 'month';
@@ -41,7 +41,7 @@ const InventoryTable = ({
   fullscreen: boolean;
   animals: Animal[];
 }) => {
-  const { freezers, addVension, deleteVension, updateVension } = useContext(FreezerContext);
+  const { freezers, addVension, deleteVension, updateVension } = useContext(InventoryContext);
   const freezer = freezers.find(freezer => freezer.id === freezerId) ?? { id: '0', drawerCount: 0, vensions: [] };
   const drawerCount: Array<string | number> = ['Nicht zugewiesen'];
   for (let i = 1; freezer && i <= freezer.drawerCount; i++) {

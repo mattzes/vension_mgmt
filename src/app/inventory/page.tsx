@@ -3,15 +3,15 @@
 import Inventory from '@/components/inventory/Inventory';
 import { Container } from '@mui/material';
 import * as React from 'react';
-import { FreezerContextProvider } from '@/context/FreezerContext';
+import { InventoryContextProvider } from '@/context/InventoryContext';
 
 export default function Home() {
   return (
     <Container>
       <>
-        <FreezerContextProvider>
+        <InventoryContextProvider>
           <Inventory />
-        </FreezerContextProvider>
+        </InventoryContextProvider>
       </>
     </Container>
   );

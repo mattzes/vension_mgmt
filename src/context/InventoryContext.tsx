@@ -3,7 +3,7 @@
 import { FreezerWithVensions, Vension, Animal, VensionToDB, pepareVensionForDB } from '../general_types';
 import { createContext, useEffect, useState } from 'react';
 
-export type FreezerContextType = {
+export type InventoryContextType = {
   freezers: FreezerWithVensions[];
   loadingFreezers: boolean;
   animals: Animal[];
@@ -12,7 +12,7 @@ export type FreezerContextType = {
   updateVension: (currentfreezerId: string, updatedVension: Vension) => void;
 };
 
-export const FreezerContext = createContext<FreezerContextType>({
+export const InventoryContext = createContext<InventoryContextType>({
   freezers: [],
   loadingFreezers: true,
   animals: [],
@@ -27,7 +27,7 @@ export const FreezerContext = createContext<FreezerContextType>({
   },
 });
 
-export const FreezerContextProvider = ({ children }: { children: React.ReactNode }) => {
+export const InventoryContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [freezers, setFreezers] = useState<FreezerWithVensions[]>([]);
   const [animals, setAnimals] = useState<Animal[]>([]);
   const [loadingFreezers, setLoadingFreezers] = useState(true);
@@ -144,8 +144,8 @@ export const FreezerContextProvider = ({ children }: { children: React.ReactNode
   };
 
   return (
-    <FreezerContext.Provider value={{ freezers, loadingFreezers, animals, addVension, deleteVension, updateVension }}>
+    <InventoryContext.Provider value={{ freezers, loadingFreezers, animals, addVension, deleteVension, updateVension }}>
       {children}
-    </FreezerContext.Provider>
+    </InventoryContext.Provider>
   );
 };
