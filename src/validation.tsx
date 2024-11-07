@@ -106,6 +106,5 @@ export const validatePrice = (values: Record<string, any>) => {
 
 export const validateFreezer = (values: Record<string, any>) => {
   const errors = validateValues(values, freezerSchema);
-  console.log(errors);
   return errors;
 };
