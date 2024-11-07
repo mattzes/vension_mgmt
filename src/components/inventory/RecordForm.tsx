@@ -94,7 +94,12 @@ export const RecordForm = ({
       updateDropDowns({ freezerId: String(e.target.value) });
     }
 
-    setValues(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    const type = columns.find(column => column.accessorKey === e.target.name)?.muiTextFieldProps?.type;
+    if (type === 'number' && e.target.value !== 'Nicht zugewiesen') {
+      setValues(prev => ({ ...prev, [e.target.name]: Number(e.target.value) }));
+    } else {
+      setValues(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    }
   };
 
   const handleCancle = () => {

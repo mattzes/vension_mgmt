@@ -14,7 +14,7 @@ export type MuiTextFieldProps = {
 export type MyColumnDef = MRT_ColumnDef<Freezer> & {
   accessorKey: 'id' | 'name' | 'drawerCount';
   showInForm?: boolean;
-  muiTextFieldProps?: () => MuiTextFieldProps;
+  muiTextFieldProps?: MuiTextFieldProps;
 };
 
 export const FreezerTable = () => {
@@ -31,28 +31,28 @@ export const FreezerTable = () => {
         accessorKey: 'name',
         header: 'Name',
         size: 0,
-        muiTextFieldProps: () => ({
+        muiTextFieldProps: {
           required: true,
           type: 'text',
           defaultValue: '',
-        }),
+        },
       },
       {
         showInForm: true,
         accessorKey: 'drawerCount',
         header: 'Anzahl Schubladen',
         size: 0,
-        muiTextFieldProps: () => ({
+        muiTextFieldProps: {
           required: true,
           type: 'number',
-        }),
+        },
       },
     ],
     []
   );
 
   const defaultValues = columns.reduce((acc, column) => {
-    const defaultValue = column.muiTextFieldProps?.().defaultValue ?? '';
+    const defaultValue = column.muiTextFieldProps?.defaultValue ?? '';
     acc[column.accessorKey ?? ''] = defaultValue;
     return acc;
   }, {} as any);

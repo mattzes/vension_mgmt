@@ -71,7 +71,12 @@ export const RecordForm = ({
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [e.target.name]: e.target.value });
+    const type = columns.find(column => column.accessorKey === e.target.name)?.muiTextFieldProps?.type;
+    if (type === 'number') {
+      setValues(prev => ({ ...prev, [e.target.name]: Number(e.target.value) }));
+    } else {
+      setValues(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    }
   };
 
   const handleCancle = () => {
@@ -94,7 +99,7 @@ export const RecordForm = ({
             {columns.map(column => {
               if (column.showInForm === false) return null;
 
-              const textFieldProps = column.muiTextFieldProps ? column.muiTextFieldProps() : {};
+              const textFieldProps = column.muiTextFieldProps ? column.muiTextFieldProps : {};
 
               return (
                 <TextField
