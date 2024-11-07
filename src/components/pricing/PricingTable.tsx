@@ -70,7 +70,7 @@ export const PricingTable = () => {
 
   useEffect(() => {
     const fetchPrices = async () => {
-      const prices = await fetch('/api/price/all').then(res => res.json());
+      const prices = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/price/all`).then(res => res.json());
       setPrices(prices);
       setIsLoading(false);
     };
@@ -90,7 +90,7 @@ export const PricingTable = () => {
         return;
       }
 
-      const req = await fetch('/api/price', {
+      const req = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/price`, {
         method: 'DELETE',
         body: JSON.stringify(row.original),
       });
@@ -122,7 +122,7 @@ export const PricingTable = () => {
 
   const handleSaveRowEdits = async (values: Price) => {
     if (rowToEdit) {
-      const req = await fetch('/api/price', {
+      const req = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/price`, {
         method: 'PUT',
         body: JSON.stringify(values),
       });
@@ -141,7 +141,7 @@ export const PricingTable = () => {
   };
 
   const handleCreateRecord = async (values: Price) => {
-    const req = await fetch('/api/price', {
+    const req = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/price`, {
       method: 'POST',
       body: JSON.stringify(values),
     });

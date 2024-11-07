@@ -34,9 +34,9 @@ export const InventoryContextProvider = ({ children }: { children: React.ReactNo
 
   useEffect(() => {
     const fetchData = async () => {
-      const freezers = await fetch('/api/freezer/withItems').then(res => res.json());
+      const freezers = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/freezer/withItems`).then(res => res.json());
       setFreezers(freezers);
-      const animals = await fetch('/api/animal').then(res => res.json());
+      const animals = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/animal`).then(res => res.json());
       setAnimals(animals);
       setLoadingFreezers(false);
     };
@@ -58,7 +58,7 @@ export const InventoryContextProvider = ({ children }: { children: React.ReactNo
     addVensionLocaly(newVension);
 
     const vensionToDB: VensionToDB = pepareVensionForDB(newVension);
-    const req = await fetch('/api/item', {
+    const req = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/item`, {
       method: 'POST',
       body: JSON.stringify(vensionToDB),
     });
@@ -110,7 +110,7 @@ export const InventoryContextProvider = ({ children }: { children: React.ReactNo
   };
 
   const updateVension = async (currentFreezerId: string, updatedVension: Vension) => {
-    const req = await fetch('/api/item', {
+    const req = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/item`, {
       method: 'PUT',
       body: JSON.stringify(pepareVensionForDB(updatedVension)),
     });
