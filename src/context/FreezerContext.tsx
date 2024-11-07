@@ -6,7 +6,7 @@ import { createContext, useEffect, useState } from 'react';
 export type FreezerContextType = {
   freezers: FreezerWithVensions[];
   addVension: (newVension: Vension) => void;
-  deleteVension: (freezerId: string, vensionId: string) => void;
+  deleteVension: (vension: Vension) => void;
   updateVension: (currentfreezerId: string, updatedVension: Vension) => void;
 };
 
@@ -15,7 +15,7 @@ export const FreezerContext = createContext<FreezerContextType>({
   addVension: function (newVension: Vension): void {
     throw new Error('Function not implemented.');
   },
-  deleteVension: function (freezerId: string, vensionId: string): void {
+  deleteVension: function (vension: Vension): void {
     throw new Error('Function not implemented.');
   },
   updateVension: function (currentfreezerId: string, updatedVension: Vension): void {
@@ -35,7 +35,7 @@ export const FreezerContextProvider = ({ children }: { children: React.ReactNode
     fetchFreezers();
   }, []);
 
-  const addVension = (newVension: Vension) => {
+  const addVensionLocaly = (newVension: Vension) => {
     const updatedFreezers = freezers.map(freezer => {
       if (freezer.id === newVension.freezerId) {
         return { ...freezer, vensions: [...freezer.vensions, newVension] };
@@ -45,7 +45,22 @@ export const FreezerContextProvider = ({ children }: { children: React.ReactNode
     setFreezers(updatedFreezers);
   };
 
-  const deleteVension = (freezerId: string, vensionId: string) => {
+  const addVension = async (newVension: Vension) => {
+    addVensionLocaly(newVension);
+
+    const vensionToDB: VensionToDB = pepareVensionForDB(newVension);
+    const req = await fetch('/api/item', {
+      method: 'POST',
+      body: JSON.stringify(vensionToDB),
+    });
+
+    if (!req.ok) {
+      deleteVensionlocaly(newVension.freezerId, newVension.id);
+      alert('Ein Fehler ist aufgetreten. Bitte versuche es später erneut.');
+    }
+  };
+
+  const deleteVensionlocaly = (freezerId: string, vensionId: string) => {
     const updatedFreezers = freezers.map(freezer => {
       if (freezer.id === freezerId) {
         return {
@@ -56,6 +71,20 @@ export const FreezerContextProvider = ({ children }: { children: React.ReactNode
       return freezer;
     });
     setFreezers(updatedFreezers);
+  };
+
+  const deleteVension = async (vension: Vension) => {
+    deleteVensionlocaly(vension.freezerId, vension.id);
+
+    const req = await fetch(`/api/item`, {
+      method: 'DELETE',
+      body: JSON.stringify({ id: vension.id }),
+    });
+
+    if (!req.ok) {
+      setFreezers(freezers);
+      alert('Ein Fehler ist aufgetreten. Bitte versuche es später erneut.');
+    }
   };
 
   const updateVension = (currentFreezerId: string, updatedVension: Vension) => {

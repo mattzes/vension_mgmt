@@ -318,7 +318,7 @@ const InventoryTable = ({
               </IconButton>
             </Tooltip>
             <Tooltip arrow placement="right" title="Löschen">
-              <IconButton color="error" onClick={() => deleteVension(freezerId, row.original.id)}>
+              <IconButton color="error" onClick={() => deleteVension(row.original)}>
                 <Delete />
               </IconButton>
             </Tooltip>
