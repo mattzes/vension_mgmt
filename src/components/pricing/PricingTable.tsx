@@ -69,7 +69,7 @@ export const PricingTable = () => {
 
   useEffect(() => {
     const fetchPrices = async () => {
-      const prices = await fetch('/api/price').then(res => res.json());
+      const prices = await fetch('/api/price/all').then(res => res.json());
       setPrices(prices);
     };
 
@@ -88,7 +88,7 @@ export const PricingTable = () => {
         return;
       }
 
-      const req = await fetch('/api/price/', {
+      const req = await fetch('/api/price', {
         method: 'DELETE',
         body: JSON.stringify(row.original),
       });
@@ -120,7 +120,7 @@ export const PricingTable = () => {
 
   const handleSaveRowEdits = async (values: Price) => {
     if (rowToEdit) {
-      const req = await fetch('/api/price/', {
+      const req = await fetch('/api/price', {
         method: 'PUT',
         body: JSON.stringify(values),
       });
@@ -139,7 +139,7 @@ export const PricingTable = () => {
   };
 
   const handleCreateRecord = async (values: Price) => {
-    const req = await fetch('/api/price/', {
+    const req = await fetch('/api/price', {
       method: 'POST',
       body: JSON.stringify(values),
     });

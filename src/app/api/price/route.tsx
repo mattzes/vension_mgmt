@@ -1,26 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { collection, doc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, query, where } from 'firebase/firestore';
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, query, where } from 'firebase/firestore';
 import { db } from '@/util/firebaseConfig';
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    const querySnapshot = await getDocs(collection(db, 'animalParts'));
-    const animalParts = querySnapshot.docs.map(doc => ({
-      ...doc.data(),
-    }));
+    const animal = req.nextUrl.searchParams.get('animal') ?? '';
+    const animalPart = req.nextUrl.searchParams.get('animalPart') ?? '';
+    const animalPartsRef = collection(db, 'animalParts');
+    const animalPartsQuery = query(animalPartsRef, where('name', '==', animal));
+    const animalPartsSnapshot = await getDocs(animalPartsQuery);
 
-    const prices = [];
-    for (const animalPart of animalParts) {
-      for (const [key, value] of Object.entries(animalPart.parts)) {
-        prices.push({
-          animal: animalPart.name,
-          animalPart: key,
-          price: value,
-        });
+    if (animalPartsSnapshot.empty) {
+      return NextResponse.json({ message: 'Animal does not exist' }, { status: 409 });
+    } else if (animalPartsSnapshot.docs.length > 1) {
+      return NextResponse.json({ message: 'Multiple documents found' }, { status: 500 });
+    } else {
+      const docData = animalPartsSnapshot.docs[0].data();
+      if (!docData.parts[animalPart]) {
+        return NextResponse.json({ message: 'Animal part does not exist' }, { status: 409 });
       }
+      return NextResponse.json({ animal: animal, animalPart: animalPart, price: docData.parts[animalPart] });
     }
-
-    return NextResponse.json(prices);
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 500 });
   }
