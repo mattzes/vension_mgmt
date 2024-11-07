@@ -58,10 +58,10 @@ export const FreezerContextProvider = ({ children }: { children: React.ReactNode
       deleteVensionlocaly(newVension.freezerId, newVension.id);
       alert('Ein Fehler ist aufgetreten. Bitte versuche es später erneut.');
     } else {
-      const { id } = await req.json();
+      const { item } = await req.json();
       const updatedFreezers = freezers.map(freezer => {
         if (freezer.id === newVension.freezerId) {
-          return { ...freezer, vensions: [...freezer.vensions, { ...newVension, id: id }] };
+          return { ...freezer, vensions: [...freezer.vensions, item] };
         }
         return freezer;
       });
