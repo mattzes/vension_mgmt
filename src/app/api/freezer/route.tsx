@@ -38,15 +38,22 @@ export async function PUT(req: NextRequest) {
 
     const { id, ...dataToUpdate } = data;
 
-    const docRef = doc(db, 'freezer', id);
+    const freezerRef = doc(db, 'freezer', id);
 
-    const docSnap = await getDoc(docRef);
+    const docSnap = await getDoc(freezerRef);
     if (!docSnap.exists()) {
       // Return a message if the document doesn't exist
       return NextResponse.json({ error: `No document found to update with id: ${id}` }, { status: 404 });
     }
 
-    await updateDoc(docRef, dataToUpdate);
+    const itemsRef = collection(db, 'item');
+    const itemsQuery = query(itemsRef, where('freezerId', '==', id), where('drawerNumber', '>', dataToUpdate.drawerCount));
+    const itemSnapshot = await getDocs(itemsQuery);
+    if (!itemSnapshot.empty) {
+      return NextResponse.json({ error: 'Cannot reduce drawer count, items exist in drawers' }, { status: 409 });
+    }
+
+    await updateDoc(freezerRef, dataToUpdate);
 
     return NextResponse.json({ message: 'success' }, { status: 202 });
   } catch (error) {
