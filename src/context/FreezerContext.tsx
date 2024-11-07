@@ -1,10 +1,12 @@
 'use client';
 
-import { FreezerWithVensions, Vension, VensionToDB, pepareVensionForDB } from '../general_types';
+import { FreezerWithVensions, Vension, Animal, VensionToDB, pepareVensionForDB } from '../general_types';
 import { createContext, useEffect, useState } from 'react';
 
 export type FreezerContextType = {
   freezers: FreezerWithVensions[];
+  loadingFreezers: boolean;
+  animals: Animal[];
   addVension: (newVension: Vension) => void;
   deleteVension: (vension: Vension) => void;
   updateVension: (currentfreezerId: string, updatedVension: Vension) => void;
@@ -12,6 +14,8 @@ export type FreezerContextType = {
 
 export const FreezerContext = createContext<FreezerContextType>({
   freezers: [],
+  loadingFreezers: true,
+  animals: [],
   addVension: function (newVension: Vension): void {
     throw new Error('Function not implemented.');
   },
@@ -25,14 +29,19 @@ export const FreezerContext = createContext<FreezerContextType>({
 
 export const FreezerContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [freezers, setFreezers] = useState<FreezerWithVensions[]>([]);
+  const [animals, setAnimals] = useState<Animal[]>([]);
+  const [loadingFreezers, setLoadingFreezers] = useState(true);
 
   useEffect(() => {
-    const fetchFreezers = async () => {
-      const freezer = await fetch('/api/freezer/withItems').then(res => res.json());
-      setFreezers(freezer);
+    const fetchData = async () => {
+      const freezers = await fetch('/api/freezer/withItems').then(res => res.json());
+      setFreezers(freezers);
+      const animals = await fetch('/api/animal').then(res => res.json());
+      setAnimals(animals);
+      setLoadingFreezers(false);
     };
 
-    fetchFreezers();
+    fetchData();
   }, []);
 
   const addVensionLocaly = (newVension: Vension) => {
@@ -135,7 +144,7 @@ export const FreezerContextProvider = ({ children }: { children: React.ReactNode
   };
 
   return (
-    <FreezerContext.Provider value={{ freezers, addVension, deleteVension, updateVension }}>
+    <FreezerContext.Provider value={{ freezers, loadingFreezers, animals, addVension, deleteVension, updateVension }}>
       {children}
     </FreezerContext.Provider>
   );

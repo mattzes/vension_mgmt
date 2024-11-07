@@ -1,21 +1,16 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { FreezerContext } from '../../context/FreezerContext';
 import InventoryCard from './InventoryCard';
-import { Typography } from '@mui/material';
+import { CircularProgress, Typography, Box } from '@mui/material';
 
 export default function Inventory() {
-  const { freezers } = useContext(FreezerContext);
-  const [animals, setAnimals] = useState([]);
+  const { freezers, animals, loadingFreezers } = useContext(FreezerContext);
 
-  useEffect(() => {
-    const fetchAnimals = async () => {
-      const animals = await fetch('/api/animal').then(res => res.json());
-      setAnimals(animals);
-    };
-
-    fetchAnimals();
-  }, []);
-  return (
+  return loadingFreezers ? (
+    <Box display="flex" justifyContent="center" alignItems="center" mt={5}>
+      <CircularProgress size="3rem" />
+    </Box>
+  ) : (
     <>
       {freezers.length === 0 || animals.length === 0 ? (
         <Typography variant="h6" align="center" mt={5}>

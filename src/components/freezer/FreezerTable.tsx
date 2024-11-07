@@ -23,6 +23,7 @@ export const FreezerTable = () => {
   const [createRecordOpen, setRecordFormOpen] = useState(false);
   const [tableData, setTableData] = useState<Freezer[]>([]);
   const [rowToEdit, setRowToEdit] = useState<MRT_Row<Freezer> | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const columns = useMemo<MyColumnDef[]>(
     () => [
@@ -61,6 +62,7 @@ export const FreezerTable = () => {
     const fetchFreezers = async () => {
       const freezers = await fetch('/api/freezer').then(res => res.json());
       setTableData(freezers);
+      setIsLoading(false);
     };
 
     fetchFreezers();
@@ -160,6 +162,7 @@ export const FreezerTable = () => {
         enableFullScreenToggle={false}
         enableBottomToolbar={false}
         enableDensityToggle={false}
+        state={{ isLoading: isLoading }}
         positionActionsColumn="last"
         renderRowActions={({ row }) => (
           <Box sx={{ display: 'flex', gap: '1rem' }}>
