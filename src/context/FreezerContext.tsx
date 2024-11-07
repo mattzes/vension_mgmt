@@ -74,6 +74,10 @@ export const FreezerContextProvider = ({ children }: { children: React.ReactNode
   };
 
   const deleteVension = async (vension: Vension) => {
+    if (!confirm('Bist du sicher, dass du diesen Eintrag löschen möchtest?')) {
+      return;
+    }
+
     deleteVensionlocaly(vension.freezerId, vension.id);
 
     const req = await fetch(`/api/item`, {
