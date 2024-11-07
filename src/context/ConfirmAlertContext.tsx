@@ -49,6 +49,12 @@ export const ConfirmAlertContextProvider = ({ children }: { children: React.Reac
     setConfirmAlertData(defautlConfirmAlertData);
   };
 
+  useEffect(() => {
+    if (confirmAlertData !== defautlConfirmAlertData) {
+      setConfirmAlertOpen(true);
+    }
+  }, [confirmAlertData]);
+
   return (
     <ConfirmAlertContext.Provider
       value={{ open, confirmAlertHandleConfirm, confirmAlertHandleCancel, confirmAlertData, setConfirmAlertData }}>
