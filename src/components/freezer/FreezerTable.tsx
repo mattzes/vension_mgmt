@@ -25,7 +25,7 @@ export const FreezerTable = () => {
   const [tableData, setTableData] = useState<Freezer[]>([]);
   const [rowToEdit, setRowToEdit] = useState<MRT_Row<Freezer> | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { setConfirmAlertData } = useContext(AlertContext);
+  const { setConfirmAlertData, handleRequestError } = useContext(AlertContext);
 
   const columns = useMemo<MyColumnDef[]>(
     () => [
@@ -78,7 +78,7 @@ export const FreezerTable = () => {
     });
 
     if (!req.ok) {
-      alert('Ein Fehler ist aufgetreten. Bitte versuche es später erneut.');
+      handleRequestError(req);
       return;
     }
 
@@ -127,7 +127,7 @@ export const FreezerTable = () => {
       });
 
       if (!req.ok) {
-        alert('Ein Fehler ist aufgetreten. Bitte versuche es später erneut.');
+        handleRequestError(req);
         return;
       }
 
@@ -144,7 +144,7 @@ export const FreezerTable = () => {
     });
 
     if (!req.ok) {
-      alert('Ein Fehler ist aufgetreten. Bitte versuche es später erneut.');
+      handleRequestError(req);
       return;
     } else {
       const { id } = await req.json();

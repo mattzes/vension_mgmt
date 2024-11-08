@@ -32,7 +32,7 @@ export const InventoryContextProvider = ({ children }: { children: React.ReactNo
   const [freezers, setFreezers] = useState<FreezerWithVensions[]>([]);
   const [animals, setAnimals] = useState<Animal[]>([]);
   const [loadingFreezers, setLoadingFreezers] = useState(true);
-  const { setConfirmAlertData } = useContext(AlertContext);
+  const { setConfirmAlertData, handleRequestError } = useContext(AlertContext);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,7 +67,8 @@ export const InventoryContextProvider = ({ children }: { children: React.ReactNo
 
     if (!req.ok) {
       deleteVensionlocaly(newVension.freezerId, newVension.id);
-      alert('Ein Fehler ist aufgetreten. Bitte versuche es später erneut.');
+      handleRequestError(req);
+      return;
     } else {
       const { item } = await req.json();
       const updatedFreezers = freezers.map(freezer => {
@@ -103,7 +104,7 @@ export const InventoryContextProvider = ({ children }: { children: React.ReactNo
 
     if (!req.ok) {
       setFreezers(freezers);
-      alert('Ein Fehler ist aufgetreten. Bitte versuche es später erneut.');
+      handleRequestError(req);
     }
   };
 
@@ -122,7 +123,7 @@ export const InventoryContextProvider = ({ children }: { children: React.ReactNo
     });
 
     if (!req.ok) {
-      alert('Ein Fehler ist aufgetreten. Bitte versuche es später erneut.');
+      handleRequestError(req);
       return;
     }
 

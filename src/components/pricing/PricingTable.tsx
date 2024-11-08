@@ -27,7 +27,7 @@ export const PricingTable = () => {
   const [prices, setPrices] = useState<Price[]>([]);
   const [rowToEdit, setRowToEdit] = useState<MRT_Row<Price> | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { setConfirmAlertData } = useContext(AlertContext);
+  const { setConfirmAlertData, handleRequestError } = useContext(AlertContext);
 
   const columns = useMemo<MyColumnDef[]>(
     () => [
@@ -93,7 +93,7 @@ export const PricingTable = () => {
     });
 
     if (!req.ok) {
-      alert('Ein Fehler ist aufgetreten. Bitte versuche es später erneut.');
+      handleRequestError(req);
       return;
     }
 
@@ -139,7 +139,7 @@ export const PricingTable = () => {
       });
 
       if (!req.ok) {
-        alert('Ein Fehler ist aufgetreten. Bitte versuche es später erneut.');
+        handleRequestError(req);
         return;
       }
 
@@ -158,7 +158,7 @@ export const PricingTable = () => {
     });
 
     if (!req.ok) {
-      alert('Ein Fehler ist aufgetreten. Bitte versuche es später erneut.');
+      handleRequestError(req);
       return;
     }
 

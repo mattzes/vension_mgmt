@@ -8,6 +8,7 @@ export type AlertContextType = {
   alertHandleClose: () => void;
   alertData: AlertData;
   setAlertData: (data: AlertData) => void;
+  handleRequestError: (req: Response) => void;
   openConfirmAlert: boolean;
   confirmAlertHandleConfirm: () => void;
   confirmAlertHandleCancel: () => void;
@@ -56,6 +57,7 @@ export const AlertContext = createContext<AlertContextType>({
   alertHandleClose: () => {},
   alertData: defautlAlertData,
   setAlertData: (data: AlertData) => {},
+  handleRequestError: () => {},
   openConfirmAlert: false,
   confirmAlertHandleConfirm: () => {},
   confirmAlertHandleCancel: () => {},
@@ -109,12 +111,25 @@ export const ConfirmAlertContextProvider = ({ children }: { children: React.Reac
     }
   }, [alertData]);
 
+  const handleRequestError = async (req: Response) => {
+    let message = 'Ein unbekanter Fehler ist aufgetreten. Bitte versuche es später erneut.';
+    try {
+      const body = await req.json();
+      message = body.message;
+    } catch (e) {}
+    setAlertData({
+      message: message,
+      type: 'error',
+    });
+  };
+
   return (
     <AlertContext.Provider
       value={{
         alertHandleClose,
         alertData,
         setAlertData,
+        handleRequestError,
         openConfirmAlert,
         confirmAlertHandleConfirm,
         confirmAlertHandleCancel,
