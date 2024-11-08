@@ -1,6 +1,6 @@
 import NavBar from '@/components/NavBar';
 import ThemeRegistry from '@/components/ThemeRegistry/ThemeRegistry';
-import { ConfirmAlertContextProvider } from '@/context/ConfirmAlertContext';
+import { ConfirmAlertContextProvider } from '@/context/AlertContext';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

@@ -5,7 +5,7 @@ import { Box, Button, Container, IconButton, MenuItem, Tooltip, useMediaQuery, u
 import { Delete, Edit } from '@mui/icons-material';
 import { RecordForm } from './RecordForm';
 import { Price } from '../../general_types';
-import { ConfirmAlertContext } from '@/context/ConfirmAlertContext';
+import { AlertContext } from '@/context/AlertContext';
 
 export type MuiTextFieldProps = {
   type: 'number' | 'text';
@@ -27,7 +27,7 @@ export const PricingTable = () => {
   const [prices, setPrices] = useState<Price[]>([]);
   const [rowToEdit, setRowToEdit] = useState<MRT_Row<Price> | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { setConfirmAlertData } = useContext(ConfirmAlertContext);
+  const { setConfirmAlertData } = useContext(AlertContext);
 
   const columns = useMemo<MyColumnDef[]>(
     () => [

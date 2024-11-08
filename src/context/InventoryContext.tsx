@@ -2,7 +2,7 @@
 
 import { FreezerWithVensions, Vension, Animal, VensionToDB, pepareVensionForDB } from '../general_types';
 import { createContext, useContext, useEffect, useState } from 'react';
-import { ConfirmAlertContext } from './ConfirmAlertContext';
+import { AlertContext } from './AlertContext';
 
 export type InventoryContextType = {
   freezers: FreezerWithVensions[];
@@ -32,7 +32,7 @@ export const InventoryContextProvider = ({ children }: { children: React.ReactNo
   const [freezers, setFreezers] = useState<FreezerWithVensions[]>([]);
   const [animals, setAnimals] = useState<Animal[]>([]);
   const [loadingFreezers, setLoadingFreezers] = useState(true);
-  const { setConfirmAlertData } = useContext(ConfirmAlertContext);
+  const { setConfirmAlertData } = useContext(AlertContext);
 
   useEffect(() => {
     const fetchData = async () => {

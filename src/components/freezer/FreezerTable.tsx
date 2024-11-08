@@ -5,7 +5,7 @@ import { Box, Button, Container, IconButton, Tooltip, useMediaQuery, useTheme } 
 import { Delete, Edit } from '@mui/icons-material';
 import { RecordForm } from './RecordForm';
 import { Freezer } from '../../general_types';
-import { ConfirmAlertContext } from '@/context/ConfirmAlertContext';
+import { AlertContext } from '@/context/AlertContext';
 
 export type MuiTextFieldProps = {
   type: 'number' | 'text';
@@ -25,7 +25,7 @@ export const FreezerTable = () => {
   const [tableData, setTableData] = useState<Freezer[]>([]);
   const [rowToEdit, setRowToEdit] = useState<MRT_Row<Freezer> | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { setConfirmAlertData } = useContext(ConfirmAlertContext);
+  const { setConfirmAlertData } = useContext(AlertContext);
 
   const columns = useMemo<MyColumnDef[]>(
     () => [

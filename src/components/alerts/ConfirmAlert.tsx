@@ -1,13 +1,14 @@
 import React, { useContext } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@mui/material';
-import { ConfirmAlertContext } from '@/context/ConfirmAlertContext';
+import { AlertContext } from '@/context/AlertContext';
 
 export function ConfirmAlert() {
-  const { open, confirmAlertHandleConfirm, confirmAlertHandleCancel, confirmAlertData } = useContext(ConfirmAlertContext);
+  const { openConfirmAlert, confirmAlertHandleConfirm, confirmAlertHandleCancel, confirmAlertData } =
+    useContext(AlertContext);
 
   return (
     <Dialog
-      open={open}
+      open={openConfirmAlert}
       onClose={confirmAlertHandleCancel}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description">
