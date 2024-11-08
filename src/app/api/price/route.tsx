@@ -8,13 +8,13 @@ export const getPrice = async (animal: string, animalPart: string) => {
   const animalPartsSnapshot = await getDocs(animalPartsQuery);
 
   if (animalPartsSnapshot.empty) {
-    return { success: false, error: 'Animal does not exist', status: 409 };
+    return { success: false, message: 'Animal does not exist', status: 409 };
   } else if (animalPartsSnapshot.docs.length > 1) {
-    return { success: false, error: 'Multiple documents found', status: 500 };
+    return { success: false, message: 'Multiple documents found', status: 500 };
   } else {
     const docData = animalPartsSnapshot.docs[0].data();
     if (!docData.parts[animalPart]) {
-      return { success: false, error: 'Animal part does not exist', status: 409 };
+      return { success: false, message: 'Animal part does not exist', status: 409 };
     }
     return { success: true, price: docData.parts[animalPart] };
   }
@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
     if (result.success) {
       return NextResponse.json({ animal, animalPart, price: result.price });
     } else {
-      return NextResponse.json({ message: result.error }, { status: result.status });
+      return NextResponse.json({ message: result.message }, { status: result.status });
     }
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 500 });
@@ -101,15 +101,15 @@ export async function DELETE(req: NextRequest) {
     const animalPartsSnapshot = await getDocs(animalPartsQuery);
 
     if (animalPartsSnapshot.empty) {
-      return NextResponse.json({ message: 'Document not found' }, { status: 404 });
+      return NextResponse.json({ message: 'Es wurde kein Dokument zu den Daten gefunden' }, { status: 404 });
     } else if (animalPartsSnapshot.docs.length > 1) {
-      return NextResponse.json({ message: 'Multiple documents found' }, { status: 500 });
+      return NextResponse.json({ message: 'Es wurden mehrer Einträge mit diesen Daten gefunden.' }, { status: 500 });
     } else {
       const animalPartData = animalPartsSnapshot.docs[0].data();
       const toUpdateAnimalPart = animalPartsSnapshot.docs[0].ref;
 
       if (!animalPartData.parts[animalPart]) {
-        return NextResponse.json({ message: 'Animal part not found' }, { status: 404 });
+        return NextResponse.json({ message: 'Die Fleischart wurde nicht gefunden' }, { status: 404 });
       }
 
       if (Object.keys(animalPartData.parts).length === 1) {
@@ -126,7 +126,7 @@ export async function DELETE(req: NextRequest) {
       }
     }
 
-    return NextResponse.json({ message: 'success' });
+    return NextResponse.json({ message: 'success' }, { status: 202 });
     1;
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 500 });

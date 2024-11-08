@@ -43,14 +43,19 @@ export async function PUT(req: NextRequest) {
     const docSnap = await getDoc(freezerRef);
     if (!docSnap.exists()) {
       // Return a message if the document doesn't exist
-      return NextResponse.json({ error: `No document found to update with id: ${id}` }, { status: 404 });
+      return NextResponse.json({ message: `Es konnte kein Dokument zu den Daten gefunden Werden.` }, { status: 404 });
     }
 
     const itemsRef = collection(db, 'item');
     const itemsQuery = query(itemsRef, where('freezerId', '==', id), where('drawerNumber', '>', dataToUpdate.drawerCount));
     const itemSnapshot = await getDocs(itemsQuery);
     if (!itemSnapshot.empty) {
-      return NextResponse.json({ error: 'Cannot reduce drawer count, items exist in drawers' }, { status: 409 });
+      return NextResponse.json(
+        {
+          message: 'Die Anzahl der Schubladen kann nicht reduziert werden, da Gegenstände in den Schubladen vorhanden sind.',
+        },
+        { status: 409 }
+      );
     }
 
     await updateDoc(freezerRef, dataToUpdate);
@@ -70,7 +75,7 @@ export async function DELETE(req: NextRequest) {
     const docSnap = await getDoc(freezerRef);
     if (!docSnap.exists()) {
       // Return a message if the document doesn't exist
-      return NextResponse.json({ error: `No document found to delete with id: ${id}` }, { status: 404 });
+      return NextResponse.json({ error: 'Es wurde kein Dokument zu den Daten gefunden' }, { status: 404 });
     }
 
     const itemsRef = collection(db, 'item');

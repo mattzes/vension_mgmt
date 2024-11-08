@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
     const animalPrice = await getPrice(createdData.animal, createdData.animalPart);
 
     if (!animalPrice.success) {
-      return NextResponse.json({ message: animalPrice.error }, { status: animalPrice.status });
+      return NextResponse.json({ message: animalPrice.message }, { status: animalPrice.status });
     }
 
     const item = {
@@ -50,7 +50,7 @@ export async function PUT(req: NextRequest) {
     const docSnap = await getDoc(docRef);
     if (!docSnap.exists()) {
       // Return a message if the document doesn't exist
-      return NextResponse.json({ error: `No document found to update with id: ${id}` }, { status: 404 });
+      return NextResponse.json({ message: 'Es wurde kein Dokument zu den Daten gefunden' }, { status: 404 });
     }
 
     await updateDoc(docRef, dataToUpdate);
@@ -70,7 +70,7 @@ export async function DELETE(req: NextRequest) {
     const docSnap = await getDoc(docRef);
     if (!docSnap.exists()) {
       // Return a message if the document doesn't exist
-      return NextResponse.json({ error: `No document found to delete with id: ${id}` }, { status: 404 });
+      return NextResponse.json({ message: 'Es wurde kein Dokument zu den Daten gefunden' }, { status: 404 });
     }
 
     await deleteDoc(docRef);
