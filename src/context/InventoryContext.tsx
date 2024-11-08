@@ -109,10 +109,9 @@ export const InventoryContextProvider = ({ children }: { children: React.ReactNo
 
   const handleDeleteVension = async (vension: Vension) => {
     setConfirmAlertData({
-      title: 'Löschen bestätigen',
-      message: 'Möchtest du diesen Eintrag wirklich löschen?',
+      title: 'Eintrag löschen?',
+      message: 'Das Löschen ist unwiderruflich. Bist du sicher, dass du diesen Eintrag löschen möchtest?',
       onConfirm: () => deleteVension(vension),
-      onCancel: () => {},
     });
   };
 

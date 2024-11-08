@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Alert } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Alert, Grid } from '@mui/material';
 import { AlertContext } from '@/context/AlertContext';
 
 export function ConfirmAlert() {
@@ -13,16 +13,20 @@ export function ConfirmAlert() {
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description">
       <DialogTitle id="alert-dialog-title">{confirmAlertData.title}</DialogTitle>
-      {confirmAlertData.message ? (
-        <DialogContent>
-          <Alert severity="warning" variant="outlined">
-            {confirmAlertData.message}
+      <DialogContent>
+        {confirmAlertData.alert ? (
+          <Alert severity={confirmAlertData.alert.type} variant="outlined">
+            {confirmAlertData.alert.message}
           </Alert>
-        </DialogContent>
-      ) : null}
+        ) : null}
+        {confirmAlertData.message && confirmAlertData.alert ? <br /> : null}
+        {confirmAlertData.message ? (
+          <DialogContentText id="alert-dialog-description">{confirmAlertData.message}</DialogContentText>
+        ) : null}
+      </DialogContent>
       <DialogActions
         style={{
-          paddingRight: '1em',
+          paddingRight: '1.5em',
           paddingBottom: '1em',
         }}>
         <Button onClick={confirmAlertHandleCancel}>Abbrechen</Button>

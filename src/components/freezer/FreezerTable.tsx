@@ -89,10 +89,13 @@ export const FreezerTable = () => {
   const handleDeleteRow = useCallback(
     async (row: MRT_Row<Freezer>) => {
       setConfirmAlertData({
-        title: 'Eintrag löschen',
-        message: `Bist du sicher, dass du ${row.original.name} löschen möchtest?`,
+        title: 'Eintrag löschen?',
+        alert: {
+          message: 'Wenn du diesen Eintrag löschst, werden auch alle Gegenstände aus dem Gefrierschrank gelöscht!',
+          type: 'warning',
+        },
+        message: 'Das Löschen ist unwiderruflich. Bist du sicher, dass du diesen Eintrag löschen möchtest?',
         onConfirm: () => deleteRow(row),
-        onCancel: () => {},
       });
     },
     [tableData]

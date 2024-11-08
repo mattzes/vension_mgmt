@@ -6,30 +6,43 @@ import { Alert } from '@/components/alerts/Alert';
 
 export type AlertContextType = {
   alertHandleClose: () => void;
-  alertData: AlertDataProviderData;
-  setAlertData: (data: AlertDataProviderData) => void;
+  alertData: AlertData;
+  setAlertData: (data: AlertData) => void;
   openConfirmAlert: boolean;
   confirmAlertHandleConfirm: () => void;
   confirmAlertHandleCancel: () => void;
-  confirmAlertData: ConfirmAlertProviderData;
+  confirmAlertData: ConfirmAlertProviderDataLocal;
   setConfirmAlertData: (data: ConfirmAlertProviderData) => void;
 };
 
-export type AlertDataProviderData = {
+export type AlertData = {
   message: string;
   type: 'success' | 'error' | 'info' | 'warning';
 };
 
-export type ConfirmAlertProviderData = {
+export type ConfirmAlertProviderDataLocal = {
   title: string;
+  alert: AlertData;
   message: string;
   onConfirm: () => void;
   onCancel: () => void;
 };
 
+export type ConfirmAlertProviderData = {
+  title: string;
+  alert?: AlertData;
+  message?: string;
+  onConfirm?: () => void;
+  onCancel?: () => void;
+};
+
 const defautlConfirmAlertData = {
   title: '',
   message: '',
+  alert: {
+    message: '',
+    type: 'info' as 'success' | 'error' | 'info' | 'warning',
+  },
   onConfirm: () => {},
   onCancel: () => {},
 };
@@ -42,7 +55,7 @@ const defautlAlertData = {
 export const AlertContext = createContext<AlertContextType>({
   alertHandleClose: () => {},
   alertData: defautlAlertData,
-  setAlertData: (data: AlertDataProviderData) => {},
+  setAlertData: (data: AlertData) => {},
   openConfirmAlert: false,
   confirmAlertHandleConfirm: () => {},
   confirmAlertHandleCancel: () => {},
@@ -53,24 +66,31 @@ export const AlertContext = createContext<AlertContextType>({
 export const ConfirmAlertContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [openConfirmAlert, setConfirmAlertOpen] = useState(false);
   const [openAlert, setAlertOpen] = useState(false);
-  const [confirmAlertData, setConfirmAlertData] = useState<ConfirmAlertProviderData>(defautlConfirmAlertData);
-  const [alertData, setAlertData] = useState<AlertDataProviderData>(defautlAlertData);
+  const [confirmAlertData, setConfirmAlertDataLocal] = useState<ConfirmAlertProviderDataLocal>(defautlConfirmAlertData);
+  const [alertData, setAlertData] = useState<AlertData>(defautlAlertData);
 
   const confirmAlertHandleConfirm = () => {
     setConfirmAlertOpen(false);
     confirmAlertData.onConfirm();
-    setConfirmAlertData(defautlConfirmAlertData);
+    setConfirmAlertDataLocal(defautlConfirmAlertData);
   };
 
   const confirmAlertHandleCancel = () => {
     setConfirmAlertOpen(false);
     confirmAlertData.onCancel();
-    setConfirmAlertData(defautlConfirmAlertData);
+    setConfirmAlertDataLocal(defautlConfirmAlertData);
   };
 
   const alertHandleClose = () => {
     setAlertData(defautlAlertData);
     setAlertOpen(false);
+  };
+
+  const setConfirmAlertData = (data: ConfirmAlertProviderData) => {
+    setConfirmAlertDataLocal({
+      ...defautlConfirmAlertData,
+      ...data,
+    });
   };
 
   useEffect(() => {

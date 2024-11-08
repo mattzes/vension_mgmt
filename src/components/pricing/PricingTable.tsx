@@ -104,8 +104,12 @@ export const PricingTable = () => {
   const handleDeleteRow = useCallback(
     async (row: MRT_Row<Price>) => {
       setConfirmAlertData({
-        title: 'Eintrag löschen',
-        message: 'Bist du sicher, dass du diesen Eintrag löschen möchtest?',
+        title: 'Eintrag löschen?',
+        alert: {
+          message: 'Es werden keine Gegenstände gelöscht, die mit diesem Eintrag verknüpft sind.',
+          type: 'info',
+        },
+        message: 'Das Löschen ist unwiderruflich. Bist du sicher, dass du diesen Eintrag löschen möchtest?',
         onConfirm: () => deleteRow(row),
         onCancel: () => {},
       });
