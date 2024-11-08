@@ -32,15 +32,7 @@ export type MyColumnDef = MRT_ColumnDef<Vension> & {
   muiTextFieldProps?: Partial<MuiTextFieldProps>;
 };
 
-const InventoryTable = ({
-  freezerId,
-  fullscreen,
-  animals,
-}: {
-  freezerId: string;
-  fullscreen: boolean;
-  animals: Animal[];
-}) => {
+const InventoryTable = ({ freezerId, animals }: { freezerId: string; animals: Animal[] }) => {
   const { freezers, addVension, deleteVension, updateVension } = useContext(InventoryContext);
   const freezer = freezers.find(freezer => freezer.id === freezerId) ?? { id: '0', drawerCount: 0, vensions: [] };
   const drawerCount: Array<string | number> = ['Nicht zugewiesen'];
@@ -305,7 +297,7 @@ const InventoryTable = ({
           expanded: true, //expand all groups by default
           grouping: ['drawerNumber'], //an array of columns to group by by default (can be multiple)
           sorting: [{ id: 'drawerNumber', desc: false }], //sort by state by default
-          isFullScreen: fullscreen,
+          isFullScreen: false,
           columnVisibility: { freezerId: false },
         }}
         positionActionsColumn="last"

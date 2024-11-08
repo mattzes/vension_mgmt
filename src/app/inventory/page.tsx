@@ -7,12 +7,10 @@ import { InventoryContextProvider } from '@/context/InventoryContext';
 
 export default function Home() {
   return (
-    <Container>
-      <>
-        <InventoryContextProvider>
-          <Inventory />
-        </InventoryContextProvider>
-      </>
+    <Container disableGutters>
+      <InventoryContextProvider>
+        <Inventory />
+      </InventoryContextProvider>
     </Container>
   );
 }

@@ -12,7 +12,6 @@ import {
   styled,
   useMediaQuery,
 } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import KitchenIcon from '@mui/icons-material/Kitchen';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import InventoryTable from './InventoryTable';
@@ -33,9 +32,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 }));
 
 const InventoryCard = ({ freezer, animals }: { freezer: FreezerWithVensions; animals: Animal[] }) => {
-  const theme = useTheme();
   const [expanded, setExpanded] = useState(true);
-  const isBelowMd = useMediaQuery(theme.breakpoints.down('md'));
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -59,7 +56,7 @@ const InventoryCard = ({ freezer, animals }: { freezer: FreezerWithVensions; ani
         </Box>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent sx={{ p: 0, pt: 2 }}>
-            <InventoryTable key={freezer.id} freezerId={freezer.id} fullscreen={isBelowMd} animals={animals} />
+            <InventoryTable key={freezer.id} freezerId={freezer.id} animals={animals} />
           </CardContent>
         </Collapse>
       </Card>
