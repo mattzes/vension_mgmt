@@ -24,6 +24,7 @@ import {
   RestaurantRounded as RestaurantRoundedIcon,
 } from '@mui/icons-material';
 import NextLink from 'next/link';
+import UserButton from '@/components/auth/UserButton';
 
 export default function NavBar() {
   const pages = {
@@ -94,6 +95,7 @@ export default function NavBar() {
               </Link>
             ))}
           </Box>
+          <UserButton />
         </Toolbar>
       </Container>
     </AppBar>
