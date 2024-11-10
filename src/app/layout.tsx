@@ -1,6 +1,6 @@
 import NavBar from '@/components/NavBar';
 import ThemeRegistry from '@/components/ThemeRegistry/ThemeRegistry';
-import { ConfirmAlertContextProvider } from '@/context/AlertContext';
+import { AlertContextProvider } from '@/context/AlertContext';
 import { AuthContextProvider } from '@/context/AuthContext';
 import type { Metadata } from 'next';
 
@@ -15,10 +15,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body style={{ margin: 0 }}>
         <ThemeRegistry>
           <AuthContextProvider>
-            <ConfirmAlertContextProvider>
+            <AlertContextProvider>
               <NavBar />
               {children}
-            </ConfirmAlertContextProvider>
+            </AlertContextProvider>
           </AuthContextProvider>
         </ThemeRegistry>
       </body>
