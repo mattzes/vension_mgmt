@@ -14,8 +14,8 @@ export function ConfirmAlert() {
       aria-describedby="alert-dialog-description">
       <DialogTitle id="alert-dialog-title">{confirmAlertData.title}</DialogTitle>
       <DialogContent>
-        {confirmAlertData.alert ? (
-          <Alert severity={confirmAlertData.alert.type} variant="outlined">
+        {confirmAlertData.alert.message ? (
+          <Alert severity={confirmAlertData.alert.type} variant="outlined" sx={{ bgcolor: 'background.paper' }}>
             {confirmAlertData.alert.message}
           </Alert>
         ) : null}
