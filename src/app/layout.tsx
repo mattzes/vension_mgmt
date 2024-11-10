@@ -3,7 +3,6 @@ import ThemeRegistry from '@/components/ThemeRegistry/ThemeRegistry';
 import { AlertContextProvider } from '@/context/AlertContext';
 import { AuthContextProvider } from '@/context/AuthContext';
 import type { Metadata } from 'next';
-import { WithAuth } from '@/components/auth/WithAuth';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -18,7 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <AuthContextProvider>
             <AlertContextProvider>
               <NavBar />
-              <WithAuth>{children}</WithAuth>
+              {children}
             </AlertContextProvider>
           </AuthContextProvider>
         </ThemeRegistry>

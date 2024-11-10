@@ -2,7 +2,7 @@
 
 import { Typography, Container, Box } from '@mui/material';
 import React from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useContext, useEffect } from 'react';
 import { AuthContext } from '@/context/AuthContext';
 
@@ -12,7 +12,7 @@ export default function Home() {
 
   useEffect(() => {
     if (user) {
-      router.push('/');
+      router.back();
     }
   }, [user]);
 
