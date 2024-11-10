@@ -2,7 +2,7 @@
 
 import React, { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '@/context/AuthContext';
-import { Button, Avatar, Menu, MenuItem } from '@mui/material';
+import { Button, Avatar, Menu, MenuItem, Box } from '@mui/material';
 
 export default function App() {
   const { user, logOut, googleSignIn } = useContext(AuthContext);
@@ -46,9 +46,11 @@ export default function App() {
   return (
     <>
       {loading ? null : !user ? (
-        <Button onClick={handleSignIn} key={'loginButton'} color="secondary" variant="contained" disableElevation>
-          Login
-        </Button>
+        <Box sx={{ pr: 3 }}>
+          <Button onClick={handleSignIn} key={'loginButton'} color="secondary" variant="contained" disableElevation>
+            Login
+          </Button>
+        </Box>
       ) : (
         <>
           <Button onClick={handleMenuOpen}>
