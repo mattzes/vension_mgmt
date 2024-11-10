@@ -95,7 +95,9 @@ export default function NavBar() {
               </Link>
             ))}
           </Box>
-          <UserButton />
+          <Box sx={{ ml: 'auto' }}>
+            <UserButton />
+          </Box>
         </Toolbar>
       </Container>
     </AppBar>
