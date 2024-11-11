@@ -3,6 +3,7 @@
 import { FreezerWithVensions, Vension, Animal, VensionToDB, pepareVensionForDB } from '../general_types';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { AlertContext } from './AlertContext';
+import { AuthContext } from './AuthContext';
 
 export type InventoryContextType = {
   freezers: FreezerWithVensions[];
@@ -33,12 +34,15 @@ export const InventoryContextProvider = ({ children }: { children: React.ReactNo
   const [animals, setAnimals] = useState<Animal[]>([]);
   const [loadingFreezers, setLoadingFreezers] = useState(true);
   const { setConfirmAlertData, handleRequestError } = useContext(AlertContext);
+  const { fetchWithToken } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchData = async () => {
-      const freezers = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/freezer/withItems`).then(res => res.json());
+      const freezers = await fetchWithToken(`${process.env.NEXT_PUBLIC_BASE_URL}/api/freezer/withItems`, 'GET').then(res =>
+        res.json()
+      );
       setFreezers(freezers);
-      const animals = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/animal`).then(res => res.json());
+      const animals = await fetchWithToken(`${process.env.NEXT_PUBLIC_BASE_URL}/api/animal`, 'GET').then(res => res.json());
       setAnimals(animals);
       setLoadingFreezers(false);
     };
@@ -60,10 +64,7 @@ export const InventoryContextProvider = ({ children }: { children: React.ReactNo
     addVensionLocaly(newVension);
 
     const vensionToDB: VensionToDB = pepareVensionForDB(newVension);
-    const req = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/item`, {
-      method: 'POST',
-      body: JSON.stringify(vensionToDB),
-    });
+    const req = await fetchWithToken(`${process.env.NEXT_PUBLIC_BASE_URL}/api/item`, 'POST', vensionToDB);
 
     if (!req.ok) {
       deleteVensionlocaly(newVension.freezerId, newVension.id);
@@ -97,10 +98,7 @@ export const InventoryContextProvider = ({ children }: { children: React.ReactNo
   const deleteVension = async (vension: Vension) => {
     deleteVensionlocaly(vension.freezerId, vension.id);
 
-    const req = await fetch(`/api/item`, {
-      method: 'DELETE',
-      body: JSON.stringify({ id: vension.id }),
-    });
+    const req = await fetchWithToken(`${process.env.NEXT_PUBLIC_BASE_URL}/api/item`, 'DELETE', { id: vension.id });
 
     if (!req.ok) {
       setFreezers(freezers);
@@ -117,10 +115,11 @@ export const InventoryContextProvider = ({ children }: { children: React.ReactNo
   };
 
   const handleUpdateVension = async (currentFreezerId: string, updatedVension: Vension) => {
-    const req = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/item`, {
-      method: 'PUT',
-      body: JSON.stringify(pepareVensionForDB(updatedVension)),
-    });
+    const req = await fetchWithToken(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/item`,
+      'PUT',
+      pepareVensionForDB(updatedVension)
+    );
 
     if (!req.ok) {
       handleRequestError(req);

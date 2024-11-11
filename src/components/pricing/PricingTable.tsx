@@ -6,6 +6,7 @@ import { Delete, Edit } from '@mui/icons-material';
 import { RecordForm } from './RecordForm';
 import { Price } from '../../general_types';
 import { AlertContext } from '@/context/AlertContext';
+import { AuthContext } from '@/context/AuthContext';
 
 export type MuiTextFieldProps = {
   type: 'number' | 'text';
@@ -28,6 +29,7 @@ export const PricingTable = () => {
   const [rowToEdit, setRowToEdit] = useState<MRT_Row<Price> | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { setConfirmAlertData, handleRequestError } = useContext(AlertContext);
+  const { fetchWithToken } = useContext(AuthContext);
 
   const columns = useMemo<MyColumnDef[]>(
     () => [
@@ -72,7 +74,9 @@ export const PricingTable = () => {
 
   useEffect(() => {
     const fetchPrices = async () => {
-      const prices = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/price/all`).then(res => res.json());
+      const prices: Price[] = await fetchWithToken(`${process.env.NEXT_PUBLIC_BASE_URL}/api/price/all`, 'GET').then(
+        (res: Response) => res.json()
+      );
       setPrices(prices);
       setIsLoading(false);
     };
@@ -87,10 +91,7 @@ export const PricingTable = () => {
   }, {} as any);
 
   const deleteRow = async (row: MRT_Row<Price>) => {
-    const req = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/price`, {
-      method: 'DELETE',
-      body: JSON.stringify(row.original),
-    });
+    const req = await fetchWithToken(`${process.env.NEXT_PUBLIC_BASE_URL}/api/price`, 'DELETE', row.original);
 
     if (!req.ok) {
       handleRequestError(req);
@@ -133,10 +134,7 @@ export const PricingTable = () => {
 
   const handleSaveRowEdits = async (values: Price) => {
     if (rowToEdit) {
-      const req = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/price`, {
-        method: 'PUT',
-        body: JSON.stringify(values),
-      });
+      const req = await fetchWithToken(`${process.env.NEXT_PUBLIC_BASE_URL}/api/price`, 'PUT', values);
 
       if (!req.ok) {
         handleRequestError(req);
@@ -152,10 +150,7 @@ export const PricingTable = () => {
   };
 
   const handleCreateRecord = async (values: Price) => {
-    const req = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/price`, {
-      method: 'POST',
-      body: JSON.stringify(values),
-    });
+    const req = await fetchWithToken(`${process.env.NEXT_PUBLIC_BASE_URL}/api/price`, 'POST', values);
 
     if (!req.ok) {
       handleRequestError(req);

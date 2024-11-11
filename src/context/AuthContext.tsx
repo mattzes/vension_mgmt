@@ -8,12 +8,14 @@ type AuthContextType = {
   user: User | null;
   googleSignIn: () => void;
   logOut: () => void;
+  fetchWithToken: (url: string, method: 'GET' | 'POST' | 'PUT' | 'DELETE', body?: object) => Promise<Response>;
 };
 
 export const AuthContext = createContext<AuthContextType>({
   user: null,
   googleSignIn: () => {},
   logOut: () => {},
+  fetchWithToken: async () => new Response(),
 });
 
 export const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
@@ -28,6 +30,21 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
     signOut(auth);
   };
 
+  const fetchWithToken = async (url: string, method: 'GET' | 'POST' | 'PUT' | 'DELETE', body: object = {}) => {
+    const token = await user?.getIdToken();
+    const options: RequestInit = {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      ...(body && (method === 'POST' || method === 'PUT' || method === 'DELETE') && { body: JSON.stringify(body) }),
+    };
+
+    const response = await fetch(url, options);
+    return response;
+  };
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, currentUser => {
       setUser(currentUser);
@@ -35,5 +52,5 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
     return () => unsubscribe();
   }, []);
 
-  return <AuthContext.Provider value={{ user, googleSignIn, logOut }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ user, googleSignIn, logOut, fetchWithToken }}>{children}</AuthContext.Provider>;
 };
