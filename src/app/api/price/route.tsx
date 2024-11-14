@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
       .get();
 
     if (animalPartsSnapshot.empty) {
-      await db.collection('animalParts').add({ name: animal, parts: { [animalPart]: price } });
+      await db.collection('animalParts').add({ name: animal, parts: { [animalPart]: price }, userId: userId });
       return NextResponse.json({ message: 'success' }, { status: 201 });
     } else if (animalPartsSnapshot.docs.length > 1) {
       return NextResponse.json({ message: 'Es wurden zu viele Einträge gefunden.' }, { status: 500 });
