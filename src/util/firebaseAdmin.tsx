@@ -9,9 +9,9 @@ export const firebaseAdmin = admin.apps.length
   : admin.initializeApp(
       {
         credential: cert({
-          clientEmail: process.env.NEXT_PUBLIC_FIREBASE_CLIENT_EMAIL,
+          clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
           projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
-          privateKey: process.env.NEXT_PUBLIC_FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+          privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
         }),
       },
       appName
