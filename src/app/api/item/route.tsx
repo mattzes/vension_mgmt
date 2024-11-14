@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
     const item = {
       id: docRef.id,
       ...createdData,
-      date: createdData.date.toMillis(),
+      date: createdData.date.seconds * 1000 + createdData.date.nanoseconds / 1000000,
       price: animalPrice.price,
     };
 

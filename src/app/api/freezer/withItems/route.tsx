@@ -1,16 +1,19 @@
-import { NextResponse } from 'next/server';
-import { collection, query, getDocs, where } from 'firebase/firestore';
-import { db } from '@/util/firebaseConfig';
+import { NextRequest, NextResponse } from 'next/server';
+import { db } from '@/util/firebaseAdmin';
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    const freezerSnapshot = await getDocs(collection(db, 'freezer'));
-    const freezers = freezerSnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+    const userId = req.headers.get('x-user-uid');
+    const freezerSnapshot = await db.collection('freezer').where('userId', '==', userId).get();
+    const freezers = freezerSnapshot.docs.map(doc => {
+      const { userId, ...data } = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+      };
+    });
 
-    const animalSnapshot = await getDocs(collection(db, 'animalParts'));
+    const animalSnapshot = await db.collection('animalParts').where('userId', '==', userId).get();
     const animals = animalSnapshot.docs.map(doc => doc.data());
 
     const findPrice = (animalName: string, animalPart: string) => {
@@ -21,12 +24,14 @@ export async function GET() {
     const freezerWithItems = [];
 
     for (const freezer of freezers) {
-      const itemsRef = collection(db, 'item');
-      const itemsQuery = query(itemsRef, where('freezerId', '==', freezer.id));
-      const itemSnapshot = await getDocs(itemsQuery);
+      const itemSnapshot = await db
+        .collection('item')
+        .where('freezerId', '==', freezer.id)
+        .where('userId', '==', userId)
+        .get();
 
       const items = itemSnapshot.docs.map(doc => {
-        const data = doc.data();
+        const { userId, ...data } = doc.data();
         return {
           id: doc.id,
           price: findPrice(data.animal, data.animalPart),

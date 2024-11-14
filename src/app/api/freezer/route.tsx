@@ -1,14 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/util/firebaseConfig';
-import { collection, doc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, where, query } from 'firebase/firestore';
+import { db } from '@/util/firebaseAdmin';
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    const querySnapshot = await getDocs(collection(db, 'freezer'));
-    const freezers = querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+    const userId = req.headers.get('x-user-uid');
+    const querySnapshot = await db.collection('freezer').where('userId', '==', userId).get();
+    const freezers = querySnapshot.docs.map(doc => {
+      const { userId, ...data } = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+      };
+    });
 
     return NextResponse.json(freezers);
   } catch (error) {
@@ -19,10 +22,12 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
+    const userId = req.headers.get('x-user-uid');
 
     // validate data
+    data.userId = userId;
 
-    const docRef = await addDoc(collection(db, 'freezer'), data);
+    const docRef = await db.collection('freezer').add(data);
 
     return NextResponse.json({ id: docRef.id, message: 'success' }, { status: 201 });
   } catch (error) {
@@ -33,22 +38,26 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
   try {
     const data = await req.json();
+    const userId = req.headers.get('x-user-uid');
 
     // validate data
 
     const { id, ...dataToUpdate } = data;
 
-    const freezerRef = doc(db, 'freezer', id);
+    const freezerRef = db.collection('freezer').doc(id);
+    const freezerSnap = await freezerRef.get();
 
-    const docSnap = await getDoc(freezerRef);
-    if (!docSnap.exists()) {
+    if (!freezerSnap.exists || freezerSnap.data()?.userId !== userId) {
       // Return a message if the document doesn't exist
       return NextResponse.json({ message: `Es konnte kein Dokument zu den Daten gefunden Werden.` }, { status: 404 });
     }
 
-    const itemsRef = collection(db, 'item');
-    const itemsQuery = query(itemsRef, where('freezerId', '==', id), where('drawerNumber', '>', dataToUpdate.drawerCount));
-    const itemSnapshot = await getDocs(itemsQuery);
+    const itemSnapshot = await db
+      .collection('item')
+      .where('freezerId', '==', id)
+      .where('userId', '==', userId)
+      .where('drawerNumber', '>=', dataToUpdate.drawerCount)
+      .get();
     if (!itemSnapshot.empty) {
       return NextResponse.json(
         {
@@ -58,7 +67,7 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    await updateDoc(freezerRef, dataToUpdate);
+    await freezerRef.update(dataToUpdate);
 
     return NextResponse.json({ message: 'success' }, { status: 202 });
   } catch (error) {
@@ -69,22 +78,21 @@ export async function PUT(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   try {
     const { id } = await req.json();
+    const userId = req.headers.get('x-user-uid');
 
-    const freezerRef = doc(db, 'freezer', id);
+    const freezerRef = db.collection('freezer').doc(id);
+    const freezerSnap = await freezerRef.get();
 
-    const docSnap = await getDoc(freezerRef);
-    if (!docSnap.exists()) {
+    if (!freezerSnap.exists || freezerSnap.data()?.userId !== userId) {
       // Return a message if the document doesn't exist
       return NextResponse.json({ error: 'Es wurde kein Dokument zu den Daten gefunden' }, { status: 404 });
     }
 
-    const itemsRef = collection(db, 'item');
-    const itemsQuery = query(itemsRef, where('freezerId', '==', id));
-    const itemSnapshot = await getDocs(itemsQuery);
-    const deletePromises = itemSnapshot.docs.map(doc => deleteDoc(doc.ref));
+    const itemSnapshot = await db.collection('item').where('freezerId', '==', id).where('userId', '==', userId).get();
+    const deletePromises = itemSnapshot.docs.map(doc => doc.ref.delete());
     await Promise.all(deletePromises);
 
-    await deleteDoc(freezerRef);
+    await freezerRef.delete();
 
     return NextResponse.json({ message: 'success' }, { status: 202 });
   } catch (error) {
