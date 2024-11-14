@@ -74,9 +74,7 @@ export const PricingTable = () => {
 
   useEffect(() => {
     const fetchPrices = async () => {
-      const prices: Price[] = await fetchWithToken(`${process.env.NEXT_PUBLIC_BASE_URL}/api/price/all`, 'GET').then(
-        (res: Response) => res.json()
-      );
+      const prices: Price[] = await fetchWithToken(`/api/price/all`, 'GET').then((res: Response) => res.json());
       setPrices(prices);
       setIsLoading(false);
     };
@@ -91,7 +89,7 @@ export const PricingTable = () => {
   }, {} as any);
 
   const deleteRow = async (row: MRT_Row<Price>) => {
-    const req = await fetchWithToken(`${process.env.NEXT_PUBLIC_BASE_URL}/api/price`, 'DELETE', row.original);
+    const req = await fetchWithToken(`/api/price`, 'DELETE', row.original);
 
     if (!req.ok) {
       handleRequestError(req);
@@ -134,7 +132,7 @@ export const PricingTable = () => {
 
   const handleSaveRowEdits = async (values: Price) => {
     if (rowToEdit) {
-      const req = await fetchWithToken(`${process.env.NEXT_PUBLIC_BASE_URL}/api/price`, 'PUT', values);
+      const req = await fetchWithToken(`/api/price`, 'PUT', values);
 
       if (!req.ok) {
         handleRequestError(req);
@@ -150,7 +148,7 @@ export const PricingTable = () => {
   };
 
   const handleCreateRecord = async (values: Price) => {
-    const req = await fetchWithToken(`${process.env.NEXT_PUBLIC_BASE_URL}/api/price`, 'POST', values);
+    const req = await fetchWithToken(`/api/price`, 'POST', values);
 
     if (!req.ok) {
       handleRequestError(req);

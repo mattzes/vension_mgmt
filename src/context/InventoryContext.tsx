@@ -38,11 +38,9 @@ export const InventoryContextProvider = ({ children }: { children: React.ReactNo
 
   useEffect(() => {
     const fetchData = async () => {
-      const freezers = await fetchWithToken(`${process.env.NEXT_PUBLIC_BASE_URL}/api/freezer/withItems`, 'GET').then(res =>
-        res.json()
-      );
+      const freezers = await fetchWithToken(`/api/freezer/withItems`, 'GET').then(res => res.json());
       setFreezers(freezers);
-      const animals = await fetchWithToken(`${process.env.NEXT_PUBLIC_BASE_URL}/api/animal`, 'GET').then(res => res.json());
+      const animals = await fetchWithToken(`/api/animal`, 'GET').then(res => res.json());
       setAnimals(animals);
       setLoadingFreezers(false);
     };
@@ -64,7 +62,7 @@ export const InventoryContextProvider = ({ children }: { children: React.ReactNo
     addVensionLocaly(newVension);
 
     const vensionToDB: VensionToDB = pepareVensionForDB(newVension);
-    const req = await fetchWithToken(`${process.env.NEXT_PUBLIC_BASE_URL}/api/item`, 'POST', vensionToDB);
+    const req = await fetchWithToken(`/api/item`, 'POST', vensionToDB);
 
     if (!req.ok) {
       deleteVensionlocaly(newVension.freezerId, newVension.id);
@@ -98,7 +96,7 @@ export const InventoryContextProvider = ({ children }: { children: React.ReactNo
   const deleteVension = async (vension: Vension) => {
     deleteVensionlocaly(vension.freezerId, vension.id);
 
-    const req = await fetchWithToken(`${process.env.NEXT_PUBLIC_BASE_URL}/api/item`, 'DELETE', { id: vension.id });
+    const req = await fetchWithToken(`/api/item`, 'DELETE', { id: vension.id });
 
     if (!req.ok) {
       setFreezers(freezers);
@@ -115,11 +113,7 @@ export const InventoryContextProvider = ({ children }: { children: React.ReactNo
   };
 
   const handleUpdateVension = async (currentFreezerId: string, updatedVension: Vension) => {
-    const req = await fetchWithToken(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/item`,
-      'PUT',
-      pepareVensionForDB(updatedVension)
-    );
+    const req = await fetchWithToken(`/api/item`, 'PUT', pepareVensionForDB(updatedVension));
 
     if (!req.ok) {
       handleRequestError(req);
