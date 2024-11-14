@@ -7,7 +7,7 @@ export default function manifest(): MetadataRoute.Manifest {
     description: 'Verwalte dein Wildfleisch in deinen Gefriertruhen',
     start_url: '/inventory',
     display: 'standalone',
-    background_color: '##60a5fa',
+    background_color: '#60a5fa',
     theme_color: '#000000',
     icons: [
       {
