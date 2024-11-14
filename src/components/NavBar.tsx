@@ -24,6 +24,7 @@ import {
   RestaurantRounded as RestaurantRoundedIcon,
 } from '@mui/icons-material';
 import NextLink from 'next/link';
+import UserButton from '@/components/auth/UserButton';
 
 export default function NavBar() {
   const pages = {
@@ -49,7 +50,7 @@ export default function NavBar() {
 
   return (
     <AppBar position="static">
-      <Container>
+      <Container disableGutters>
         <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer}>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', m: 0.5 }}>
             <IconButton onClick={toggleDrawer}>
@@ -75,7 +76,7 @@ export default function NavBar() {
             ))}
           </List>
         </Drawer>
-        <Toolbar>
+        <Toolbar disableGutters sx={{ pl: 3 }}>
           <IconButton
             size="large"
             edge="start"
@@ -93,6 +94,9 @@ export default function NavBar() {
                 </Button>
               </Link>
             ))}
+          </Box>
+          <Box sx={{ ml: 'auto' }}>
+            <UserButton />
           </Box>
         </Toolbar>
       </Container>

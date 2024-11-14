@@ -6,6 +6,7 @@ import { Delete, Edit } from '@mui/icons-material';
 import { RecordForm } from './RecordForm';
 import { Freezer } from '../../general_types';
 import { AlertContext } from '@/context/AlertContext';
+import { AuthContext } from '@/context/AuthContext';
 
 export type MuiTextFieldProps = {
   type: 'number' | 'text';
@@ -26,6 +27,7 @@ export const FreezerTable = () => {
   const [rowToEdit, setRowToEdit] = useState<MRT_Row<Freezer> | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { setConfirmAlertData, handleRequestError } = useContext(AlertContext);
+  const { fetchWithToken } = useContext(AuthContext);
 
   const columns = useMemo<MyColumnDef[]>(
     () => [
@@ -62,7 +64,9 @@ export const FreezerTable = () => {
 
   useEffect(() => {
     const fetchFreezers = async () => {
-      const freezers = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/freezer`).then(res => res.json());
+      const freezers = await fetchWithToken(`${process.env.NEXT_PUBLIC_BASE_URL}/api/freezer`, 'GET').then(res =>
+        res.json()
+      );
       setTableData(freezers);
       setIsLoading(false);
     };
@@ -72,10 +76,7 @@ export const FreezerTable = () => {
 
   const deleteRow = async (row: MRT_Row<Freezer>) => {
     // send fetch request to delete row from database
-    const req = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/freezer`, {
-      method: 'DELETE',
-      body: JSON.stringify({ id: row.original.id }),
-    });
+    const req = await fetchWithToken(`${process.env.NEXT_PUBLIC_BASE_URL}/api/freezer`, 'DELETE', { id: row.original.id });
 
     if (!req.ok) {
       handleRequestError(req);
@@ -121,10 +122,7 @@ export const FreezerTable = () => {
       editedTableData[rowToEdit.index] = values;
 
       // send fetch request to update row in database
-      const req = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/freezer`, {
-        method: 'PUT',
-        body: JSON.stringify(values),
-      });
+      const req = await fetchWithToken(`${process.env.NEXT_PUBLIC_BASE_URL}/api/freezer`, 'PUT', values);
 
       if (!req.ok) {
         handleRequestError(req);
@@ -138,10 +136,7 @@ export const FreezerTable = () => {
   };
 
   const handleCreateRecord = async (values: Freezer) => {
-    const req = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/freezer`, {
-      method: 'POST',
-      body: JSON.stringify(values),
-    });
+    const req = await fetchWithToken(`${process.env.NEXT_PUBLIC_BASE_URL}/api/freezer`, 'POST', values);
 
     if (!req.ok) {
       handleRequestError(req);

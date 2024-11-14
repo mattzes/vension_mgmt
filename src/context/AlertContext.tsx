@@ -65,7 +65,7 @@ export const AlertContext = createContext<AlertContextType>({
   setConfirmAlertData: (data: ConfirmAlertProviderData) => {},
 });
 
-export const ConfirmAlertContextProvider = ({ children }: { children: React.ReactNode }) => {
+export const AlertContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [openConfirmAlert, setConfirmAlertOpen] = useState(false);
   const [openAlert, setAlertOpen] = useState(false);
   const [confirmAlertData, setConfirmAlertDataLocal] = useState<ConfirmAlertProviderDataLocal>(defautlConfirmAlertData);

@@ -1,6 +1,11 @@
+'use client';
+
 import { FreezerTable } from '@/components/freezer/FreezerTable';
 import * as React from 'react';
+import withAuth from '@/hoc/withAuth';
 
-export default function Home() {
+function Home() {
   return <FreezerTable />;
 }
+
+export default withAuth(Home);

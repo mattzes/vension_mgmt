@@ -4,8 +4,9 @@ import Inventory from '@/components/inventory/Inventory';
 import { Container } from '@mui/material';
 import * as React from 'react';
 import { InventoryContextProvider } from '@/context/InventoryContext';
+import withAuth from '@/hoc/withAuth';
 
-export default function Home() {
+function Home() {
   return (
     <Container disableGutters>
       <InventoryContextProvider>
@@ -14,3 +15,5 @@ export default function Home() {
     </Container>
   );
 }
+
+export default withAuth(Home);
