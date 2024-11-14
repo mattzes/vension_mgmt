@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    return NextResponse.json({ message: 'Authorized' }, { status: 200 });
+    return NextResponse.json({ userEmail: check.email, userId: check.uid, message: 'Authorized' }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }

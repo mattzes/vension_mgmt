@@ -8,7 +8,7 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(new URL('/login', req.url));
     }
 
-    const response = await fetch(new URL('/api/verifyToken', req.url).toString(), {
+    const res = await fetch(new URL('/api/verifyToken', req.url).toString(), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -16,8 +16,13 @@ export async function middleware(req: NextRequest) {
       body: JSON.stringify({ token: token }),
     });
 
-    if (response.ok) {
-      return NextResponse.next();
+    if (res.ok) {
+      const { userEmail, userId } = await res.json();
+
+      const response = await NextResponse.next();
+      response.headers.set('x-user-uid', userId);
+      response.headers.set('x-user-email', userEmail);
+      return response;
     } else {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
@@ -28,5 +33,5 @@ export async function middleware(req: NextRequest) {
 
 // Specify routes you want to protect
 export const config = {
-  matcher: ['/api/:path*'], // Adjust route pattern as needed
+  matcher: ['/api/freezer/:path*', '/api/animal/:path*', '/api/price/:path*', '/api/item/:path*'], // Adjust route pattern as needed
 };
