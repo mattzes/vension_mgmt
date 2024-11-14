@@ -1,5 +1,5 @@
 import admin from 'firebase-admin';
-import serviceAccount from '@/dev-vension-mgmt-ca107511fd7d.json';
+import { cert } from 'firebase-admin/app';
 
 const appName = 'firebaseAdmin';
 
@@ -8,7 +8,14 @@ export const firebaseAdmin = admin.apps.length
   ? admin.app(appName) // Use the existing app if it's already initialized
   : admin.initializeApp(
       {
-        credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
+        credential: cert({
+          clientEmail: process.env.NEXT_PUBLIC_FIREBASE_CLIENT_EMAIL,
+          privateKey: process.env.NEXT_PUBLIC_FIREBASE_PRIVATE_KEY,
+          projectId: process.env.NEXT_PUBLIC_FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+        }),
       },
       appName
     );
+
+export const db = firebaseAdmin.firestore();
+export const auth = firebaseAdmin.auth();
