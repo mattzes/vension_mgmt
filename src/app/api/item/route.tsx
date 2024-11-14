@@ -45,12 +45,15 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   try {
-    const data = await req.json();
+    const { id, ...data } = await req.json();
     const userId = req.headers.get('x-user-uid');
 
     // validate data
 
-    const { id, ...dataToUpdate } = data;
+    const dataToUpdate = {
+      ...data,
+      date: Timestamp.fromDate(new Date(data.date)),
+    };
 
     const docRef = db.collection('item').doc(id);
     const docSnap = await docRef.get();
