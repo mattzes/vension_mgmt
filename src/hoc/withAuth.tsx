@@ -1,18 +1,20 @@
-'use client';
-
-import React, { useContext } from 'react';
+// 'use client';
+import React, { useContext, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { AuthContext } from '@/context/AuthContext'; // Adjust path based on where your AuthContext is located
+import { AuthContext } from '@/context/AuthContext';
 
 const withAuth = (WrappedComponent: React.ComponentType) => {
   const AuthHOC = (props: React.ComponentProps<typeof WrappedComponent>) => {
-    const { user } = useContext(AuthContext); // Access authentication state
+    const { user } = useContext(AuthContext);
     const router = useRouter();
 
-    if (!user) {
-      router.push('/login');
-      return null;
-    }
+    useEffect(() => {
+      if (!user) {
+        router.push('/login');
+      }
+    }, [user, router]);
+
+    if (!user) return null;
 
     return <WrappedComponent {...props} />;
   };
