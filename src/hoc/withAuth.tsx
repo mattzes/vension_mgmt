@@ -12,7 +12,7 @@ const withAuth = (WrappedComponent: React.ComponentType) => {
       if (!user) {
         router.push('/login');
       }
-    }, [user, router]);
+    }, [user]);
 
     if (!user) return null;
 
