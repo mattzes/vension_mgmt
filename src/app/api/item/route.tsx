@@ -6,7 +6,7 @@ import { getPrice } from '@/app/api/price/route';
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
-    const userId = req.headers.get('x-user-uid');
+    const userId = req.headers.get('x-user-uid') ?? '';
 
     // Validate data here
 
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: 'Fehler beim erstellen des Gegenstandes.' }, { status: 500 });
     }
 
-    const animalPrice = await getPrice(createdData.animal, createdData.animalPart);
+    const animalPrice = await getPrice(createdData.animal, createdData.animalPart, userId);
 
     if (!animalPrice.success) {
       return NextResponse.json({ message: animalPrice.message }, { status: animalPrice.status });

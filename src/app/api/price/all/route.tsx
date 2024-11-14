@@ -1,10 +1,10 @@
-import { NextResponse } from 'next/server';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '@/util/firebaseConfig';
+import { NextRequest, NextResponse } from 'next/server';
+import { db } from '@/util/firebaseAdmin';
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    const querySnapshot = await getDocs(collection(db, 'animalParts'));
+    const userId = req.headers.get('x-user-uid');
+    const querySnapshot = await db.collection('animalParts').where('userId', '==', userId).get();
     const animalParts = querySnapshot.docs.map(doc => ({
       ...doc.data(),
     }));
