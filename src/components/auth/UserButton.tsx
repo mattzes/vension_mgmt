@@ -7,7 +7,6 @@ import { Button, Avatar, Menu, MenuItem, Box } from '@mui/material';
 export default function App() {
   const { user, logOut, googleSignIn } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
   const [anchorElMenu, setAnchorElMenu] = useState<null | HTMLElement>(null);
 
   const handleSignIn = async () => {
@@ -27,21 +26,12 @@ export default function App() {
   };
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setMenuOpen(true);
     setAnchorElMenu(event.currentTarget);
   };
 
   const handleMenuClose = () => {
-    setMenuOpen(false);
+    setAnchorElMenu(null);
   };
-
-  useEffect(() => {
-    const checkAuthentication = async () => {
-      await new Promise(resolve => setTimeout(resolve, 50));
-      setLoading(false);
-    };
-    checkAuthentication();
-  }, [user]);
 
   return (
     <>
@@ -56,8 +46,13 @@ export default function App() {
           <Button onClick={handleMenuOpen}>
             <Avatar src={user?.photoURL ?? ''} />
           </Button>
-          <Menu anchorEl={anchorElMenu} open={Boolean(menuOpen)} onClose={handleMenuClose}>
-            <MenuItem onClick={handleSignOut}>Logout</MenuItem>
+          <Menu anchorEl={anchorElMenu} open={Boolean(anchorElMenu)} onClose={handleMenuClose}>
+            <MenuItem key={'username'} disabled>
+              {user.displayName}
+            </MenuItem>
+            <MenuItem key={'logout'} onClick={handleSignOut}>
+              Logout
+            </MenuItem>
           </Menu>
         </>
       )}
