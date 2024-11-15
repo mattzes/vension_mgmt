@@ -10,6 +10,7 @@ export default function App() {
   const [anchorElMenu, setAnchorElMenu] = useState<null | HTMLElement>(null);
 
   const handleSignIn = async () => {
+    setAnchorElMenu(null);
     try {
       await googleSignIn();
     } catch (error) {
