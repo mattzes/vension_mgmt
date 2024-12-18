@@ -14,10 +14,11 @@ export const getPrice = async (animal: string, animalPart: string, userId: strin
     return { success: false, message: 'Multiple documents found', status: 500 };
   } else {
     const docData = animalPartsSnapshot.docs[0].data();
-    if (!docData.parts[animalPart]) {
+    if (animalPart in docData.parts) {
+      return { success: true, price: docData.parts[animalPart] };
+    } else {
       return { success: false, message: 'Animal part does not exist', status: 409 };
     }
-    return { success: true, price: docData.parts[animalPart] };
   }
 };
 
@@ -73,15 +74,12 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
   try {
     const { animal, animalPart, price } = await req.json();
-    console.log('put-1', animal, animalPart, price);
     const userId = req.headers.get('x-user-uid');
     const animalPartsSnapshot = await db
       .collection('animalParts')
       .where('name', '==', animal)
       .where('userId', '==', userId)
       .get();
-
-    console.log('put-2', animalPartsSnapshot.empty, animalPartsSnapshot.docs.length);
 
     if (animalPartsSnapshot.empty) {
       return NextResponse.json({ message: 'Tierart wurde nicht gefunden.' }, { status: 409 });
@@ -91,14 +89,13 @@ export async function PUT(req: NextRequest) {
       const docRef = animalPartsSnapshot.docs[0].ref;
       const docData = animalPartsSnapshot.docs[0].data();
 
-      console.log('put-3', docData);
-
-      if (!docData.parts[animalPart]) {
+      if (animalPart in docData.parts) {
+        await docRef.update({
+          [`parts.${animalPart}`]: price, // Use Firestore's dot notation for nested fields
+        });
+      } else {
         return NextResponse.json({ message: `Fleischart existiert nicht für das Tier: ${animal}` }, { status: 409 });
       }
-      await docRef.update({
-        [`parts.${animalPart}`]: price, // Use Firestore's dot notation for nested fields
-      });
     }
 
     return NextResponse.json({ message: 'success' }, { status: 201 });
@@ -110,15 +107,12 @@ export async function PUT(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   try {
     const { animal, animalPart, price } = await req.json();
-    console.log('delete-1', animal, animalPart, price);
     const userId = req.headers.get('x-user-uid');
     const animalPartsSnapshot = await db
       .collection('animalParts')
       .where('name', '==', animal)
       .where('userId', '==', userId)
       .get();
-
-    console.log('delete-2', animalPartsSnapshot.empty, animalPartsSnapshot.docs.length);
 
     if (animalPartsSnapshot.empty) {
       return NextResponse.json({ message: 'Es wurde kein Dokument zu den Daten gefunden' }, { status: 404 });
@@ -128,9 +122,7 @@ export async function DELETE(req: NextRequest) {
       const animalPartData = animalPartsSnapshot.docs[0].data();
       const toUpdateAnimalPart = animalPartsSnapshot.docs[0].ref;
 
-      console.log('delete-3', animalPartData);
-
-      if (!animalPartData.parts[animalPart]) {
+      if (!(animalPart in animalPartData.parts)) {
         return NextResponse.json({ message: 'Die Fleischart wurde nicht gefunden' }, { status: 404 });
       }
 
