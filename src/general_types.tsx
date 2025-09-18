@@ -28,6 +28,7 @@ export type Vension = {
   drawerNumber: number | string;
   animal: string;
   animalPart: string;
+  unit?: 'weight' | 'count';
   weight: number;
   count: number;
   date: string;

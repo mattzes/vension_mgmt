@@ -22,6 +22,7 @@ export type MyColumnDef = MRT_ColumnDef<Vension> & {
     | 'drawerNumber'
     | 'animal'
     | 'animalPart'
+    | 'unit'
     | 'weight'
     | 'count'
     | 'date'
@@ -112,14 +113,33 @@ const InventoryTable = ({ freezerId, animals }: { freezerId: string; animals: An
       },
     },
     {
+      accessorKey: 'unit',
+      header: 'Abrechnungseinheit',
+      size: 0,
+      defaultValue: 'weight',
+      muiTextFieldProps: {
+        required: true,
+        type: 'text',
+        select: true,
+        children: [
+          <MenuItem key={'weight'} value={'weight'}>
+            Gewicht (g)
+          </MenuItem>,
+          <MenuItem key={'count'} value={'count'}>
+            Stückzahl
+          </MenuItem>,
+        ],
+      },
+    },
+    {
       accessorKey: 'weight',
-      header: 'Gewicht in g',
+      header: 'Abrechnungseinheit',
       size: 0,
       muiTextFieldProps: {
         required: true,
         type: 'number',
       },
-      Cell: ({ row }) => <>{row.original.weight}g</>,
+      Cell: ({ row }) => <>{row.original.unit === 'count' ? 'Stückzahl' : `${row.original.weight}g`}</>,
     },
     {
       accessorKey: 'count',
@@ -167,7 +187,9 @@ const InventoryTable = ({ freezerId, animals }: { freezerId: string; animals: An
       size: 0,
       Cell: ({ row }) => {
         let displayPrice = row.original.price ? row.original.price : 0;
-        displayPrice *= row.original.weight / 1000;
+        if (row.original.unit !== 'count') {
+          displayPrice *= row.original.weight / 1000;
+        }
         displayPrice = Math.round(displayPrice * 100) / 100;
         return <>{displayPrice.toString().replace('.', ',')}€</>;
       },
@@ -239,6 +261,7 @@ const InventoryTable = ({ freezerId, animals }: { freezerId: string; animals: An
     return acc;
   }, {} as any);
   defaultValues.freezerId = freezer.id;
+  if (!defaultValues.unit) defaultValues.unit = 'weight';
 
   const setDefaultColumns = () => {
     setColumns(defaultColumns);
@@ -298,7 +321,7 @@ const InventoryTable = ({ freezerId, animals }: { freezerId: string; animals: An
           grouping: ['drawerNumber'], //an array of columns to group by by default (can be multiple)
           sorting: [{ id: 'drawerNumber', desc: false }], //sort by state by default
           isFullScreen: false,
-          columnVisibility: { freezerId: false },
+          columnVisibility: { freezerId: false, unit: false },
         }}
         positionActionsColumn="last"
         renderRowActions={({ row }) => (

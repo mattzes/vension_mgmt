@@ -94,6 +94,12 @@ export const RecordForm = ({
       updateDropDowns({ freezerId: String(e.target.value) });
     }
 
+    if (e.target.name === 'unit') {
+      const nextUnit = String(e.target.value);
+      setValues(prev => ({ ...prev, unit: nextUnit as any }));
+      return;
+    }
+
     const type = columns.find(column => column.accessorKey === e.target.name)?.muiTextFieldProps?.type;
     if (type === 'number' && e.target.value !== 'Nicht zugewiesen') {
       setValues(prev => ({ ...prev, [e.target.name]: Number(e.target.value) }));
@@ -124,7 +130,11 @@ export const RecordForm = ({
             {columns.map(column => {
               if (column.showInForm === false) return null;
 
-              const textFieldProps = column.muiTextFieldProps ? column.muiTextFieldProps : {};
+              let textFieldProps = column.muiTextFieldProps ? column.muiTextFieldProps : {};
+              // Disable weight when pricing by count
+              if (column.accessorKey === 'weight' && values.unit === 'count') {
+                textFieldProps = { ...textFieldProps, disabled: true };
+              }
 
               return (
                 <TextField

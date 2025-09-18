@@ -22,6 +22,7 @@ const vensionSchema: Record<string, any> = {
     'string.allowOnly': 'Bitte gib eine Fleischart an.',
     'any.required': 'Bitte gib eine Fleischart an.',
   }),
+  unit: Joi.string().valid('weight', 'count').optional(),
   weight: Joi.number().min(0).required().messages({
     'number.base': 'Bitte gib ein Gewicht an.',
     'number.empty': 'Bitte gib ein Gewicht an.',
@@ -93,6 +94,12 @@ const validateValues = (values: Record<string, any>, schema: Schema) => {
 };
 
 export const validateVension = (values: Record<string, any>) => {
+  // Make weight optional when unit is count
+  if (values?.unit === 'count') {
+    const schema: Record<string, any> = { ...vensionSchema };
+    delete schema.weight;
+    return validateValues(values, schema);
+  }
   return validateValues(values, vensionSchema);
 };
 
